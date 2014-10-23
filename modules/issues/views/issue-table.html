@@ -2,6 +2,7 @@
 <thead>
 	<tr>
 		<th>#</th>
+		<th>Bearbeitet am</th>
 		<th>Type</th>
 		<th>Status</th>
 		<th>Zugewiesen an</th>
@@ -10,8 +11,14 @@
 	</tr>
 </thead>
 <tbody>
-	<tr data-ng-repeat="i in issues">
+	<tr data-ng-if="!issues || issues.length == 0">
+		<td colspan="6" style="text-align:center;"><i>Für die aktuelle Auwahl sind keine Ergebnisse vorhanden</i></td>
+	</tr>
+	<tr data-ng-repeat="i in issues" 
+		data-ng-class="{'info' : i.state == 'ASSIGNED', 'danger' : i.state == 'NEW', 'warning' : i.state == 'FEEDBACK', 'success' : i.state == 'RESOLVED', 'active' : i.state == 'CLOSED'}">
+		
 		<td>#{{i.number}}</td>
+		<td>{{i.dateModified|date:'dd.MM.yyyy HH:mm'}}</td>
 		<td>{{i.issuetype}}</td>
 		<td>{{i.state}}</td>
 		<td>{{i.assignedTo}}</td>

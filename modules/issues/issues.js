@@ -135,6 +135,7 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 		},
 		
 		updateIssue : function(issue) {
+			issue.dateModified = new Date().getTime();
 			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
 				.then(function(response) {
 					return response.data;
