@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="col-md-12 col-md-8">
+		<h3>Milestones</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title">Milestones</h5>
+			</div>
+			
+			<div class="panel-body">
+				<table class="table table-condesed table-striped">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Kunde</th>
+						<th>Version</th>
+						<th>Status</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="m in milestones">
+						<td>{{m.name}}</td>
+						<td>{{m.customer.name}}</td>
+						<td>{{m.version}}</td>
+						<td>
+							<span data-ng-if="m.status == 'NEW'">Neu</span>
+							<span data-ng-if="m.status == 'APPROVAL_REQUESTED'">Freigabe eingeholt</span>
+							<span data-ng-if="m.status == 'APPROVED'">Freigegeben</span>
+							<span data-ng-if="m.status == 'CERTIFIED'">Abgenommen</span>
+						</td>
+						<td class="tools">
+							<a href="#/milestones/{{m._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>|
+							<a href="javascript:void('');" title="Entfernen" data-ng-click="deleteMilestone()"><span class="fa fa-trash-o"></span></a>
+						</td>
+					</tr>
+				</tbody>
+				</table>
+			</div>
+		</div>	
+	</div>
+</div>

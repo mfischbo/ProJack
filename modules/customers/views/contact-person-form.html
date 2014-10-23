@@ -1,0 +1,36 @@
+<form name="contactForm">
+	<div class="form-group col-md-12 col-xs-12">
+		<label>Anrede</label>
+		<select data-ng-model="contact.gender" class="form-control">
+			<option value="M">Herr</option>
+			<option value="F">Frau</option>
+		</select>
+	</div>
+	<div class="form-group">
+		<div class="col-md-6 col-xs-12">
+			<label>Vorname</label>
+			<input type="text" data-ng-model="contact.firstName" placeholder="Max" class="form-control" required>
+		</div>
+		<div class="col-md-6 col-xs-12">
+			<label>Nachname</label>
+			<input type="text" data-ng-model="contact.lastName" placeholder="Mustermann" class="form-control" required>
+		</div>
+	</div>
+	
+	<div class="form-group col-md-12 col-xs-12">
+		<label>E-Mail</label>
+		<input type="email" data-ng-model="contact.email" placeholder="m.mustermann@example.com" class="form-control">
+	</div>
+	
+	<div class="form-group col-xs-12 col-md-12">
+		<label>Telefon</label>
+		<input type="text" data-ng-model="contact.phone" placeholder="+49 12345 56799" class="form-control">
+	</div>
+
+	<div class="pull-right">
+		<button type="button" class="btn btn-danger" data-ng-click="unfocusContact()">Abbrechen</button>
+		<button type="submit" class="btn btn-primary" data-ng-click="addContact()" data-ng-disabled="contactForm.$invalid">
+			&Uuml;bernehmen
+		</button>
+	</div>
+</form>

@@ -1,0 +1,25 @@
+td.tools {
+    text-align:right;
+    white-space:no-wrap;
+}
+
+td.tools span {
+    width:20px;
+    text-align:center;
+}
+
+td.tools a {
+	text-decoration:none;
+}
+
+#alert-panel {
+    display:block;
+    position:absolute;
+    width:100%;
+    margin-top:-20px
+}
+
+#alert-panel .alert {
+    padding:5px;
+    text-align:center;
+}
