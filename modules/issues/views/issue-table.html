@@ -12,12 +12,12 @@
 <tbody>
 	<tr data-ng-repeat="i in issues">
 		<td>#{{i.number}}</td>
-		<td>{{i.issueType}}</td>
+		<td>{{i.issuetype}}</td>
 		<td>{{i.state}}</td>
 		<td>{{i.assignedTo}}</td>
 		<td>{{i.title}}</td>
 		<td class="tools">
-		
+			<a href="#/issues/{{i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 		</td>
 	</tr>
 </tbody>

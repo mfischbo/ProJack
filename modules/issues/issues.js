@@ -15,6 +15,8 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 				reportedBy  : '', // the person who reported this issue 
 				state		: 'NEW', // NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
 				issuetype	: 'BUG', // BUG, FEATURE, CHANGE_REQUEST, SUPPORT
+				dateCreated : new Date().getTime(),
+				dateModified: new Date().getTime(),
 				notes		: [],
 				slices		: []
 			};
@@ -90,7 +92,9 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 				issue.feature = issue.feature._id;
 		
 			// get the next available numerical ticket number
-			var p = $http.get(ProJack.config.dbUrl + "/_design/issues/_view/count?group=false").success(function(data) {
+			// TODO: This kinda sucks! It'll be way cooler if we could set the 
+			// number in couch on insert. Check out how this would be done
+			$http.get(ProJack.config.dbUrl + "/_design/issues/_view/count?group=false").success(function(data) {
 				if (data.rows.length == 0) {
 					issue.number = 1;
 				} else {
@@ -100,8 +104,9 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 					.then(function(response) {
 						return response.data._id;
 					});
+			}).then(function(response) { 
+				return response; 
 			});
-			return p;
 		},
 		
 		updateIssue : function(issue) {
@@ -188,7 +193,7 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 	$scope.createIssue = function() {
 		service.createIssue($scope.issue).then(function(data) {
 			KT.alert("Das Issue wurde erfolgreich angelegt");
-			$location.path("/issues/" + data._id + "/edit");
+			$location.path("/issues");
 		});
 	};
 }]);
