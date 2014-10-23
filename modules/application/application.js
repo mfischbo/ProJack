@@ -43,6 +43,8 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 			templateUrl : './modules/issues/views/edit.html'
 		})
 		.otherwise({redirectTo : '/'});
+
 	
 	$httpProvider.defaults.useXDomain = true;
+	$httpProvider.defaults.withCredentials = true;
 }]);

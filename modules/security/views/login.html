@@ -1,0 +1,25 @@
+<form data-role="form" data-ng-submit="login()">
+<div class="panel panel-default">
+	<div class="panel-heading">Login</div>
+	<div class="panel-body">
+			<div class="control-group">
+				<label>E-Mail</label>
+				<input type="text" name="email" data-ng-model="username" class="form-control">
+			</div>
+			
+			<div class="control-group">
+				<label>Password</label>
+				<input type="password" name="password" data-ng-model="password" class="form-control">
+			</div>
+		
+			<br/>	
+			<div class="alert alert-warning alert-dismissable" data-ng-show="loginFailed">
+				<strong>Login Failed!</strong> Forgot your password?<br/>
+				<a href="#/recover">Click here</a>
+			</div>
+	</div>
+	<div class="panel-footer">
+		<button type="submit" class="btn btn-success btn-block">Login</button>
+	</div>
+</div>
+</form>
