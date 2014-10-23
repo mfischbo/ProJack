@@ -1,0 +1,24 @@
+<table class="table table-condensed">
+<thead>
+	<tr>
+		<th>#</th>
+		<th>Type</th>
+		<th>Status</th>
+		<th>Zugewiesen an</th>
+		<th>Zusammenfassung</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+	<tr data-ng-repeat="i in issues">
+		<td>#{{i.number}}</td>
+		<td>{{i.issueType}}</td>
+		<td>{{i.state}}</td>
+		<td>{{i.assignedTo}}</td>
+		<td>{{i.title}}</td>
+		<td class="tools">
+		
+		</td>
+	</tr>
+</tbody>
+</table>

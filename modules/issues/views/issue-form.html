@@ -1,0 +1,41 @@
+<form name="issueform">
+	<div class="form-group">
+		<label>Kunde</label>
+		<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers"></select>
+	</div>
+	
+	<div class="form-group">
+		<label>Milestone</label>
+		<select data-ng-model="issue.milestone" class="form-control" data-ng-options="m as m.version for m in milestones"></select>
+	</div>
+	
+	<div class="form-group" data-ng-if="issue.milestone.specification.features && issue.milestone.specification.features.length > 0">
+		<label>Feature</label>
+		<select data-ng-model="issue.feature" class="form-control" data-ng-options="f._id as f.title for f in issue.milestone.specification.features"></select>
+	</div>
+
+	<div class="form-group">
+		<label>Name</label>
+		<input type="text" data-ng-model="issue.title" class="form-control" placeholder="Zusammenfassung des Problems">
+	</div>	
+	
+	<div class="form-group">
+		<label>Beschreibung</label>	
+		<textarea rows="4" data-ng-model="issue.description" class="form-control"></textarea>
+	</div>
+	
+	<div class="form-group">
+		<label>Zugewiesen an</label>
+		<input type="text" data-ng-model="issue.assignedTo" class="form-control">
+	</div>
+	
+	<div class="form-group">
+		<label>Typ</label>
+		<select data-ng-model="issue.issuetype" class="form-control">
+			<option value="BUG">Bug</option>
+			<option value="FEATURE">Feature</option>
+			<option value="CHANGE_REQUEST">Change Request</option>
+			<option value="SUPPORT">Supportanfrage</option>
+		</select>
+	</div>
+</form>

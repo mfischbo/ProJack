@@ -1,1 +1,19 @@
-hello
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title">Neues Issue anlegen</h5>
+			</div>	
+			<div class="panel-body">
+				<div data-ng-include data-src="'./modules/issues/views/issue-form.html'"></div>
+			</div>
+			
+			<div class="panel-footer">
+				<div class="pull-right">
+					<button class="btn btn-success" data-ng-click="createIssue()">Speichern</button>
+				</div>	
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>

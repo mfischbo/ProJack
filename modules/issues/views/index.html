@@ -1,1 +1,50 @@
-Hello
+<div class="row">
+	<div class="col-md-6 col-xs-6">
+	</div>
+	<div class="col-md-6 col-xs-6">
+		<div class="pull-right">
+			<a href="#/issues/create" class="btn btn-primary btn-xs"><span class="fa fa-plus"> Issue</span></a>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 col-xs-12">&nbsp;</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-2 col-xs-2">
+						<h5 class="panel-title">Filter</h5>
+					</div>
+					
+					<div class="col-md-10 col-xs-11">
+						<div class="form-inline pull-right">
+							<label>Kunde</label>
+							<select data-ng-model="criteria.customer" class="form-control input-sm" data-ng-options="c._id as c.name for c in customers"></select>
+						
+							<label>Milestone</label>
+							<select data-ng-model="criteria.milestone" class="form-control input-sm" data-ng-options="m._id as m.version for m in milestones"></select>
+							
+							<label>Status bis</label>
+							<select data-ng-model="criteria.status" class="form-control input-sm">
+								<option value="NEW">Neu</option>
+								<option value="ASSIGNED">Zugewiesen</option>
+								<option value="FEEDBACK">Feedback</option>
+								<option value="RESOLVED">Resolved</option>
+								<option value="CLOSED">Geschlossen</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div data-ng-include data-src="'./modules/issues/views/issue-table.html'"></div>
+			</div>
+		</div>	
+	</div>
+</div>

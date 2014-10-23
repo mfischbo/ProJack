@@ -46,7 +46,7 @@ ProJack.customers.service("CustomerService", ['$http', 'KT', function($http, KT)
 		
 		newCustomer: function() {
 			return {
-				_type : "customer",
+				type : "customer",
 				dateCreated : new Date().getTime(),
 				dateModified : new Date().getTime(),
 				name : "",

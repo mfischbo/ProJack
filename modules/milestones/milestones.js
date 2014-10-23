@@ -9,7 +9,7 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, K
 		 */
 		newMilestone: function() {
 			return {
-				_type 				: 'milestone',
+				type 				: 'milestone',
 				customer 			: '',
 				dateCreated 		: new Date().getTime(),
 				dateModified 		: new Date().getTime(),
@@ -78,7 +78,7 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, K
 		 * Returns a promise returning all milestones for the given customer
 		 */
 		getMilestonesByCustomer : function(customer) {
-			var p = $http.get(ProJack.config.dbUrl + '/_design/milestones/_view/byCustomer?key=\"'+customer_.id+'\"')
+			var p = $http.get(ProJack.config.dbUrl + '/_design/milestones/_view/byCustomer?key="'+customer._id+'"')
 				.then(function(response) {
 					var retval = [];
 					for (var i in response.data.rows) {
@@ -145,8 +145,8 @@ ProJack.milestones.controller('MileStonesController', ['$http', '$scope', 'Miles
 	});
 }]);
 
-ProJack.milestones.controller('MileStonesCreateController', ['$http', '$scope', '$location', 'MilestoneService', 'CustomerService',
-	function($http, $scope, $location, service, customerService) {
+ProJack.milestones.controller('MileStonesCreateController', ['$http', '$scope', '$location', 'KT', 'MilestoneService', 'CustomerService',
+	function($http, $scope, $location, KT, service, customerService) {
 
 	$scope.milestone = service.newMilestone();
 
