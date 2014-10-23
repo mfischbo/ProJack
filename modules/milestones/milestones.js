@@ -1,4 +1,4 @@
-ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule']);
+ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule']);
 
 ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, KT) {
 	
@@ -162,8 +162,8 @@ ProJack.milestones.controller('MileStonesCreateController', ['$http', '$scope', 
 	};
 }]);
 
-ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$routeParams', 'KT', 'MilestoneService', 'CustomerService', 
-	function($http, $scope, $routeParams, KT, service, customerService) {
+ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$routeParams', 'KT', 'MilestoneService', 'CustomerService', 'IssueService', 
+	function($http, $scope, $routeParams, KT, service, customerService, issueService) {
 
 	$scope.tab = 'MILESTONE';
 	
