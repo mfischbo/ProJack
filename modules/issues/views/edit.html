@@ -1,1 +1,62 @@
-hello
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+		<h3># {{::issue.number}} bearbeiten</h3>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Time spent {{timeOnIssue}} <span data-ng-if="feature">- Time for Feature {{feature.estimatedEffort}}</span>
+			</div>
+	
+			<div class="panel-body">
+				<div data-ng-include data-src="'./modules/issues/views/issue-details.html'"></div>	
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-6 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title">Ticket Status</h5>
+			</div>
+			
+			<div class="panel-body">
+				<div data-ng-include data-src="'./modules/issues/views/issue-state.html'"></div>	
+			</div>
+			
+			<div class="panel-footer">
+				<div class="pull-right">
+					<button class="btn btn-success" data-ng-click="updateIssue()">Speichern</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>	
+		</div>	
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12 col-xs-12" data-ng-repeat="n in issue.notes | orderBy:'dateCreated' track by $index">
+		<div class="col-md-2 col-xs-12">
+			<b data-ng-if="n.userCreated">
+				{{n.userCreated}} <small>{{n._id}}</small>
+			</b>
+			<i data-ng-if="!n.userCreated || n.userCreated.length == 0">
+				Anonymus
+			</i>
+			<small>{{n.dateCreated|date:'dd.MM.yyyy HH:mm'}}</small> <br/>
+			<span data-ng-if="n.timeSpent.hours != 0 && timeSpentMinutes != 0"><b>Time Spent</b> {{n.timeSpentHours}}:{{n.timeSpentMinutes}}</span>
+		</div>	
+		<div class="col-md-10 col-xs-12">
+			<span data-ng-if="n.text">{{n.text}}</span>
+			<span data-ng-if="!n.text || n.text.length == 0">&nbsp;</span>
+			<div class="pull-right">
+				<button type="button" class="btn btn-primary btn-xs" data-ng-click="focusNote(n)"><span class="fa fa-pencil"></span></button>
+				<button type="button" class="btn btn-danger btn-xs" data-ng-click="deleteNote(n)"><span class="fa fa-trash-o"></span></button>
+			</div>
+		</div>
+		<div class="col-md-12"><br/><hr/></div>
+	</div>
+</div>

@@ -17,16 +17,20 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 				issuetype	: 'BUG', // BUG, FEATURE, CHANGE_REQUEST, SUPPORT
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
-				notes		: [],
-				slices		: []
+				notes		: []
 			};
 		},
 		
-		newSlice : function() {
+		newNote : function() {
 			return {
-				startedAt 	: new Date().getTime(),
-				endedAt		: undefined,
-				user		: ''
+				_id				: KT.UUID(),
+				text 			: '',
+				timeSpentHours 	: 0,
+				timeSpentMinutes: 0,
+				dateCreated 	: new Date().getTime(),
+				dateModified	: new Date().getTime(),
+				userCreated 	: '',
+				userModified	: ''
 			};
 		},
 		
@@ -75,6 +79,27 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 			});
 		},
 		
+		calculateTimeOnIssue : function(issue) {
+			// calculate the overall time on this issue
+			var sumHours = 0;
+			var sumMins  = 0;
+			for (var i in issue.notes) {
+				sumHours += issue.notes[i].timeSpentHours;
+				sumMins  += issue.notes[i].timeSpentMinutes;
+			}
+			sumHours += Math.floor(sumMins / 60);
+			sumMins   = sumMins%60;
+		
+			var retval = "";
+			if (sumHours < 10)
+				retval = "0";
+			retval += sumHours + ":";
+			if (sumMins < 10)
+				retval += "0";
+			retval += sumMins;
+			return retval;
+		},
+		
 		saveId : function (id, low) {
 			if (!id || id == "") {
 				if (low) return ProJack.config.lowId;
@@ -113,7 +138,7 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
 				.then(function(response) {
 					return response.data;
-				})
+				});
 		},
 		
 		deleteIssue : function(issue) {
@@ -198,11 +223,65 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 	};
 }]);
 
-ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'IssueService', 'CustomerService', 
-                                                  function($scope, $routeParams, service, customerService) {
+ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
+                                                  function($scope, $routeParams, KT, service, customerService, milestoneService) {
+	
+	$scope.time = { spent : '' };
 	
 	service.getIssueById($routeParams.id).then(function(data) {
 		$scope.issue = data;
+		$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
+	
+		customerService.getCustomerById($scope.issue.customer).then(function(data) {
+			$scope.customer = data;
+		});
+		
+		milestoneService.getMilestoneById($scope.issue.milestone).then(function(data) {
+			$scope.milestone = data;
+			if ($scope.issue.feature && $scope.issue.feature != "") {
+				$scope.feature = KT.find("_id", $scope.issue.feature, $scope.milestone.specification.features);
+			}
+		});
 	});
 	
+	$scope.addNote = function() {
+		$scope.note = service.newNote();
+	};
+	
+	$scope.unfocusNote = function() {
+		$scope.note = undefined;
+		$scope.time.spent = "";
+	};
+	
+	$scope.focusNote = function(n) {
+		$scope.note = n;
+		$scope.time.spent = n.timeSpentHours + ":" + n.timeSpentMinutes;
+	}
+	
+	$scope.deleteNote = function(n) {
+		KT.remove('_id', n._id, $scope.issue.notes);
+		$scope.updateIssue();
+	};
+	
+	$scope.updateIssue = function() {
+		if ($scope.note) {
+			KT.remove('_id', $scope.note._id, $scope.issue.notes);
+			$scope.issue.notes.push($scope.note);
+		}
+		
+		if ($scope.time && $scope.time.spent.length > 0) {
+			var tmp = $scope.time.spent.split(":");
+			$scope.note.timeSpentHours = parseInt(tmp[0]);
+			$scope.note.timeSpentMinutes = parseInt(tmp[1]);
+		}
+		
+		$scope.note = undefined;
+		$scope.time.spent = "";
+		
+		service.updateIssue($scope.issue).then(function(data) {
+			$scope.issue._rev = data.rev;
+			$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
+			KT.alert("Notiz gespeichert");
+		});
+	};
 }]);
