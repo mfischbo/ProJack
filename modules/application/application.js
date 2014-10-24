@@ -1,10 +1,22 @@
-var app = angular.module("ProJack", ['ngRoute', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule']);
+var app = angular.module("ProJack", ['ngRoute', 'SecurityModule', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule']);
 app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
 		.when('/', {
 			controller : 'DashBoardController',
 			templateUrl : './modules/dashboard/views/index.html'
+		})
+		.when('/admin/users', {
+			controller : 'UserIndexController',
+			templateUrl : './modules/security/views/user-index.html'
+		})
+		.when('/admin/users/:id/edit', {
+			controller : 'UserEditController',
+			templateUrl : './modules/security/views/user-edit.html'
+		})
+		.when("/admin/users/create", {
+			controller : 'UserCreateController',
+			templateUrl : './modules/security/views/user-create.html'
 		})
 		.when('/milestones', {
 			controller : 'MileStonesController',
@@ -47,4 +59,47 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 	
 	$httpProvider.defaults.useXDomain = true;
 	$httpProvider.defaults.withCredentials = true;
+	
+	$httpProvider.interceptors.push(function($q) {
+        return {
+            'request' : function(config) {
+                if (config.method == "PATCH")
+                    config.headers['Content-Type'] = "application/json";
+
+                return config;
+            },
+
+            'requestError' : function(rejection) {
+                return $q.reject(rejection);
+            },
+
+            'response'      : function(response) {
+                return response;
+            },
+
+            'responseError' : function(rejection) {
+                if (rejection.status == 401 || rejection.status == 503)
+                    window.location.href = "./login";
+                
+                /*
+                if (rejection.status == 405 || rejection.status == 415)
+                    KT.alert("Leider ist ein Fehler aufgetreten", 'error');
+
+                if (rejection.status == 403) {
+                    var m = rejection.config.method;
+                    if (m == "POST" || m == "PATCH" || m == "PUT" || m == "DELETE")
+                        KT.alert("Sie haben nicht die notwendigen Rechte um diese Aktion durchzuf&uuml;hren", 'error');
+                }
+
+                if (rejection.status == 500) {
+                    KT.alert("Ooops! Da ist leider etwas schief gelaufen", 'error');
+                }
+
+                // disable spinner
+                KT.hideSpinner();
+                */
+                return $q.reject(rejection);
+            }
+        };
+	});
 }]);

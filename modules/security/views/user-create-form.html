@@ -1,0 +1,26 @@
+<form name="userForm">
+	<div class="form-group">
+		<label>Login</label>
+		<input type="text" data-ng-model="user.name" class="form-control">
+	</div>
+	<div class="form-group">
+		<label>Password</label>
+		<input type="password" data-ng-model="user.password" class="form-control" placeholder="Password"><br/>
+		<input type="password" data-ng-model="passwordConfirmation" class="form-control" placeholder="Nochmal bitte...">
+	</div>
+	
+	<div class="form-group">
+		<label>Vorname</label>	
+		<input type="text" data-ng-model="user.profile.firstName" class="form-control" placeholder="John">
+	</div>
+	
+	<div class="form-group">
+		<label>Nachname</label>	
+		<input type="text" data-ng-model="user.profile.lastName" class="form-control" placeholder="Doe">
+	</div>
+	
+	<div class="form-group">
+		<label>E-Mail</label>
+		<input type="email" data-ng-model="user.profile.email" class="form-control" placeholder="john.doe@example.com">
+	</div>
+</form>
