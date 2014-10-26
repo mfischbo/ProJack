@@ -1,5 +1,10 @@
 <form name="featureform">
 	<div class="form-group">
+		<label class="checkbox-inline">
+			<input type="checkbox" data-ng-model="focusedFeature.createIssue" data-ng-disabled="focusedFeature.createIssue == false"> autom. Ticket anlegen
+		</label>
+	</div>
+	<div class="form-group">
 		<label>Name</label>
 		<input type="text" data-ng-model="focusedFeature.title" class="form-control">
 	</div>

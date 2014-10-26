@@ -1,6 +1,6 @@
 ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule']);
 
-ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, KT) {
+ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', function($http, KT, iService) {
 	
 	return {
 		
@@ -42,6 +42,7 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, K
 				result 			: '',
 				internalNote 	: '',
 				estimatedEffort : '00:00',
+				createIssue     : true,
 				questions 		: []
 			};
 		},
@@ -107,6 +108,8 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, K
 		createMilestone : function(milestone) {
 			var p = $http.post(ProJack.config.dbUrl, milestone)
 				.then(function(response) {
+					
+
 					return response.data;
 				});
 			return p;
@@ -117,6 +120,22 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', function($http, K
 		 */
 		updateMilestone : function(milestone) {
 			milestone.dateModified = new Date().getTime();
+			
+			// add a new issue if createIssue is true
+			for (var k in milestone.specification.features) {
+				var f = milestone.specification.features[k];
+				if (f.createIssue && f.createIssue == true) {
+					var i = iService.newIssue();
+					i.title = f.title;
+					i.description = "Anforderung\n" + f.requirement + "\n\nUmsetzung:\n" + f.implementation;
+					i.milestone = milestone._id;
+					i.feature = f._id;
+					i.customer = milestone.customer;
+					f.createIssue = false;
+					iService.createIssue(i);
+				}
+			}
+			
 			var p = $http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
 				.then(function(response) {
 					return response.data;
