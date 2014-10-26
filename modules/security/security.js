@@ -93,7 +93,7 @@ ProJack.security.service("SecurityService", ['$http', function($http) {
 		logout : function() {
 			return $http({
 				method : 'DELETE',
-				url    : ProJack.config.srvUrl + "_session"
+				url    : ProJack.config.srvUrl + "/_session"
 			}).then(function(response) {
 				return response.data;
 			});
@@ -101,6 +101,26 @@ ProJack.security.service("SecurityService", ['$http', function($http) {
 	};
 }]);
 
+ProJack.security.directive("userSelector", ['SecurityService', 'KT', function(service, KT) {
+
+	return {
+        restrict:   "A",
+        scope : {
+            'selectAs': '=selectAs',
+        },
+        template: '<div class="input-group">'
+            + '<select data-ng-model="selectAs" data-ng-options="u.id as u.login for u in users" class="form-control input-sm">'
+            + '<option value="" disabled>User</option>'
+            + '</select>'
+            + '</div>',
+        link:   function(scope, element, attrs) {
+
+        	service.getAllUserNames().then(function(data) {
+        		scope.users = data;
+        	});
+        } 
+    };
+}]);
 
 ProJack.security.controller("UserIndexController", ['$scope', 'SecurityService', function($scope, service) {
 	

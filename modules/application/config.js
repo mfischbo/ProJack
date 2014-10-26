@@ -12,5 +12,7 @@ ProJack.config = {
 		srvUrl : "/cdb",
 		dbUrl :  "/cdb/projack",
 		lowId : "00000000000000000000000000000000",
-		highId: "ffffffffffffffffffffffffffffffff"
+		highId: "ffffffffffffffffffffffffffffffff",
+		sessionKey : "__ProJack_Session",
+		appUrl : "/projack"
 }
