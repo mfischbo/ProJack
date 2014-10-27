@@ -1,5 +1,5 @@
-ProJack.issues = angular.module("IssuesModule", ['CustomersModule', 'MileStonesModule', 'Utils']);
-ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
+ProJack.issues = angular.module("IssuesModule", ['CustomersModule', 'MileStonesModule','SecurityModule', 'Utils', 'angularFileUpload']);
+ProJack.issues.service("IssueService", ['$http', '$q', 'KT', function ($http, $q, KT) {
 	
 	return {
 		newIssue : function() {
@@ -37,6 +37,17 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 		getIssueById : function(id) {
 			return $http.get(ProJack.config.dbUrl + "/" + id)
 				.then(function(response) {
+					var issue = response.data;
+					if (issue._attachments) {
+						issue.attachments = [];
+						for (var i in issue._attachments) {
+							issue.attachments.push({
+								filename : i,
+								type : issue._attachments[i].content_type, 
+								length : issue._attachments[i].length
+							});
+						}
+					}
 					return response.data;
 				});
 		},
@@ -116,6 +127,8 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 			if (typeof issue.feature == "object")
 				issue.feature = issue.feature._id;
 		
+			var d = $q.defer();
+			
 			// get the next available numerical ticket number
 			// TODO: This kinda sucks! It'll be way cooler if we could set the 
 			// number in couch on insert. Check out how this would be done
@@ -125,13 +138,14 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 				} else {
 					issue.number = (parseInt(data.rows[0].value) + 1);
 				}
-				return $http.post(ProJack.config.dbUrl, issue)
-					.then(function(response) {
-						return response.data._id;
+				$http.post(ProJack.config.dbUrl, issue)
+					.success(function(response) {
+						d.resolve(response.data);
+					}).error(function() {
+						d.reject();
 					});
-			}).then(function(response) { 
-				return response; 
 			});
+			return d.promise;
 		},
 		
 		updateIssue : function(issue) {
@@ -147,6 +161,27 @@ ProJack.issues.service("IssueService", ['$http', 'KT', function ($http, KT) {
 				method 	: 'DELETE',
 				url 	: ProJack.config.dbUrl + "/" + issue._id + "?rev=" + issue._rev 
 			});
+		},
+		
+		addAttachment : function(issue, file) {
+			var deferred = $q.defer();
+			var fr = new FileReader();
+			fr.readAsDataURL(file);
+			fr.onload = function(e) {
+				if (!issue._attachments)
+					issue._attachments = {};
+				issue._attachments[file.name] = {};
+				issue._attachments[file.name]["content_type"] = file.type;
+				issue._attachments[file.name]['data'] = fr.result.split(",")[1];
+				$http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
+				.success(function(response) {
+					deferred.resolve({filename : file.name, type : file.type, length : file.size || 0 });
+				})
+				.error(function(response) {
+					deferred.reject(response.data);
+				});
+			}
+			return deferred.promise;
 		}
 	};
 }]);
@@ -224,8 +259,8 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 	};
 }]);
 
-ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
-                                                  function($scope, $routeParams, KT, service, customerService, milestoneService) {
+ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', '$upload',
+                                                  function($scope, $routeParams, KT, service, customerService, milestoneService, $upload) {
 	
 	$scope.time = { spent : '' };
 	
@@ -262,6 +297,18 @@ ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT'
 	$scope.deleteNote = function(n) {
 		KT.remove('_id', n._id, $scope.issue.notes);
 		$scope.updateIssue();
+	};
+	
+	$scope.onAttachmentSelect = function($files) {
+		var p = service.addAttachment($scope.issue, $files[0]);
+		p.then(function(data) {
+			$scope.issue.attachments.push(data);
+			KT.alert("Upload erfolgreich");
+		});
+	};
+	
+	$scope.downloadAttachment = function(a) {
+		window.open(ProJack.config.dbUrl + "/" + $scope.issue._id + "/" + a.filename, '_blank');
 	};
 	
 	$scope.updateIssue = function() {

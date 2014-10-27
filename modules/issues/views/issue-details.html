@@ -27,7 +27,10 @@
 		<b>Typ</b>	
 	</div>
 	<div class="col-md-9 col-xs-6">
-		{{issue.issuetype}}
+		<span data-ng-if="issue.issuetype == 'BUG'">Bug</span>
+		<span data-ng-if="issue.issuetype == 'CHANGE_REQUEST'">Change Request</span>
+		<span data-ng-if="issue.issuetype == 'FEATURE'">Feature</span>
+		<span data-ng-if="issue.issuetype == 'SUPPORT'">Support</span>	
 	</div>
 </div>
 <div class="row">
@@ -35,7 +38,11 @@
 		<b>Status</b>	
 	</div>
 	<div class="col-md-9 col-xs-6">
-		{{::issue.state}}
+		<span data-ng-if="issue.state == 'NEW'">Neu</span>	
+		<span data-ng-if="issue.state == 'FEEDBACK'">Feedback</span>	
+		<span data-ng-if="issue.state == 'ASSIGNED'">Zugewiesen</span>	
+		<span data-ng-if="issue.state == 'RESOLVED'">Resolved</span>	
+		<span data-ng-if="issue.state == 'CLOSED'">Geschlossen</span>
 	</div>
 </div>
 <div class="row">
@@ -43,7 +50,7 @@
 		<b>Zugewiesen an</b>	
 	</div>
 	<div class="col-md-9 col-xs-6">
-		{{::issue.assignedTo}}
+		{{issue.assignedTo.split(":").pop()}}
 	</div>
 </div>
 <div class="row">

@@ -5,7 +5,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-6 col-xs-12">
+	<div class="col-md-8 col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				Time spent {{timeOnIssue}} <span data-ng-if="feature">- Time for Feature {{feature.estimatedEffort}}</span>
@@ -17,7 +17,7 @@
 		</div>
 	</div>
 	
-	<div class="col-md-6 col-xs-12">
+	<div class="col-md-4 col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h5 class="panel-title">Ticket Status</h5>
@@ -38,7 +38,12 @@
 </div>
 
 <div class="row">
-	<div class="col-md-12 col-xs-12" data-ng-repeat="n in issue.notes | orderBy:'dateCreated' track by $index">
+	<div class="col-md-8 col-xs-12" data-ng-if="issue.notes.length == 0">
+		<div class="col-md-12 col-xs-12">
+			<i>Keine Notizen vorhanden</i>
+		</div>
+	</div>
+	<div class="col-md-8 col-xs-12" data-ng-repeat="n in issue.notes | orderBy:'dateCreated' track by $index">
 		<div class="col-md-2 col-xs-12">
 			<b data-ng-if="n.userCreated">
 				{{n.userCreated}} <small>{{n._id}}</small>
@@ -59,4 +64,17 @@
 		</div>
 		<div class="col-md-12"><br/><hr/></div>
 	</div>
+
+	<div class="col-md-4 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title">Dateianhänge</h5>
+			</div>
+			
+			<div class="panel-body">
+				<div data-ng-include data-src="'./modules/issues/views/issue-attachments.html'"></div>
+			</div>
+		</div>
+	</div>	
+	
 </div>

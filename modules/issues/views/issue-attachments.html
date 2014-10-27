@@ -1,0 +1,11 @@
+<div class="form-group">
+	<label class="Upload"></label>
+	<input type="file" data-ng-file-select="onAttachmentSelect($files)" class="form-control">
+</div>
+<hr/>
+<div data-ng-repeat="a in issue.attachments">
+	{{a.type}} {{(a.length/1024).toFixed(2)}} kB
+	<a href="javascript:void('');" data-ng-click="downloadAttachment(a)">
+		{{a.filename}} 
+	</a>
+</div>
