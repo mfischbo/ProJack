@@ -131,6 +131,7 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', f
 					i.milestone = milestone._id;
 					i.feature = f._id;
 					i.customer = milestone.customer;
+					i.issuetype = "FEATURE";
 					f.createIssue = false;
 					iService.createIssue(i);
 				}
