@@ -45,10 +45,10 @@
 	</div>
 	<div class="col-md-8 col-xs-12" data-ng-repeat="n in issue.notes | orderBy:'dateCreated' track by $index">
 		<div class="col-md-2 col-xs-12">
-			<b data-ng-if="n.userCreated">
-				{{n.userCreated}} <small>{{n._id}}</small>
+			<b data-ng-if="n.userModified">
+				{{n.userModified}}
 			</b>
-			<i data-ng-if="!n.userCreated || n.userCreated.length == 0">
+			<i data-ng-if="!n.userModified || n.userModified.length == 0">
 				Anonymus
 			</i>
 			<small>{{n.dateCreated|date:'dd.MM.yyyy HH:mm'}}</small> <br/>

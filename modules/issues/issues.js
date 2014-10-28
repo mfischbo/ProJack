@@ -12,7 +12,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				feature		: '', // id of the feature this issue is related to
 				customer	: '', // id of the customer this issue is related to
 				assignedTo  : '', // the user the issue is assigned to
-				reportedBy  : '', // the person who reported this issue 
+				reportedBy  : secService.getCurrentUserName(),
 				state		: 'NEW', // NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
 				issuetype	: 'BUG', // BUG, FEATURE, CHANGE_REQUEST, SUPPORT
 				dateCreated : new Date().getTime(),
@@ -29,8 +29,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				timeSpentMinutes: 0,
 				dateCreated 	: new Date().getTime(),
 				dateModified	: new Date().getTime(),
-				userCreated 	: '',
-				userModified	: ''
+				userCreated 	: secService.getCurrentUserName(),
+				userModified	: secService.getCurrentUserName()
 			};
 		},
 		
@@ -266,8 +266,8 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 	};
 }]);
 
-ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', '$upload',
-                                                  function($scope, $routeParams, KT, service, customerService, milestoneService, $upload) {
+ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload',
+                                                  function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload) {
 	
 	$scope.time = { spent : '' };
 	
@@ -298,6 +298,7 @@ ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT'
 	
 	$scope.focusNote = function(n) {
 		$scope.note = n;
+		$scope.note.userModified = secService.getCurrentUserName();
 		$scope.time.spent = n.timeSpentHours + ":" + n.timeSpentMinutes;
 	}
 	
