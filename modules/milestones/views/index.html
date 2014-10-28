@@ -23,7 +23,7 @@
 				</thead>
 				<tbody>
 					<tr data-ng-repeat="m in milestones">
-						<td>{{m.name}}</td>
+						<td><a href="#/milestones/{{m._id}}/edit">{{m.name}}</a></td>
 						<td>{{m.customer.name}}</td>
 						<td>{{m.version}}</td>
 						<td>

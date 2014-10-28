@@ -311,8 +311,11 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 	});
 	
 	$scope.updateMilestone = function() {
-		service.updateMilestone($scope.milestone).then(function() {
+		service.updateMilestone($scope.milestone).then(function(data) {
 			KT.alert("Alle Änderungen gespeichert");
+			service.getAggregation($scope.milestone).then(function(aggr) {
+				$scope.aggregation = aggr;
+			});
 		});
 	};
 	

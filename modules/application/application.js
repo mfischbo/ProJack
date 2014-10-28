@@ -20,6 +20,10 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 			controller : 'UserCreateController',
 			templateUrl : './modules/security/views/user-create.html'
 		})
+		.when("/admin/users/self", {
+			controller : 'UserProfileController',
+			templateUrl : './modules/security/views/user-profile.html'
+		})
 	
 		
 		// Template Administration

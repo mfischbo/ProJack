@@ -150,3 +150,7 @@ ProJack.security.controller("UserCreateController", ['$scope', 'SecurityService'
 		});
 	};
 }]);
+
+ProJack.security.controller("UserProfileController", ['$scope', 'SecurityService', function($scope, service) {
+	
+}]);

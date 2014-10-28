@@ -17,6 +17,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issuetype	: 'BUG', // BUG, FEATURE, CHANGE_REQUEST, SUPPORT
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
+				estimatedTime: 0,
 				notes		: []
 			};
 		},
