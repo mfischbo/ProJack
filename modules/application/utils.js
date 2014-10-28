@@ -113,11 +113,11 @@ ProJack.utils.service("KT", function() {
 			}
 	};
 
-	x.showSpinner = function() {
+	x.enableSpinner = function() {
 		$("#spinner").show();
 	}
 
-	x.hideSpinner = function() {
+	x.disableSpinner = function() {
 		$("#spinner").hide();
 	}
 

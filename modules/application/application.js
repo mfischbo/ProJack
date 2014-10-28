@@ -1,4 +1,4 @@
-var app = angular.module("ProJack", ['ngRoute', 'SecurityModule', 'TemplateModule', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule']);
+var app = angular.module("ProJack", ['ngRoute', 'SecurityModule', 'TemplateModule', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule', 'MailModule']);
 app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
@@ -72,6 +72,12 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 		.when('/issues/:id/edit', {
 			controller : 'IssueEditController',
 			templateUrl : './modules/issues/views/edit.html'
+		})
+		
+		// mails
+		.when("/mails", {
+			controller : 'MailboxIndexController',
+			templateUrl : './modules/mails/views/index.html'
 		})
 		.otherwise({redirectTo : '/'});
 
