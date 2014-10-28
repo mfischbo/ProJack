@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-ng-app="Login">
 	<head>
-		<title>Busta Mail v.0.1</title>
+		<title>ProJack - Project Management done right</title>
 		<link rel="stylesheet" type="text/css" href="./resources/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="./resources/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="./resources/css/style.css">

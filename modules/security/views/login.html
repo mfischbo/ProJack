@@ -1,13 +1,16 @@
 <form data-role="form" data-ng-submit="login()">
 <div class="panel panel-default">
-	<div class="panel-heading">Login</div>
+	<div class="panel-heading">
+		<div class="panel-title" class="pull-left">ProJack - Login</div>
+		<img src="./resources/images/logo-small.png" class="pull-right" style="margin-top:-25px;">
+	</div>
 	<div class="panel-body">
-			<div class="control-group">
+			<div class="form-group">
 				<label>E-Mail</label>
 				<input type="text" name="email" data-ng-model="username" class="form-control">
 			</div>
 			
-			<div class="control-group">
+			<div class="form-group">
 				<label>Password</label>
 				<input type="password" name="password" data-ng-model="password" class="form-control">
 			</div>
