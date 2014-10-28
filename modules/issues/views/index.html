@@ -18,11 +18,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<div class="row">
-					<div class="col-md-2 col-xs-2">
-						<h5 class="panel-title">Filter</h5>
-					</div>
-					
-					<div class="col-md-10 col-xs-11">
+					<div class="col-md-12 col-xs-12">
 						<div class="form-inline pull-right">
 							<label>Typ</label>
 							<select data-ng-model="criteria.type" class="form-control input-sm">
@@ -31,20 +27,20 @@
 								<option value="1">Change Requests</option>
 								<option value="2">Features</option>
 								<option value="3">Support</option>
-							</select>
+							</select>&nbsp;&nbsp;
 							
 							<label>Zuweisung</label>
 							<select data-ng-model="criteria.selection" class="form-control input-sm">
 								<option value="0">Alle</option>
 								<option value="1">Mir zugewiesen</option>
 								<option value="2">Nicht zugewiesen</option>
-							</select>
+							</select>&nbsp;&nbsp;
 							
 							<label>Kunde</label>
-							<select data-ng-model="criteria.customer" class="form-control input-sm" data-ng-options="c._id as c.name for c in customers"></select>
+							<select data-ng-model="criteria.customer" class="form-control input-sm" data-ng-options="c._id as c.name for c in customers"></select>&nbsp;&nbsp;
 						
 							<label>Milestone</label>
-							<select data-ng-model="criteria.milestone" class="form-control input-sm" data-ng-options="m._id as m.version for m in milestones"></select>
+							<select data-ng-model="criteria.milestone" class="form-control input-sm" data-ng-options="m._id as m.version for m in milestones"></select>&nbsp;&nbsp;
 							
 							<label>Status bis</label>
 							<select data-ng-model="criteria.status" class="form-control input-sm">
