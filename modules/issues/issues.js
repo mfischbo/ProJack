@@ -82,6 +82,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				status = "99";
 				
 			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search?";
+			
+			if (criteria.type !== '') url += "type=" + criteria.type;
+			
 			if (criteria.selection == 1) url += "uid=org.couchdb.user:" + secService.getCurrentUserName();
 			if (criteria.selection == 2) url += "uid=";
 			

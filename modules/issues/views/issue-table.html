@@ -20,10 +20,10 @@
 		<td>#{{i.number}}</td>
 		<td>{{i.dateModified|date:'dd.MM.yyyy HH:mm'}}</td>
 		<td>
-			<span data-ng-if="i.issuetype == 'BUG'">Bug</span>
-			<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'">Change Request</span>
-			<span data-ng-if="i.issuetype == 'FEATURE'">Feature</span>
-			<span data-ng-if="i.issuetype == 'SUPPORT'">Support</span>
+			<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
+			<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
+			<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
+			<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>
 		</td>
 		<td>
 			<span data-ng-if="i.state == 'NEW'">Neu</span>	

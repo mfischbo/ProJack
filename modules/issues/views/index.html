@@ -24,7 +24,16 @@
 					
 					<div class="col-md-10 col-xs-11">
 						<div class="form-inline pull-right">
-							<label>Anzeige</label>
+							<label>Typ</label>
+							<select data-ng-model="criteria.type" class="form-control input-sm">
+								<option value="">Alle</option>
+								<option value="0">Bug</option>
+								<option value="1">Change Requests</option>
+								<option value="2">Features</option>
+								<option value="3">Support</option>
+							</select>
+							
+							<label>Zuweisung</label>
 							<select data-ng-model="criteria.selection" class="form-control input-sm">
 								<option value="0">Alle</option>
 								<option value="1">Mir zugewiesen</option>
