@@ -12,6 +12,9 @@
 		<label>Autor</label>	
 		<input type="text" data-ng-model="milestone.specification.authors[$index]" class="form-control" placeholder="Max Mustermann">
 	</div>
-	
-	<button class="btn btn-primary btn-xs pull-right" data-ng-click="addAuthor()"><span class="fa fa-plus"> Autor</span></button>
+
+	<div class="pull-right">
+		<button class="btn btn-primary btn-xs" data-ng-click="addAuthor()"><span class="fa fa-plus"> Autor</span></button>
+	</div>	
+	<div class="clearfix"></div>
 </form>

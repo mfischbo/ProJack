@@ -1,4 +1,4 @@
-ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule']);
+ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule', 'TemplateModule']);
 
 ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', function($http, KT, iService) {
 	
@@ -96,7 +96,11 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', f
 		getMilestoneById : function(id) {
 			var p = $http.get(ProJack.config.dbUrl + "/" + id)
 				.then(function(response) {
-					return response.data;
+					var retval = response.data;
+					retval.attachments = [];
+					for (var i in retval._attachments) 
+						retval.attachments.push({ name : i, type : retval._attachments[i]['content_type'], size : retval._attachments[i].length });
+					return retval;
 				});
 			return p;
 		},
@@ -153,6 +157,42 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', f
 				url    : ProJack.config.dbUrl + "/" + milestone._id + "?rev=" + milestone._rev
 			});
 			return p;
+		},
+	
+		addAttachment : function(milestone, file) {
+			if (!milestone._attachments)
+				milestone._attachments = {};
+			
+			milestone._attachments[file.name] = {};
+			milestone._attachments[file.name]['content_type'] = file.type;
+			milestone._attachments[file.name]['data'] = file.data;
+			return $http.post(ProJack.config.dbUrl, milestone).then(function(response) {
+				return response.data;
+			});
+		},
+		
+		printMilestone : function(milestone, template) {
+			var that = this;
+			$http({ 
+				method : 'GET',
+				url    : ProJack.config.dbUrl + "/" + template._id + "?attachments=true",
+				headers : {'Accept' : 'application/json'}
+			
+			}).then(function(response) {
+				var name = undefined;
+				for (var i in response.data._attachments) {
+					name = i;
+					break;
+				}
+				var post = {
+					template : response.data._attachments[i].data,
+					model    : JSON.stringify(milestone),
+					filename : milestone.name + ".pdf"
+				}
+				$http.post(ProJack.config.serviceUrl + "/reports", post).success(function(data) {
+					that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data });
+				});
+			});
 		}
 	};
 }]);
@@ -186,6 +226,7 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 	function($http, $scope, $routeParams, KT, service, customerService, issueService) {
 
 	$scope.tab = 'MILESTONE';
+	$scope.template = { _id : undefined };
 	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
@@ -237,5 +278,13 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 	$scope.addFeature = function() {
 		$scope.focusedFeature = service.newFeature();
 		$scope.milestone.specification.features.push($scope.focusedFeature);
+	};
+	
+	$scope.printMilestone = function() {
+		service.printMilestone($scope.milestone, $scope.template);
+	};
+	
+	$scope.downloadAttachment = function(a) {
+		window.open(ProJack.config.dbUrl + "/" + $scope.milestone._id + "/" + a.name, '_blank');
 	};
 }]);

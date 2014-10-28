@@ -1,4 +1,4 @@
-var app = angular.module("ProJack", ['ngRoute', 'SecurityModule', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule']);
+var app = angular.module("ProJack", ['ngRoute', 'SecurityModule', 'TemplateModule', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule']);
 app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
@@ -6,6 +6,8 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 			controller : 'DashBoardController',
 			templateUrl : './modules/dashboard/views/index.html'
 		})
+		
+		// User Administration
 		.when('/admin/users', {
 			controller : 'UserIndexController',
 			templateUrl : './modules/security/views/user-index.html'
@@ -18,6 +20,15 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 			controller : 'UserCreateController',
 			templateUrl : './modules/security/views/user-create.html'
 		})
+	
+		
+		// Template Administration
+		.when('/admin/templates', {
+			controller : 'TemplateIndexController',
+			templateUrl : './modules/templates/views/index.html'
+		})
+	
+		// Milestones
 		.when('/milestones', {
 			controller : 'MileStonesController',
 			templateUrl : './modules/milestones/views/index.html'
@@ -30,6 +41,8 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 			controller : 'MileStonesEditController',
 			templateUrl : './modules/milestones/views/edit.html'
 		})
+		
+		// Customer Administration
 		.when('/customers', {
 			controller : 'CustomersIndexController',
 			templateUrl : './modules/customers/views/index.html'
@@ -42,6 +55,8 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
 			controller : 'CustomersEditController',
 			templateUrl : './modules/customers/views/edit.html'
 		})
+		
+		// Issues
 		.when('/issues', {
 			controller : 'IssueIndexController',
 			templateUrl : './modules/issues/views/index.html'

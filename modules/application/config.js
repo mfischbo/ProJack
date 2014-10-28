@@ -9,10 +9,21 @@
  * ProxyPass /cdb		http://site.whereyour.couchdblives:port
  */
 ProJack.config = {
+
+		// server url for couchdb
 		srvUrl : "/cdb",
+		
+		// server url and db for couch
 		dbUrl :  "/cdb/projack",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
+		
+		// session key where user data is stored in the session storage
 		sessionKey : "__ProJack_Session",
-		appUrl : "/projack"
+		
+		// path to the application
+		appUrl : "/projack",
+		
+		// the path to spring backend service
+		serviceUrl : "/services"
 }

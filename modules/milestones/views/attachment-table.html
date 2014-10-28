@@ -1,0 +1,21 @@
+<table class="table">
+<thead>
+	<tr>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Size</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+	<tr data-ng-repeat="a in milestone.attachments">
+		<td>
+			<a href="javascript:void('');" data-ng-click="downloadAttachment(a)">{{a.name}}</a></td>
+		<td>{{a.type}}</td>
+		<td>{{(a.size / 1024).toFixed(0)}} kb</td>
+		<td class="tools">
+			<a href="javascript:void('');" data-ng-click="downloadAttachment(a)"><span class="fa fa-download"></span></a>
+		</td>
+	</tr>
+</tbody>
+</table>
