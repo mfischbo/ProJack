@@ -1,6 +1,6 @@
 td.tools {
     text-align:right;
-    white-space:no-wrap;
+    white-space:nowrap;
 }
 
 td.tools span {
@@ -14,9 +14,10 @@ td.tools a {
 
 #alert-panel {
     display:block;
-    position:absolute;
+    position:fixed;
     width:100%;
-    margin-top:-20px
+    margin-top:-20px;
+    z-index:9999;
 }
 
 #alert-panel .alert {
@@ -26,4 +27,8 @@ td.tools a {
 
 a[data-target] {
 	cursor:pointer;
+}
+
+div.tab-pane {
+	margin-top:14px;
 }
