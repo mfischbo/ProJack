@@ -33,7 +33,7 @@
 			<span data-ng-if="i.state == 'CLOSED'">Geschlossen</span>
 		</td>
 		<td>{{i.assignedTo.split(":").pop()}}</td>
-		<td>{{i.title}}</td>
+		<td><a href="#/issues/{{i._id}}/edit">{{i.title}}</a></td>
 		<td class="tools">
 			<a href="#/issues/{{i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 		</td>

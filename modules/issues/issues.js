@@ -310,6 +310,8 @@ ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT'
 	$scope.onAttachmentSelect = function($files) {
 		var p = service.addAttachment($scope.issue, $files[0]);
 		p.then(function(data) {
+			if (!$scope.issue.attachments)
+				$scope.issue.attachments = [];
 			$scope.issue.attachments.push(data);
 			KT.alert("Upload erfolgreich");
 		});

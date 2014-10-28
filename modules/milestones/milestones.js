@@ -1,6 +1,6 @@
 ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule', 'TemplateModule']);
 
-ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', function($http, KT, iService) {
+ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueService', function($http, $q, KT, iService) {
 	
 	return {
 		
@@ -11,6 +11,8 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', f
 			return {
 				type 				: 'milestone',
 				customer 			: '',
+				factor				: 1.6,
+				rate				: 60.00,
 				dateCreated 		: new Date().getTime(),
 				dateModified 		: new Date().getTime(),
 				name 				: '',
@@ -193,6 +195,58 @@ ProJack.milestones.service("MilestoneService", ['$http', 'KT', 'IssueService', f
 					that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data });
 				});
 			});
+		},
+		
+		getAggregation	: function(milestone) {
+			
+			var def = $q.defer();
+			
+			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/milestoneStats?group=true&key="' + milestone._id + '"')
+				.success(function(data) {
+					var a = {
+							developmentTime: 0,
+							totalTime : 0,
+							issuestats : {
+								totalCount : 0,
+								assignedCount : 0,
+								totalTimeSpent : 0,
+								totalTrend : 0
+							}
+					};
+					if (data.rows[0]) {
+						a.issues = data.rows[0].value;
+					}
+					
+					for (var i in a.issues) {
+						a.issuestats.totalCount += a.issues[i].count;
+						a.issuestats.assignedCount += a.issues[i].assigned;
+						a.issuestats.totalTimeSpent += a.issues[i].timeSpent;
+						a.issues[i].timeSpent = moment.duration(a.issues[i].timeSpent, 'seconds').format("HH:mm");
+					}
+				
+					for (var i in milestone.specification.features) {
+						var q = milestone.specification.features[i].estimatedEffort.split(":");
+						a.developmentTime += (q[0] * 3600 + q[1] * 60);
+					}
+					a.totalTime = milestone.factor * a.developmentTime;
+					a.budget    = milestone.rate   * (a.totalTime / 3600);
+					a.issuestats.totalTrend = moment.duration(a.issuestats.totalTimeSpent - a.developmentTime, 'seconds').format("HH:mm");
+					a.issuestats.totalTimeSpent = moment.duration(a.issuestats.totalTimeSpent, 'seconds').format("HH:mm");
+					a.budgetPerFeature = a.budget / milestone.specification.features.length;
+					a.overhead  = moment.duration(a.totalTime - a.developmentTime, 'seconds').format("HH:mm");
+					a.timePerFeature = moment.duration(a.totalTime / milestone.specification.features.length, 'seconds').format("HH:mm");
+					a.developmentTime = moment.duration(a.developmentTime, 'seconds').format('HH:mm', { forceLength : true });
+					a.totalTime = moment.duration(a.totalTime, 'seconds').format('hh:mm', { forceLength : true });
+					
+					if (milestone.plannedReleaseDate) {
+						a.daysToGo = moment(milestone.plannedReleaseDate).diff(moment(), 'days');
+					}
+				
+					def.resolve(a);				
+				}).error(function() {
+					def.reject();
+				});
+			return def.promise;
 		}
 	};
 }]);
@@ -233,6 +287,10 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 
 		service.getMilestoneById($routeParams.id).then(function(data) {
 			$scope.milestone = data;
+			
+			service.getAggregation($scope.milestone).then(function(aggr) {
+				$scope.aggregation = aggr;
+			});
 			
 			if ($scope.milestone.plannedReleaseDate.length > 0) {
 				$scope.milestone.plannedReleaseDate = new Date($scope.milestone.plannedReleaseDate);

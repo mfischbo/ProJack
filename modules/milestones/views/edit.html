@@ -42,9 +42,18 @@
 	</div>
 	
 	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h5 class="panel-title">Milestone stats</h5>
+			</div>
+			<div class="panel-body">
+				<div data-ng-include data-src="'./modules/milestones/views/milestone-stats.html'"></div>
+			</div>
+		</div>
+	
 		<div class="panel panel-default" data-ng-if="tab == 'MILESTONE'">
 			<div class="panel-heading">
-				<div class="panel-title">Status</div>
+				<h5 class="panel-title">Status</h5>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
@@ -99,7 +108,9 @@
 		</div>
 	
 		<div class="panel panel-default" data-ng-if="tab == 'FEATURES'">
-			<div class="panel-heading">Features</div>
+			<div class="panel-heading">
+				<h5 class="panel-title">Features</h5>
+			</div>
 			<div class="panel-body">
 				<div data-ng-if="milestone.specification.features.length == 0">
 					<i>Noch keine Features angelegt</i>	
