@@ -1,5 +1,5 @@
 ProJack.issues = angular.module("IssuesModule", ['CustomersModule', 'MileStonesModule','SecurityModule', 'Utils', 'angularFileUpload']);
-ProJack.issues.service("IssueService", ['$http', '$q', 'KT', function ($http, $q, KT) {
+ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', function ($http, $q, KT, secService) {
 	
 	return {
 		newIssue : function() {
@@ -77,16 +77,23 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', function ($http, $q
 		},
 		
 		getIssuesByCriteria : function(criteria) {
-			var url = ProJack.config.dbUrl + "/_design/issues/_view/search";
-			url += '?startkey=["'+ this.saveId(criteria.customer, true) +'", "'+ this.saveId(criteria.milestone, true) +'", "NEW"]';
-			url += '&endkey=["'+ this.saveId(criteria.customer, false) +'", "'+ this.saveId(criteria.milestone, false) +'", "'+criteria.status+'"]';
+			var status = criteria.status;
+			if (criteria.status == "")
+				status = "99";
+				
+			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search?";
+			if (criteria.selection == 1) url += "uid=org.couchdb.user:" + secService.getCurrentUserName();
+			if (criteria.selection == 2) url += "uid=";
 			
+			if (criteria.customer) url += "&cid=" + criteria.customer;
+			if (criteria.milestone !== '') 
+				url += "&spec=" + criteria.milestone;
+			
+			url += "&status=" + criteria.status;
+			
+			console.debug(url);
 			return $http.get(url).then(function(response) {
-				var retval = [];
-				for (var i in response.data.rows) {
-					retval.push(response.data.rows[i].value);
-				}
-				return retval;
+				return response.data.rows;
 			});
 		},
 		
@@ -110,15 +117,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', function ($http, $q
 			retval += sumMins;
 			return retval;
 		},
-		
-		saveId : function (id, low) {
-			if (!id || id == "") {
-				if (low) return ProJack.config.lowId;
-				return ProJack.config.highId;
-			}
-			return id;
-		},
-		
+	
 		createIssue : function(issue) {
 			if (typeof issue.customer == "object")
 				issue.customer = issue.customer._id;
@@ -126,7 +125,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', function ($http, $q
 				issue.milestone = issue.milestone._id;
 			if (typeof issue.feature == "object")
 				issue.feature = issue.feature._id;
-		
+			
 			var d = $q.defer();
 			
 			// get the next available numerical ticket number
@@ -207,6 +206,12 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 			$scope.criteria.customer = data[0]._id;
 			$scope.milestones = [{version : 'Alle Versionen', _id : "" }];
 		}
+		milestoneService.getMilestonesByCustomer(
+				KT.find("_id", $scope.criteria.customer, $scope.customers)).then(function(stones) {
+			if (!$scope.milestones) 
+				$scope.milestones = [{ version : 'Alle Versionen', _id : "" }];
+			$scope.milestones = $scope.milestones.concat(stones);
+		})
 	});
 	
 	$scope.$watch('criteria.customer', function(val) {
@@ -227,7 +232,6 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		sessionStorage.setItem(locKey, JSON.stringify($scope.criteria));
 		service.getIssuesByCriteria($scope.criteria).then(function(data) {
 			$scope.issues = data;
-			console.log(data);
 		});
 	}, true);
 	

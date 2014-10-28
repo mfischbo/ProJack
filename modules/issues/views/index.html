@@ -24,6 +24,13 @@
 					
 					<div class="col-md-10 col-xs-11">
 						<div class="form-inline pull-right">
+							<label>Anzeige</label>
+							<select data-ng-model="criteria.selection" class="form-control input-sm">
+								<option value="0">Alle</option>
+								<option value="1">Mir zugewiesen</option>
+								<option value="2">Nicht zugewiesen</option>
+							</select>
+							
 							<label>Kunde</label>
 							<select data-ng-model="criteria.customer" class="form-control input-sm" data-ng-options="c._id as c.name for c in customers"></select>
 						
@@ -32,11 +39,12 @@
 							
 							<label>Status bis</label>
 							<select data-ng-model="criteria.status" class="form-control input-sm">
-								<option value="NEW">Neu</option>
-								<option value="ASSIGNED">Zugewiesen</option>
-								<option value="FEEDBACK">Feedback</option>
-								<option value="RESOLVED">Resolved</option>
-								<option value="CLOSED">Geschlossen</option>
+								<option value="">Alle</option>
+								<option value="0">Neu</option>
+								<option value="1">Zugewiesen</option>
+								<option value="2">Feedback</option>
+								<option value="3">Resolved</option>
+								<option value="4">Geschlossen</option>
 							</select>
 						</div>
 					</div>

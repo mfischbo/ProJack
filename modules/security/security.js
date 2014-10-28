@@ -85,9 +85,8 @@ ProJack.security.service("SecurityService", ['$http', function($http) {
 		},
 		
 		getCurrentUserName : function() {
-			this.getCurrentSession().then(function(data) {
-				return data.name;
-			});
+			var u = JSON.parse(sessionStorage.getItem(ProJack.config.sessionKey));
+			return u.name;
 		},
 		
 		logout : function() {
