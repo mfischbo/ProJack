@@ -12,6 +12,9 @@
 	</div>
 	<div class="col-md-9 col-xs-6">
 		<a href="#/milestones/{{milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
+		<span data-ng-if="milestone.status == 'NEW'" class="text-danger">&nbsp;&nbsp;Keine Freigabe!</span>
+		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success">&nbsp;&nbsp;Freigegeben</span>
+		<span data-ng-if="milestone.approvedBy.length > 0"><small> (von {{milestone.approvedBy}})</small></span>
 	</div>
 </div>
 <div class="row">
@@ -19,7 +22,7 @@
 		<b>Feature</b>	
 	</div>
 	<div class="col-md-9 col-xs-6">
-		{{feature.title}}
+		{{feature.title}} 
 	</div>
 </div>
 <div class="row">

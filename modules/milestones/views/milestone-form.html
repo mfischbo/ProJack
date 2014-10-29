@@ -11,26 +11,41 @@
 		<label>Kunde</label>
 		<select data-ng-model="milestone.customer" class="form-control" data-ng-options="c as c.name for c in customers"></select>
 	</div>
-	<div class="form-group">
-		<label>Stundenfaktor</label>
-		<input type="number" data-ng-model="milestone.factor" min="1.0" step="0.1" class="form-control">	
-	</div>
-	<div class="form-group">
-		<label>Stundensatz</label>
-		<input type="number" data-ng-model="milestone.rate" min="10.0" step="1" class="form-control">
-	</div>
 	<div class="form-group">	
 		<label>Version</label>	
 		<input type="text" data-ng-model="milestone.version" class="form-control" placeholder="prefix-major.minor.patchlevel">
 	</div>
 	<div class="form-group">
-		<div class="col-md-6 col-xs-12">
-			<label>Geplantes Releasedatum</label>
-			<input type="date" data-ng-model="milestone.plannedReleaseDate" class="form-control">
+		<div class="row">
+			<div class="col-md-4">
+				<label>Stundenfaktor</label>
+				<input type="number" data-ng-model="milestone.factor" min="1.0" step="0.1" class="form-control">	
+			</div>
+			<div class="col-md-4">
+				<label>Stundensatz</label>
+				<input type="number" data-ng-model="milestone.rate" min="10.0" step="1" class="form-control">
+			</div>	
+			<div class="col-md-4">
+				<label>Geschätzte Gesamtzeit (h)</label>	
+				<input type="number" data-ng-model="milestone.estimatedTotalTime" min="0" step="1" class="form-control">
+			</div>
 		</div>
-		<div class="col-md-6 col-xs-12">
-			<label>Tatsächliches Releasedatum</label>
-			<input type="date" data-ng-model="milestone.actualReleaseDate" class="form-control">
+	</div>
+
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-4 col-xs=6">
+				<label>Geplante Freigabe</label>
+				<input type="date" data-ng-model="milestone.plannedApprovalDate" class="form-control">
+			</div>
+			<div class="col-md-4 col-xs-12">
+				<label>Geplantes Releasedatum</label>
+				<input type="date" data-ng-model="milestone.plannedReleaseDate" class="form-control">
+			</div>
+			<div class="col-md-4 col-xs-12">
+				<label>Tatsächliches Releasedatum</label>
+				<input type="date" data-ng-model="milestone.actualReleaseDate" class="form-control">
+			</div>
 		</div>
 	</div>
 </form>

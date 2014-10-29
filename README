@@ -1,0 +1,19 @@
+Changes to couchdb configurations required:
+
+File : /etc/couchdb/local.ini (or similar)
+
+// Might be irrelevant when using proxy setup with apache/nginx
+enable_cors=true 
+
+[cors]
+origins = *
+
+
+File: /etc/couchdb/default.ini (or similar)
+
+
+// required in order to allow a casual user to 'see' others
+[couch_httpd_auth]
+public_fields=_id, name
+users_db_public = true
+

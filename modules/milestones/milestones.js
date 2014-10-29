@@ -13,11 +13,13 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 				customer 			: '',
 				factor				: 1.6,
 				rate				: 60.00,
+				estimatedTotalTime  : 0,
 				dateCreated 		: new Date().getTime(),
 				dateModified 		: new Date().getTime(),
 				name 				: '',
 				description 		: '',
 				version 			: '',
+				plannedApprovalDate : '',
 				plannedReleaseDate 	: '',
 				actualReleaseDate 	: '',
 				approvedBy			: '',
@@ -291,7 +293,11 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 			service.getAggregation($scope.milestone).then(function(aggr) {
 				$scope.aggregation = aggr;
 			});
-			
+		
+			if ($scope.milestone.plannedApprovalDate.length > 0) {
+				$scope.milestone.plannedApprovalDate = new Date($scope.milestone.plannedApprovalDate);
+			}
+			 
 			if ($scope.milestone.plannedReleaseDate.length > 0) {
 				$scope.milestone.plannedReleaseDate = new Date($scope.milestone.plannedReleaseDate);
 			}
