@@ -1,9 +1,17 @@
-ProJack.milestones.controller('MileStonesController', ['$http', '$scope', 'MilestoneService',
-	function($http, $scope, service) {
+ProJack.milestones.controller('MileStonesController', ['$http', '$scope', 'MilestoneService', 'KT',
+	function($http, $scope, service, KT) {
 	
 	service.getAllMilestones().then(function(data) {
 		$scope.milestones = data;
 	});
+	
+	$scope.deleteMilestone = function(milestone) {
+		service.deleteMilestone(milestone).then(function() {
+			KT.remove('_id', milestone._id, $scope.milestones);
+			KT.alert("Der Milestone wurde entfernt");
+		});
+	};
+	
 }]);
 
 ProJack.milestones.controller('MileStonesCreateController', ['$http', '$scope', '$location', 'KT', 'MilestoneService', 'CustomerService',
