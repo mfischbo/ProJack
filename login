@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="./resources/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="./resources/js/angular.min.js"></script>
 		<script type="text/javascript" src="./resources/js/angular-route.min.js"></script>
+		<script type="text/javascript" src="./resources/js/ui-bootstrap-tpls-0.11.2.min.js"></script>
 
 		<!--  Angular Modules -->
 		<script type="text/javascript" src="./modules/application/config.js"></script>

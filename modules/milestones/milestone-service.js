@@ -142,10 +142,12 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 					iService.createIssue(i);
 				}
 			}
-			
-			var p = $http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
-				.then(function(response) {
+		
+			var p =	$http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
+				.success(function(response) {
 					return response.data;
+				}).error(function(response) {
+					return "OOPS!";
 				});
 			return p;
 		},
@@ -176,6 +178,8 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 		printMilestone : function(milestone, template) {
 			var def = $q.defer();
 			var that = this;
+			
+			// download the template for the report
 			$http({ 
 				method : 'GET',
 				url    : ProJack.config.dbUrl + "/" + template._id + "?attachments=true",
@@ -187,23 +191,85 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 					name = i;
 					break;
 				}
-				var post = {
-					template : response.data._attachments[i].data,
-					model    : JSON.stringify(milestone),
-					filename : milestone.name + ".pdf"
-				}
-				$http.post(ProJack.config.serviceUrl + "/reports", post).success(function(data) {
-					that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data }).then(function() {
-						def.resolve();
+				var attachment = response.data._attachments[name];
+				
+				// download all issues for this milestone to get the issue numbers for the features
+				iService.getIssuesByMilestone(milestone).then(function(issues) {
+					
+					milestone.totalTime = 0;
+					for (var i in milestone.specification.features) {
+						var f = milestone.specification.features[i];
+						
+						// find the appropriate issue
+						var issue = KT.find('feature', f._id, issues);
+						if (issue) {
+							// assign the actual issue number
+							f.issueId = issue.number;
+						
+							// calculate the total time for that issue and the total time for the milestone
+							var x = that.calculateFeatureTime(milestone, f);
+							f.featureTime = moment.duration(x, 'seconds').format("HH:mm");
+							milestone.totalTime += x;
+						}
+						issue = undefined;
+					}
+					// format the milestone time to a string
+					milestone.totalTime = moment.duration(milestone.totalTime, 'seconds').format("HH:mm");
+					
+					// create the report
+					var post = {
+							template : attachment.data,
+							model    : JSON.stringify(milestone),
+							filename : milestone.name + ".pdf"
+					}
+					$http.post(ProJack.config.serviceUrl + "/reports", post).success(function(data) {
+						that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data }).then(function() {
+							def.resolve();
+						});
 					});
 				});
 			});
 			return def.promise;
 		},
 		
+		/**
+		 * Calculates the actual time for a feature given the milestones factor 
+		 * and the estimated development time for the feature.
+		 * All feature times are rounded up to a quarter of an hour
+		 */
+		calculateFeatureTime : function(milestone, feature) {
+			var factor= milestone.factor;
+			
+			// time is stored as string 'HH:mm'
+			var tmp = feature.estimatedEffort.split(":");
+			var fTime = (parseInt(tmp[0]) * 3600) + parseInt(tmp[1]) * 60;
+			
+			// multiply by the milestones factor
+			fTime = fTime * factor;
+			
+			// round up to the quarter of an hour
+			var q = fTime % 3600;
+			if (q > 0 && q < 15 * 60)
+				q = 15*60;
+			if (q > 15*60 && q < 30*60)
+				q = 30*60;
+			if (q > 30*60 && q < 45*60)
+				q = 45*60;
+			if (q > 45*60) 
+				q = 3600;
+		
+			fTime = (Math.floor(fTime / 3600) * 3600) + q;
+			return fTime;
+		},
+		
+		
+		/**
+		 * Calculates the aggregation for the given milestone
+		 */
 		getAggregation	: function(milestone) {
 			
 			var def = $q.defer();
+			var that = this;
 			
 			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/milestoneStats?group=true&key="' + milestone._id + '"')
 				.success(function(data) {
@@ -230,9 +296,10 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 				
 					for (var i in milestone.specification.features) {
 						var q = milestone.specification.features[i].estimatedEffort.split(":");
+						a.totalTime += that.calculateFeatureTime(milestone, milestone.specification.features[i]);
 						a.developmentTime += (q[0] * 3600 + q[1] * 60);
 					}
-					a.totalTime = milestone.factor * a.developmentTime;
+					//a.totalTime = milestone.factor * a.developmentTime;
 					a.budget    = milestone.rate   * (a.totalTime / 3600);
 					a.issuestats.totalTrend = moment.duration(a.issuestats.totalTimeSpent - a.developmentTime, 'seconds').format("HH:mm");
 					a.issuestats.totalTimeSpent = moment.duration(a.issuestats.totalTimeSpent, 'seconds').format("HH:mm");

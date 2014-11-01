@@ -110,7 +110,7 @@ ProJack.issues.controller('IssueEditController',
 			var n = $scope.issue.notes[i];
 			$scope.html.notes[n._id] = $sce.trustAsHtml(n.text);
 		}
-		$scope.html.description = $sce.trustAsHtml($scope.issue.description);
+		$scope.html.description = $sce.trustAsHtml($scope.issue.description.replace(/\n/g, '<br/>'));
 	}
 	
 	$scope.addNote = function() {

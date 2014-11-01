@@ -11,8 +11,8 @@
 	</div>
 	<div class="col-md-3 col-xs-6">
 		<a href="#/milestones/{{milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
-		<span data-ng-if="milestone.status == 'NEW'" class="text-danger">&nbsp;&nbsp;Keine Freigabe!</span>
-		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success">&nbsp;&nbsp;Freigegeben</span>
+		<span data-ng-if="milestone.status == 'NEW'" class="text-danger">&nbsp;&nbsp;<small>Keine Freigabe!</small></span>
+		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success">&nbsp;&nbsp;<small>Freigegeben</small></span>
 		<span data-ng-if="milestone.approvedBy.length > 0"><small> (von {{milestone.approvedBy}})</small></span>
 	</div>
 </div>

@@ -73,7 +73,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		getIssuesByMilestone : function(milestone) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byMilestone?key="'+milestone._id+'"')
 				.then(function(response) {
-					
+					var retval = [];
+					for (var i in response.data.rows) 
+						retval.push(response.data.rows[i].value);
+					return retval;
 				});
 		},
 		
