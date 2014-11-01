@@ -6,9 +6,11 @@ ProJack.milestones.controller('MileStonesController', ['$http', '$scope', 'Miles
 	});
 	
 	$scope.deleteMilestone = function(milestone) {
-		service.deleteMilestone(milestone).then(function() {
-			KT.remove('_id', milestone._id, $scope.milestones);
-			KT.alert("Der Milestone wurde entfernt");
+		KT.confirm("Soll der Milestone wirklich entfernt werden?", function() {
+			service.deleteMilestone(milestone).then(function() {
+				KT.remove('_id', milestone._id, $scope.milestones);
+				KT.alert("Der Milestone wurde entfernt");
+			});
 		});
 	};
 	

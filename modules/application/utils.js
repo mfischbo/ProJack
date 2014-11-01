@@ -1,5 +1,5 @@
-ProJack.utils = angular.module("Utils", []);
-ProJack.utils.service("KT", function() {
+ProJack.utils = angular.module("Utils", ['ui.bootstrap']);
+ProJack.utils.service("KT", ['$modal', function($modal) {
 	
 	var x = { 
 			indexOf : function(property, value, array) {
@@ -124,11 +124,19 @@ ProJack.utils.service("KT", function() {
 
 	x.confirm = function(txt, callback) {
 		
-		//var $modal = angular.injector().get("$modal");
+		var instance = $modal.open({
+			templateUrl: './modules/application/views/confirmation-modal.html',
+			controller : 'ConfirmationInstanceController',
+			resolve    : {
+				text : function() {
+					return txt
+				}
+			}
+		});
 		
-		var retval = window.confirm(txt);
-		if (retval)
+		instance.result.then(function() {
 			callback();
+		});
 	};
 
 	x.alert = function(message, status) {
@@ -153,4 +161,16 @@ ProJack.utils.service("KT", function() {
 		}, 3000);
 	};
 	return x;
-});
+}]);
+
+ProJack.utils.controller("ConfirmationInstanceController", ['$scope', '$modalInstance', 'text', function($scope, $instance, text) {
+	
+	$scope.text = text;
+	$scope.ok = function() {
+		$instance.close();
+	};
+	
+	$scope.cancel = function() {
+		$instance.dismiss();
+	};
+}]);
