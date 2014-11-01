@@ -12,15 +12,25 @@
 	<label>Zugewiesen an</label>
 	<div data-user-selector data-select-as="issue.assignedTo"></div>
 </div>
-
-<div class="form-group" data-ng-if="note">
-	<label>Notiz</label>
-	<textarea rows="4" data-ng-model="note.text" class="form-control"></textarea>
-</div>
-
-<div class="form-group" data-ng-if="note">
-	<label>Zeitaufwand</label>
-	<input type="text" data-ng-model="time.spent" class="form-control" placeholder="HH:mm">
+<div data-ng-if="note">
+	<div class="form-group">
+		<label>Notiz</label>
+		<textarea rows="4" data-ng-model="note.text" class="form-control" data-ui-tinymce="$parent.tinyOptions"></textarea>
+	</div>
+	
+	<div class="form-group">
+		<label>Tasktype</label>
+		<select data-ng-model="note.tasktype" class="form-control">
+			<option value="GENERAL">Generell</option>
+			<option value="BACKEND">Backend</option>
+			<option value="FRONTEND">Frontend</option>
+		</select>
+	</div>
+	
+	<div class="form-group">	
+		<label>Zeitaufwand</label>
+		<input type="text" data-ng-model="time.spent" class="form-control" placeholder="HH:mm">
+	</div>
 </div>
 
 <button class="btn btn-primary btn-xs pull-right" data-ng-click="addNote()" data-ng-if="!note"><span class="fa fa-plus"> Notiz</span></button>

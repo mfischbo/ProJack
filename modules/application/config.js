@@ -25,5 +25,10 @@ ProJack.config = {
 		appUrl : "/projack",
 		
 		// the path to spring backend service
-		serviceUrl : "/services"
+		serviceUrl : "/services",
+		
+		// default options for tinymce
+		tinyOptions : {
+			menu : {}
+		}
 }

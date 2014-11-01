@@ -2,40 +2,56 @@
 	<div class="col-md-3 col-xs-6">
 		<b>Kunde</b>	
 	</div>
-	<div class="col-md-9 col-xs-6">
+	<div class="col-md-3 col-xs-6">
 		<a href="#/customers/{{customer._id}}/edit" title="{{customer.description}}">{{customer.name}}</a>
 	</div>
-</div>
-<div class="row">
+	
 	<div class="col-md-3 col-xs-6">
 		<b>Version</b>	
 	</div>
-	<div class="col-md-9 col-xs-6">
+	<div class="col-md-3 col-xs-6">
 		<a href="#/milestones/{{milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
 		<span data-ng-if="milestone.status == 'NEW'" class="text-danger">&nbsp;&nbsp;Keine Freigabe!</span>
 		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success">&nbsp;&nbsp;Freigegeben</span>
 		<span data-ng-if="milestone.approvedBy.length > 0"><small> (von {{milestone.approvedBy}})</small></span>
 	</div>
 </div>
+
 <div class="row">
 	<div class="col-md-3 col-xs-6">
 		<b>Feature</b>	
 	</div>
-	<div class="col-md-9 col-xs-6">
+	<div class="col-md-3 col-xs-6">
 		{{feature.title}} 
 	</div>
-</div>
-<div class="row">
+	
 	<div class="col-md-3 col-xs-6">
 		<b>Typ</b>	
 	</div>
-	<div class="col-md-9 col-xs-6">
-		<span data-ng-if="issue.issuetype == 'BUG'">Bug</span>
-		<span data-ng-if="issue.issuetype == 'CHANGE_REQUEST'">Change Request</span>
-		<span data-ng-if="issue.issuetype == 'FEATURE'">Feature</span>
-		<span data-ng-if="issue.issuetype == 'SUPPORT'">Support</span>	
+	<div class="col-md-3 col-xs-6">
+		<span data-ng-if="issue.issuetype == 'BUG'" class="label label-danger" >Bug</span>
+		<span data-ng-if="issue.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
+		<span data-ng-if="issue.issuetype == 'FEATURE'" class="label label-info">Feature</span>
+		<span data-ng-if="issue.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
 	</div>
 </div>
+
+<div class="row">
+	<div class="col-md-3 col-xs-6">
+		<b>Eingereicht von</b>	
+	</div>
+	<div class="col-md-3 col-xs-6">
+		{{issue.reportedBy}}
+	</div>
+	<div class="col-md-3 col-xs-6">
+		<b>Zugewiesen an</b>	
+	</div>
+	<div class="col-md-3 col-xs-6">
+		{{issue.assignedTo.split(":").pop()}}
+	</div>
+</div>
+
+
 <div class="row">
 	<div class="col-md-3 col-xs-6">
 		<b>Status</b>	
@@ -48,22 +64,13 @@
 		<span data-ng-if="issue.state == 'CLOSED'">Geschlossen</span>
 	</div>
 </div>
+
 <div class="row">
-	<div class="col-md-3 col-xs-6">
-		<b>Zugewiesen an</b>	
-	</div>
-	<div class="col-md-9 col-xs-6">
-		{{issue.assignedTo.split(":").pop()}}
+	<div class="col-md-12 col-xs-12">
+		<br/>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-3 col-xs-6">
-		<b>Eingereicht von</b>	
-	</div>
-	<div class="col-md-9 col-xs-6">
-		{{issue.reportedBy}}
-	</div>
-</div>
+
 <div class="row">
 	<div class="col-md-3 col-xs-6">
 		<b>Zusammenfassung</b>	
@@ -72,9 +79,10 @@
 		{{issue.title}}
 	</div>
 </div>
+
 <div class="row">
 	<div class="col-md-12 col-xs-12">
-		<b>Beschreibung</b><br/>
-		<div data-ng-bind-html="issue.description" style="font-family:Monospace;"></div>
+		<br/>
+		<div data-ng-bind-html="html.description" style="font-family:Monospace; font-size:12px;"></div>
 	</div>
 </div>

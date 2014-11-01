@@ -84,12 +84,13 @@ ProJack.issues.controller('IssueEditController',
         function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload, $sce) {
 	
 	$scope.time = { spent : '' };
+	$scope.html = { description : '', notes : {} };
+	$scope.tinyOptions = ProJack.config.tinyOptions;
 	
 	service.getIssueById($routeParams.id).then(function(data) {
 		$scope.issue = data;
 		$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
-		
-		$scope.issue.description = $sce.trustAsHtml($scope.issue.description);
+		$scope.sanitizeHtml();
 	
 		customerService.getCustomerById($scope.issue.customer).then(function(data) {
 			$scope.customer = data;
@@ -102,6 +103,15 @@ ProJack.issues.controller('IssueEditController',
 			}
 		});
 	});
+	
+	$scope.sanitizeHtml = function() {
+		// add $sce for all notes
+		for (var i in $scope.issue.notes) {
+			var n = $scope.issue.notes[i];
+			$scope.html.notes[n._id] = $sce.trustAsHtml(n.text);
+		}
+		$scope.html.description = $sce.trustAsHtml($scope.issue.description);
+	}
 	
 	$scope.addNote = function() {
 		$scope.note = service.newNote();
@@ -155,6 +165,7 @@ ProJack.issues.controller('IssueEditController',
 		service.updateIssue($scope.issue).then(function(data) {
 			$scope.issue._rev = data.rev;
 			$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
+			$scope.sanitizeHtml();
 			KT.alert("Notiz gespeichert");
 		});
 	};
