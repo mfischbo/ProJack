@@ -54,6 +54,9 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
                                                     function($scope, $location, KT, service, customerService, milestoneService) {
 	
 	$scope.issue = service.newIssue();
+	$scope.tinymceOptions = {
+			menu : {}
+	};
 	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
@@ -76,14 +79,17 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 	};
 }]);
 
-ProJack.issues.controller('IssueEditController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload',
-                                                  function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload) {
+ProJack.issues.controller('IssueEditController', 
+		['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
+        function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload, $sce) {
 	
 	$scope.time = { spent : '' };
 	
 	service.getIssueById($routeParams.id).then(function(data) {
 		$scope.issue = data;
 		$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
+		
+		$scope.issue.description = $sce.trustAsHtml($scope.issue.description);
 	
 		customerService.getCustomerById($scope.issue.customer).then(function(data) {
 			$scope.customer = data;

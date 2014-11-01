@@ -1,1 +1,2 @@
-ProJack.issues = angular.module("IssuesModule", ['CustomersModule', 'MileStonesModule','SecurityModule', 'Utils', 'angularFileUpload']);
+ProJack.issues = angular.module("IssuesModule", 
+		['CustomersModule', 'MileStonesModule','SecurityModule', 'Utils', 'angularFileUpload', 'ui.tinymce']);
