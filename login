@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="./modules/application/config.js"></script>
 		<script type="text/javascript" src="./modules/application/utils.js"></script>
 		<script type="text/javascript" src="./modules/security/security.js"></script>
+		<script type="text/javascript" src="./modules/security/security-service.js"></script>
 		<script type="text/javascript" src="./modules/application/login.js"></script>
 	</body>
 </html>

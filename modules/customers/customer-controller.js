@@ -1,5 +1,3 @@
-ProJack.customers = angular.module("CustomersModule", ['Utils']);
-
 ProJack.customers.controller("CustomersIndexController", ['$scope', 'CustomerService', 'KT',
     function($scope, service, KT) {
 	

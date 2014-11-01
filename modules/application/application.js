@@ -1,5 +1,9 @@
-var app = angular.module("ProJack", ['ngRoute', 'SecurityModule', 'TemplateModule', 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 'IssuesModule', 'MailModule']);
-app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
+ProJack.app = angular.module("ProJack", 
+		['ngRoute', 'Utils', 'SecurityModule', 'TemplateModule', 
+		 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 
+		 'IssuesModule', 'MailModule']);
+
+ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
 		.when('/', {
@@ -103,10 +107,14 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
             },
 
             'responseError' : function(rejection) {
-                if (rejection.status == 401 || rejection.status == 503)
+                if (rejection.status == 401)
                     window.location.href = "./login";
-                
+               
                 /*
+                if (rejection.status == 503)
+                	KT.alert("Ein verwendeter Dienst ist derzeit nicht erreichbar", 'error');
+                
+                
                 if (rejection.status == 405 || rejection.status == 415)
                     KT.alert("Leider ist ein Fehler aufgetreten", 'error');
 
@@ -121,7 +129,7 @@ app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpPro
                 }
 
                 // disable spinner
-                KT.hideSpinner();
+                KT.disableSpinner();
                 */
                 return $q.reject(rejection);
             }
