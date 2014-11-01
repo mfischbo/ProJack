@@ -1,4 +1,9 @@
-ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueService', function($http, $q, KT, iService) {
+/**
+ * Service for managing milestones
+ */
+ProJack.milestones.service("MilestoneService", 
+		['$http', '$q', 'KT', 'IssueService', 
+		 function($http, $q, KT, iService) {
 	
 	return {
 		
@@ -94,6 +99,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 	
 		/**
 		 * Returns a promise returning a milestone for the given id
+		 * @param The id of the milestone to be returned
 		 */
 		getMilestoneById : function(id) {
 			var p = $http.get(ProJack.config.dbUrl + "/" + id)
@@ -114,8 +120,6 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 		createMilestone : function(milestone) {
 			var p = $http.post(ProJack.config.dbUrl, milestone)
 				.then(function(response) {
-					
-
 					return response.data;
 				});
 			return p;
@@ -126,6 +130,11 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 		 */
 		updateMilestone : function(milestone) {
 			milestone.dateModified = new Date().getTime();
+			
+			// collect all features into a hashmap
+			var features = {};
+			for (var k in milestone.specification.features)
+				features[milestone.specification.features[k]._id] = milestone.specification.features[k];
 			
 			// add a new issue if createIssue is true
 			for (var k in milestone.specification.features) {
@@ -140,6 +149,13 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 					i.issuetype = "FEATURE";
 					f.createIssue = false;
 					iService.createIssue(i);
+				} else {
+					// update a given features text if specification changes
+					iService.getIssueByFeature(f).then(function(issue) {
+						var tmp = features[issue.feature];
+						issue.description = "<b>Anforderung</b><br/>" + tmp.requirement + "<br/><br/><b>Umsetzung</b><br/>" + tmp.implementation;
+						iService.updateIssue(issue);
+					});
 				}
 			}
 		
@@ -163,6 +179,11 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 			return p;
 		},
 	
+		/**
+		 * Adds a document attachment to the milestone
+		 * @param The document to be attached
+		 * @param The file to be attached as attachment
+		 */
 		addAttachment : function(milestone, file) {
 			if (!milestone._attachments)
 				milestone._attachments = {};
@@ -175,6 +196,12 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 			});
 		},
 		
+		
+		/**
+		 * Sends the milestone to the backend service in order to generate a report from it.
+		 * @param milestone The milestone to be printed
+		 * @param template The template to be used for printing the milestone
+		 */
 		printMilestone : function(milestone, template) {
 			var def = $q.defer();
 			var that = this;
@@ -265,6 +292,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 		
 		/**
 		 * Calculates the aggregation for the given milestone
+		 * @param The milestone to calculate the aggregation for
 		 */
 		getAggregation	: function(milestone) {
 			

@@ -80,6 +80,13 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
+		getIssueByFeature : function(feature) {
+			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byFeature?key="'+feature._id+'"')
+				.then(function(response) {
+					return response.data.rows[0].value;
+				});
+		},
+		
 		getIssuesByCriteria : function(criteria) {
 			var status = criteria.status;
 			if (criteria.status == "")
