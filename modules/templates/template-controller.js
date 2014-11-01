@@ -11,7 +11,10 @@ ProJack.templates.controller("TemplateIndexController", ['$scope', '$upload', 'T
 	};
 	
 	$scope.saveTemplate = function() {
-		service.createTemplate($scope.template, $scope.file);
+		service.createTemplate($scope.template, $scope.file).then(function(data) {
+			KT.alert("Das Template wurde hochgeladen");
+			$scope.templates.push(data);
+		});
 	};
 	
 	$scope.removeTemplate = function(t) {
@@ -20,24 +23,4 @@ ProJack.templates.controller("TemplateIndexController", ['$scope', '$upload', 'T
 			KT.alert("Template wurde erfolgreich entfernt");
 		});
 	}
-}]);
-
-
-ProJack.templates.directive("templateSelector", ['TemplateService', 'KT', function(service, KT) {
-	return {
-		restrict : 		'A',
-		scope : {
-			'selectAs' : '=selectAs'
-		},
-		template : '<div class="form-group">'
-			+ '<select data-ng-model="selectAs" data-ng-options="t._id as t.name for t in templates" class="form-control">'
-			+ '</select>'
-			+ '</div>',
-			
-		link : function(scope, element, attrs) {
-			service.getAllTemplates().then(function(data) {
-				scope.templates = data;
-			})
-		}
-	};
 }]);

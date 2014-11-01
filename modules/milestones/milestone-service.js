@@ -133,7 +133,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 				if (f.createIssue && f.createIssue == true) {
 					var i = iService.newIssue();
 					i.title = f.title;
-					i.description = "Anforderung\n" + f.requirement + "\n\nUmsetzung:\n" + f.implementation;
+					i.description = "<b>Anforderung</b><br/>" + f.requirement + "<br/><br/><b>Umsetzung</b><br/>" + f.implementation;
 					i.milestone = milestone._id;
 					i.feature = f._id;
 					i.customer = milestone.customer;
@@ -174,6 +174,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 		},
 		
 		printMilestone : function(milestone, template) {
+			var def = $q.defer();
 			var that = this;
 			$http({ 
 				method : 'GET',
@@ -192,9 +193,12 @@ ProJack.milestones.service("MilestoneService", ['$http', '$q', 'KT', 'IssueServi
 					filename : milestone.name + ".pdf"
 				}
 				$http.post(ProJack.config.serviceUrl + "/reports", post).success(function(data) {
-					that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data });
+					that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data }).then(function() {
+						def.resolve();
+					});
 				});
 			});
+			return def.promise;
 		},
 		
 		getAggregation	: function(milestone) {

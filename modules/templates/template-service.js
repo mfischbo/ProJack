@@ -36,7 +36,7 @@ ProJack.templates.service("TemplateService", ['$http', '$q', 'KT', function($htt
 				
 				return $http.post(ProJack.config.dbUrl, template)
 					.success(function(response) {
-						deferred.resolve({filename : file.name, type : file.type, length : file.size || 0});
+						deferred.resolve({name : template.name, filename : file.name, type : file.type, length : file.size || 0});
 					})
 					.error(function(response) {
 						deferred.reject(response.data);
