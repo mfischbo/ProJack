@@ -23,7 +23,7 @@ T.controller("LoginController", ['$scope', 'SecurityService', function($scope, s
 		securityService.login($scope.username, $scope.password).then(function(data) {
 			if (data.ok) {
 				securityService.getCurrentSession().then(function(data) {
-					sessionStorage.setItem(ProJack.config.sessionKey, JSON.stringify(data.userCtx));
+					localStorage.setItem(ProJack.config.sessionKey, JSON.stringify(data.userCtx));
 					window.location.href = ProJack.config.appUrl;
 				});
 			}
@@ -33,7 +33,7 @@ T.controller("LoginController", ['$scope', 'SecurityService', function($scope, s
 
 T.controller("LogoutController", ['$scope', 'SecurityService', function($scope, service) {
 	service.logout().then(function() {
-		sessionStorage.removeItem(ProJack.config.sessionKey);
+		localStorage.removeItem(ProJack.config.sessionKey);
 		window.location.href = ProJack.config.appUrl + "/login";
 	});
 }]);
