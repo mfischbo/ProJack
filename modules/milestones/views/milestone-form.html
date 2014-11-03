@@ -34,15 +34,19 @@
 
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-4 col-xs=6">
+			<div class="col-md-3 col-xs-6">
+				<label>Spec fertig am</label>	
+				<input type="date" data-ng-model="milestone.plannedCompletionDate" class="form-control">
+			</div>
+			<div class="col-md-3 col-xs-6">
 				<label>Geplante Freigabe</label>
 				<input type="date" data-ng-model="milestone.plannedApprovalDate" class="form-control">
 			</div>
-			<div class="col-md-4 col-xs-12">
+			<div class="col-md-3 col-xs-6">
 				<label>Geplantes Releasedatum</label>
 				<input type="date" data-ng-model="milestone.plannedReleaseDate" class="form-control">
 			</div>
-			<div class="col-md-4 col-xs-12">
+			<div class="col-md-3 col-xs-6">
 				<label>Tatsächliches Releasedatum</label>
 				<input type="date" data-ng-model="milestone.actualReleaseDate" class="form-control">
 			</div>

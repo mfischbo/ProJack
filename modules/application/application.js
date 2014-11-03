@@ -1,7 +1,7 @@
 ProJack.app = angular.module("ProJack", 
 		['ngRoute', 'Utils', 'SecurityModule', 'TemplateModule', 
 		 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 
-		 'IssuesModule', 'MailModule']);
+		 'IssuesModule', 'MailModule', 'CalendarModule']);
 
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
@@ -76,6 +76,12 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 		.when('/issues/:id/edit', {
 			controller : 'IssueEditController',
 			templateUrl : './modules/issues/views/edit.html'
+		})
+		
+		// Calendar Module
+		.when('/calendar', {
+			controller : 'CalendarIndexController',
+			templateUrl : './modules/calendar/views/index.html'
 		})
 		
 		// mails

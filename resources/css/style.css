@@ -32,3 +32,10 @@ a[data-target] {
 div.tab-pane {
 	margin-top:14px;
 }
+
+tr.today {
+	border-left: 2px solid red;
+}
+tr.weekend {
+	background-color:#eee;
+}
