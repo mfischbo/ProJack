@@ -7,7 +7,9 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', function($http
 				.then(function(response) {
 					var retval = {};
 					
-					for (var i = 1; i < 32; i++) {
+					var dLimit = moment(year + '-' + month + '-01').endOf('month').date();
+					
+					for (var i = 1; i < dLimit +1; i++) {
 						var rk = year + "-" + month + "-" + i;
 						var rd = new Date(rk).getTime();
 						retval[rd] = {
@@ -34,6 +36,7 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', function($http
 							}
 						}
 					}
+					console.log(retval);
 					return retval;
 				});
 		}

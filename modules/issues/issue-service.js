@@ -141,7 +141,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issue.feature = issue.feature._id;
 			
 			var d = $q.defer();
-			
+		
 			// get the next available numerical ticket number
 			// TODO: This kinda sucks! It'll be way cooler if we could set the 
 			// number in couch on insert. Check out how this would be done
