@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html data-ng-app="Login">
 	<head>
-		<title>ProJack - Project Management done right</title>
-		<link rel="stylesheet" type="text/css" href="./resources/css/bootstrap.min.css">
+		<meta charset="UTF-8">
+		<title>ProJack - Nuff said!</title>
+		<link rel="shortcut icon" href="./resources/images/logo-small.png">
+		<link rel="stylesheet" type="text/css" href="http://bootswatch.com/united/bootstrap.min.css">
+		<!--<link rel="stylesheet" type="text/css" href="./resources/css/bootstrap.min.css">-->
 		<link rel="stylesheet" type="text/css" href="./resources/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="./resources/css/style.css">
 	</head>
