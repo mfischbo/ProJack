@@ -1,0 +1,28 @@
+<h4>Neuen Reminder erstellen</h4>
+<form name="reminderForm">
+
+<div class="form-group">
+	<div class="row">
+		<div class="col-md-8">
+			<label>Beschreibung</label>
+			<textarea data-ng-model="reminder.description" class="form-control" rows="7" required placeholder="Schnitzel bestellen..."></textarea>
+		</div>	
+		
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>Alarm am</label>
+				<input type="date" data-ng-model="reminder.alertAt" class="form-control input-sm" required>	
+			</div>
+		
+			<div class="form-group">	
+				<label>Alarm um</label>
+				<input type="time" data-ng-model="reminder.alertTime" class="form-control input-sm" required>
+			</div>
+			
+			<div class="form-group">
+				<button type="button" class="btn btn-success pull-right btn-sm" data-ng-click="saveReminder()" data-ng-disabled="reminderForm.$invalid">Speichern</button>
+			</div>
+		</div>
+	</div>
+</div>
+</form>

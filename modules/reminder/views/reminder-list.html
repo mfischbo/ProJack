@@ -1,0 +1,14 @@
+<h4>Aktive Benachrichtigungen</h4>
+<div data-ng-repeat="r in reminders">
+	<b>{{r.alertAt|date:'dd.MM.yyyy'}} {{r.alertTime|date:'HH:mm'}}</b><br/>
+	{{r.description}}<br/>
+	<div class="pull-right">
+		<button type="button" class="btn btn-danger btn-xs" title="Entfernen" data-ng-click="removeReminder(r)"><span class="fa fa-trash-o"></span></button>
+	</div>
+	<div class="clearfix"></div>
+	<hr/>
+</div>
+
+<div data-ng-if="reminders.length == 0">
+	<i>Great! Nothing to do!</i>
+</div>

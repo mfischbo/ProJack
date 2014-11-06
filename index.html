@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-ng-app="ProJack" lang="de">
+<html lang="de">
 <head>
 	<meta charset="UTF-8">
 	<title>ProJack - Nuff said!</title>
@@ -43,12 +43,24 @@
 					
 					<ul class="nav navbar-nav navbar-right">
                         <li><a style="font-size:20px; display:none;" id="spinner"><span class="fa fa-circle-o-notch fa-spin"></span></a></li>
+                        
+                       	<li data-ng-controller="ReminderController" data-ng-class="{active : panelVisible}">
+                       		<a href="javascript:void('')" data-ng-click="toggleVisible()" style="font-size:20px;"><span class="fa fa-bell"></span> <span class="badge">{{reminders.length}}</span></a>
+							<div id="reminder-panel" data-ng-show="panelVisible">
+								<div data-ng-include data-src="'./modules/reminder/views/reminder-form.html'"></div>
+								<div data-ng-include data-src="'./modules/reminder/views/reminder-list.html'"></div>
+								<audio id="projack-player">
+									<source src="./resources/media/coin-sound.mp3">
+								</audio>
+							</div>
+						</li>	
                         <li><a href="#/admin/users/self" style="font-size:20px;"><span class="fa fa-user"></span></a></li>
                         <li><a href="./login#/logout" style="font-size:20px;"><span class="fa fa-power-off"></span></a></li>
                     </ul>
 				</div>
 			</div>
 		</nav>
+		
 	
 	<div class="container-fluid">
 		<div class="row">
@@ -113,7 +125,18 @@
 	<!-- Calendar Module -->
 	<script src="./modules/calendar/calendar.js"></script>
 	
+	<!-- Reminder Module -->
+	<script src="./modules/reminder/reminder.js"></script>	
+	<script src="./modules/reminder/reminder-service.js"></script>	
+	<script src="./modules/reminder/reminder-controller.js"></script>	
+	
 	<script src="./modules/dashboard/dashboard.js"></script>
 	<script src="./modules/application/application.js"></script>
+	
+	<script type="text/javascript">
+		angular.element(document).ready(function() {
+			angular.bootstrap(document, ['ProJack', 'ReminderModule']);
+		});
+	</script>
 </body>
 </html>

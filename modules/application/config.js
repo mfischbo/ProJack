@@ -27,6 +27,9 @@ ProJack.config = {
 		// the path to spring backend service
 		serviceUrl : "/services",
 		
+		// time in ms how often the reminder api should be polled
+		reminderPollTime : 10000,
+		
 		// default options for tinymce
 		tinyOptions : {
 			menu : {}
