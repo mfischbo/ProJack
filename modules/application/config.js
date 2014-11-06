@@ -30,6 +30,9 @@ ProJack.config = {
 		// time in ms how often the reminder api should be polled
 		reminderPollTime : 10000,
 		
+		// enable / disable reminder polling
+		reminderPollingEnabled : true,
+		
 		// default options for tinymce
 		tinyOptions : {
 			menu : {}

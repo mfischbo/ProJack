@@ -33,12 +33,14 @@ ProJack.reminder.controller('ReminderController', ['$scope', '$window', 'Reminde
 			KT.remove('_id', reminder._id, $scope.reminders);
 		});
 	};
-	
-	// inititally load
-	$scope.fetchReminders();
 
-	// set a timeout
-	$window.setInterval(function() {
+	if (ProJack.config.reminderPollingEnabled) {
+		// inititally load
 		$scope.fetchReminders();
-	}, ProJack.config.reminderPollTime);
+	
+		// set a timeout
+		$window.setInterval(function() {
+			$scope.fetchReminders();
+		}, ProJack.config.reminderPollTime);
+	}
 }]);
