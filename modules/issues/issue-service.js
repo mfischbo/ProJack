@@ -17,6 +17,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
 				estimatedTime: 0,
+				resolveUntil: new Date(),
 				notes		: []
 			};
 		},
@@ -39,6 +40,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return $http.get(ProJack.config.dbUrl + "/" + id)
 				.then(function(response) {
 					var issue = response.data;
+					
+					if (issue.resolveUntil !== undefined && issue.resolveUntil.length > 0)
+						issue.resolveUnitl = new Date(issue.resolveUntil);
+					
 					if (issue._attachments) {
 						issue.attachments = [];
 						for (var i in issue._attachments) {

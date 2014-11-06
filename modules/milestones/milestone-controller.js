@@ -49,22 +49,6 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 				$scope.aggregation = aggr;
 			});
 		
-			if ($scope.milestone.plannedApprovalDate.length > 0) {
-				$scope.milestone.plannedApprovalDate = new Date($scope.milestone.plannedApprovalDate);
-			}
-			 
-			if ($scope.milestone.plannedReleaseDate.length > 0) {
-				$scope.milestone.plannedReleaseDate = new Date($scope.milestone.plannedReleaseDate);
-			}
-			
-			if ($scope.milestone.actualReleaseDate.length > 0) {
-				$scope.milestone.actualReleaseDate = new Date($scope.milestone.actualReleaseDate);
-			}
-			
-			if ($scope.milestone.plannedCompletionDate.length > 0) {
-				$scope.milestone.plannedCompletionDate = new Date($scope.milestone.plannedCompletionDate);
-			}
-			
 			// select the correct customer. This needs to be done for the select to work
 			for (var i in $scope.customers) {
 				if ($scope.customers[i]._id == $scope.milestone.customer._id) {

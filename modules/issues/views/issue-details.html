@@ -11,9 +11,8 @@
 	</div>
 	<div class="col-md-3 col-xs-6">
 		<a href="#/milestones/{{milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
-		<span data-ng-if="milestone.status == 'NEW'" class="text-danger">&nbsp;&nbsp;<small>Keine Freigabe!</small></span>
-		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success">&nbsp;&nbsp;<small>Freigegeben</small></span>
-		<span data-ng-if="milestone.approvedBy.length > 0"><small> (von {{milestone.approvedBy}})</small></span>
+		<span data-ng-if="milestone.status == 'NEW'" class="text-danger" style="cursor:help" title="Das Pflichtenheft aus dem dieses Ticket stammt wurde noch nicht freigegeben">&nbsp;&nbsp;<small>Keine Freigabe!</small></span>
+		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success" style="cursor:help" title="Das Pflichtenheft aus dem dieses Ticket stammt wurde freigegeben">&nbsp;&nbsp;<small>Freigegeben</small></span>
 	</div>
 </div>
 
@@ -56,12 +55,18 @@
 	<div class="col-md-3 col-xs-6">
 		<b>Status</b>	
 	</div>
-	<div class="col-md-9 col-xs-6">
+	<div class="col-md-3 col-xs-6">
 		<span data-ng-if="issue.state == 'NEW'">Neu</span>	
 		<span data-ng-if="issue.state == 'FEEDBACK'">Feedback</span>	
 		<span data-ng-if="issue.state == 'ASSIGNED'">Zugewiesen</span>	
 		<span data-ng-if="issue.state == 'RESOLVED'">Resolved</span>	
 		<span data-ng-if="issue.state == 'CLOSED'">Geschlossen</span>
+	</div>
+	<div class="col-md-3 col-xs-6">
+		<b>Zu erledigen bis</b>
+	</div>
+	<div class="col-md-3 col-xs-6">
+		{{issue.resolveUntil|date:'dd.MM.yyyy'}}
 	</div>
 </div>
 

@@ -1,12 +1,16 @@
 <form name="issueform">
 	<div class="form-group">
-		<label>Kunde</label>
-		<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers"></select>
-	</div>
-	
-	<div class="form-group">
-		<label>Milestone</label>
-		<select data-ng-model="issue.milestone" class="form-control" data-ng-options="m as m.version for m in milestones"></select>
+		<div class="row">
+			<div class="col-md-6 col-xs-12">
+				<label>Kunde</label>
+				<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers"></select>
+			</div>
+			
+			<div class="col-md-6 col-xs-12">
+				<label>Milestone</label>
+				<select data-ng-model="issue.milestone" class="form-control" data-ng-options="m as m.version for m in milestones"></select>
+			</div>
+		</div>
 	</div>
 	
 	<div class="form-group" data-ng-if="issue.milestone.specification.features && issue.milestone.specification.features.length > 0">
@@ -25,17 +29,26 @@
 	</div>
 	
 	<div class="form-group">
-		<label>Zugewiesen an</label>
-		<div data-user-selector data-select-as="issue.assignedTo"></div>
-	</div>
+		<div class="row">
+			<div class="col-md-4 col-xs-12">
+				<label>Typ</label>
+				<select data-ng-model="issue.issuetype" class="form-control">
+					<option value="BUG">Bug</option>
+					<option value="FEATURE">Feature</option>
+					<option value="CHANGE_REQUEST">Change Request</option>
+					<option value="SUPPORT">Supportanfrage</option>
+				</select>
+			</div>	
+			
+			<div class="col-md-4 col-xs-12">
+				<label>Zugewiesen an</label>
+				<div data-user-selector data-select-as="issue.assignedTo"></div>			
+			</div>
 	
-	<div class="form-group">
-		<label>Typ</label>
-		<select data-ng-model="issue.issuetype" class="form-control">
-			<option value="BUG">Bug</option>
-			<option value="FEATURE">Feature</option>
-			<option value="CHANGE_REQUEST">Change Request</option>
-			<option value="SUPPORT">Supportanfrage</option>
-		</select>
+			<div class="col-md-4 col-xs-12">
+				<label>Zu erledigen bis</label>
+				<input type="date"  data-ng-model="issue.resolveUntil" class="form-control">
+			</div>
+		</div>
 	</div>
 </form>

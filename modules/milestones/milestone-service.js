@@ -111,6 +111,19 @@ ProJack.milestones.service("MilestoneService",
 					retval.attachments = [];
 					for (var i in retval._attachments) 
 						retval.attachments.push({ name : i, type : retval._attachments[i]['content_type'], size : retval._attachments[i].length });
+					
+					// format dates correctly 
+					if (retval.plannedApprovalDate !== undefined && retval.plannedApprovalDate.length > 0)
+						retval.plannedApprovalDate = new Date(retval.plannedApprovalDate);
+					
+					if (retval.plannedReleaseDate !== undefined && retval.plannedReleaseDate.length > 0)
+						retval.plannedReleaseDate = new Date(retval.plannedReleaseDate);
+				
+					if (retval.actualReleaseDate !== undefined && retval.actualReleaseDate.length > 0)
+						retval.actualReleaseDate = new Date(retval.actualReleaseDate);
+				
+					if (retval.plannedCompletionDate !== undefined && retval.plannedCompletionDate.length > 0)
+						retval.plannedCompletionDate = new Date(retval.plannedCompletionDate);
 					return retval;
 				});
 			return p;
@@ -150,6 +163,7 @@ ProJack.milestones.service("MilestoneService",
 					i.feature = f._id;
 					i.customer = milestone.customer;
 					i.issuetype = "FEATURE";
+					i.resolveUntil = milestone.plannedReleaseDate,
 					f.createIssue = false;
 					iService.createIssue(i);
 				} else {
