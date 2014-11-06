@@ -98,6 +98,11 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 	$httpProvider.interceptors.push(function($q) {
         return {
             'request' : function(config) {
+            	
+                // safety check: are we logged in?
+            	if (!localStorage.getItem(ProJack.config.sessionKey))
+            		window.location.href = "./login";
+            	
                 if (config.method == "PATCH")
                     config.headers['Content-Type'] = "application/json";
 
