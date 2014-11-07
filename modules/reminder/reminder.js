@@ -1,1 +1,1 @@
-ProJack.reminder = angular.module("ReminderModule", ['Utils']);
+ProJack.reminder = angular.module("ReminderModule", ['Utils', 'SecurityModule']);

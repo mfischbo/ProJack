@@ -3,7 +3,7 @@ ProJack.reminder.controller('ReminderController', ['$scope', '$window', 'Reminde
 	$scope.panelVisible = false;
 	
 	$scope.reminder = service.newReminder();
-	$scope.reminders = [];
+	$scope.reminders = undefined;
 	
 	$scope.toggleVisible = function() {
 		$scope.panelVisible = !$scope.panelVisible;
@@ -21,7 +21,7 @@ ProJack.reminder.controller('ReminderController', ['$scope', '$window', 'Reminde
 	
 	$scope.fetchReminders = function() {
 		service.getAllActiveReminders().then(function(reminders) {
-			if ($scope.reminders.length != reminders.length) {
+			if ($scope.reminders && $scope.reminders.length < reminders.length) {
 				$('#projack-player')[0].play();
 			}
 			$scope.reminders = reminders;
@@ -30,7 +30,8 @@ ProJack.reminder.controller('ReminderController', ['$scope', '$window', 'Reminde
 	
 	$scope.removeReminder = function(reminder) {
 		service.deleteReminder(reminder).then(function() {
-			KT.remove('_id', reminder._id, $scope.reminders);
+			KT.remove('_id', reminder._id, $scope.reminders.reminders);
+			KT.alert("Der Reminder wurde erfolgreich entfernt");
 		});
 	};
 
