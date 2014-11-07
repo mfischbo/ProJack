@@ -4,26 +4,35 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 	var locKey = "__IssuesIndex_Criteria";
 	
 	$scope.criteria = {
+		type   : '',
+		selection : 0,
 		status : 'NEW',
-		customer : undefined,
-		milestone : undefined
+		customer : '',
+		milestone :'',
+		status : ''
 	};
 	
-	if (sessionStorage.getItem(locKey)) {
-		$scope.criteria = JSON.parse(sessionStorage.getItem(locKey));
+	if (localStorage.getItem(locKey)) {
+		$scope.criteria = JSON.parse(localStorage.getItem(locKey));
 	}
 	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
-		if (!$scope.criteria.customer) {
+		
+		if ($scope.criteria.customer == '') {
 			$scope.criteria.customer = data[0]._id;
-			$scope.milestones = [{version : 'Alle Versionen', _id : "" }];
 		}
+		
 		milestoneService.getMilestonesByCustomer(
 				KT.find("_id", $scope.criteria.customer, $scope.customers)).then(function(stones) {
-			if (!$scope.milestones) 
-				$scope.milestones = [{ version : 'Alle Versionen', _id : "" }];
+			if (!$scope.milestones)
+				$scope.milestones = [];
+			
+			$scope.milestones.push({version : 'Alle Versionen', _id : ''});
+			$scope.milestones.push({version : 'Ohne Milestone', _id : ProJack.config.lowId});
 			$scope.milestones = $scope.milestones.concat(stones);
+			if ($scope.criteria.milestone == '')
+				$scope.criteria.milestone = $scope.milestones[0]._id;
 		})
 	});
 	
@@ -33,16 +42,19 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		
 		milestoneService.getMilestonesByCustomer(KT.find('_id', val, $scope.customers))
 			.then(function(data) {
-				$scope.milestones = [{ version : 'Alle Versionen', _id : "" }];
+				$scope.milestones = [];
+				$scope.milestones.push({ version : 'Alle Versionen', _id : '' });
+				$scope.milestones.push({version : 'Ohne Milestone', _id : ProJack.config.lowId});
+			
 				$scope.milestones = $scope.milestones.concat(data);
 				if ($scope.milestones.length == 1) {
-					$scope.criteria.milestone = "";
+					$scope.criteria.milestone = $scope.milestones[0]._id;
 				}
 			});
 	});
 	
 	$scope.$watch('criteria', function() {
-		sessionStorage.setItem(locKey, JSON.stringify($scope.criteria));
+		localStorage.setItem(locKey, JSON.stringify($scope.criteria));
 		service.getIssuesByCriteria($scope.criteria).then(function(data) {
 			$scope.issues = data;
 		});
@@ -66,7 +78,7 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 		if (!val || val.length == 0) return;
 		milestoneService.getMilestonesByCustomer(KT.find('_id', val, $scope.customers))
 			.then(function(data) {
-				$scope.milestones = [{ version : 'Ohne Milestone', _id : '' }];
+				$scope.milestones = [{ version : 'Ohne Milestone', _id : ProJack.config.lowId }];
 				$scope.milestones = $scope.milestones.concat(data);
 			});
 	});
@@ -87,6 +99,8 @@ ProJack.issues.controller('IssueEditController',
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
 	
+	
+	
 	service.getIssueById($routeParams.id).then(function(data) {
 		$scope.issue = data;
 		$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
@@ -95,13 +109,15 @@ ProJack.issues.controller('IssueEditController',
 		customerService.getCustomerById($scope.issue.customer).then(function(data) {
 			$scope.customer = data;
 		});
-		
-		milestoneService.getMilestoneById($scope.issue.milestone).then(function(data) {
-			$scope.milestone = data;
-			if ($scope.issue.feature && $scope.issue.feature != "") {
-				$scope.feature = KT.find("_id", $scope.issue.feature, $scope.milestone.specification.features);
-			}
-		});
+	
+		if ($scope.issue.milestone != ProJack.config.lowId) {
+			milestoneService.getMilestoneById($scope.issue.milestone).then(function(data) {
+				$scope.milestone = data;
+				if ($scope.issue.feature && $scope.issue.feature != "") {
+					$scope.feature = KT.find("_id", $scope.issue.feature, $scope.milestone.specification.features);
+				}
+			});
+		}
 	});
 	
 	$scope.sanitizeHtml = function() {

@@ -41,7 +41,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				.then(function(response) {
 					var issue = response.data;
 					
-					if (issue.resolveUntil !== undefined && issue.resolveUntil.length > 0)
+					if (issue.resolveUntil && issue.resolveUntil.length > 0)
 						issue.resolveUnitl = new Date(issue.resolveUntil);
 					
 					if (issue._attachments) {
