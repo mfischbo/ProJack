@@ -17,7 +17,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
 				estimatedTime: 0,
-				resolveUntil: new Date(),
+				resolveUntil: '',
 				notes		: []
 			};
 		},
@@ -144,6 +144,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issue.milestone = issue.milestone._id;
 			if (typeof issue.feature == "object")
 				issue.feature = issue.feature._id;
+			
+			if (issue.assignedTo && issue.assignedTo.length > 0)
+				issue.state = 'ASSIGNED';
 			
 			var d = $q.defer();
 		

@@ -32,6 +32,7 @@ ProJack.reminder.controller('ReminderController', ['$scope', '$window', 'Reminde
 		service.deleteReminder(reminder).then(function() {
 			KT.remove('_id', reminder._id, $scope.reminders.reminders);
 			KT.alert("Der Reminder wurde erfolgreich entfernt");
+			$scope.reminders.length--;
 		});
 	};
 

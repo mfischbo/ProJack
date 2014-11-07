@@ -68,7 +68,6 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 						if (Array.isArray(retval[k]))
 							retval.length += retval[k].length;
 					}
-					console.debug(retval);
 					return retval;
 				});
 		},
