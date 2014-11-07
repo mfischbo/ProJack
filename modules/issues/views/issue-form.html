@@ -1,14 +1,13 @@
-<form name="issueform">
 	<div class="form-group">
 		<div class="row">
 			<div class="col-md-6 col-xs-12">
 				<label>Kunde</label>
-				<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers"></select>
+				<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers" required></select>
 			</div>
 			
 			<div class="col-md-6 col-xs-12">
 				<label>Milestone</label>
-				<select data-ng-model="issue.milestone" class="form-control" data-ng-options="m as m.version for m in milestones"></select>
+				<select data-ng-model="issue.milestone" class="form-control" data-ng-options="m as m.version for m in milestones" required></select>
 			</div>
 		</div>
 	</div>
@@ -20,12 +19,12 @@
 
 	<div class="form-group">
 		<label>Name</label>
-		<input type="text" data-ng-model="issue.title" class="form-control" placeholder="Zusammenfassung des Problems">
+		<input type="text" data-ng-model="issue.title" class="form-control" placeholder="Zusammenfassung des Problems" required>
 	</div>	
 	
 	<div class="form-group">
 		<label>Beschreibung</label>	
-		<textarea rows="4" data-ng-model="issue.description" class="form-control" data-ui-tinymce="tinymceOptions"></textarea>
+		<textarea rows="4" data-ng-model="issue.description" class="form-control" data-ui-tinymce="tinymceOptions" required></textarea>
 	</div>
 	
 	<div class="form-group">
@@ -51,4 +50,3 @@
 			</div>
 		</div>
 	</div>
-</form>
