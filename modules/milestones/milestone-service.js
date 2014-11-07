@@ -113,16 +113,16 @@ ProJack.milestones.service("MilestoneService",
 						retval.attachments.push({ name : i, type : retval._attachments[i]['content_type'], size : retval._attachments[i].length });
 					
 					// format dates correctly 
-					if (retval.plannedApprovalDate !== undefined && retval.plannedApprovalDate.length > 0)
+					if (retval.plannedApprovalDate && retval.plannedApprovalDate.length > 0)
 						retval.plannedApprovalDate = new Date(retval.plannedApprovalDate);
 					
-					if (retval.plannedReleaseDate !== undefined && retval.plannedReleaseDate.length > 0)
+					if (retval.plannedReleaseDate && retval.plannedReleaseDate.length > 0)
 						retval.plannedReleaseDate = new Date(retval.plannedReleaseDate);
 				
-					if (retval.actualReleaseDate !== undefined && retval.actualReleaseDate.length > 0)
+					if (retval.actualReleaseDate && retval.actualReleaseDate.length > 0)
 						retval.actualReleaseDate = new Date(retval.actualReleaseDate);
 				
-					if (retval.plannedCompletionDate !== undefined && retval.plannedCompletionDate.length > 0)
+					if (retval.plannedCompletionDate && retval.plannedCompletionDate.length > 0)
 						retval.plannedCompletionDate = new Date(retval.plannedCompletionDate);
 					return retval;
 				});
@@ -176,13 +176,12 @@ ProJack.milestones.service("MilestoneService",
 				}
 			}
 		
-			var p =	$http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
+			return $http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
 				.success(function(response) {
 					return response.data;
 				}).error(function(response) {
 					return "OOPS!";
 				});
-			return p;
 		},
 	
 		/**

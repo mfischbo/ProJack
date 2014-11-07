@@ -19,7 +19,7 @@
 	<h5 class="pull-right">Software Releases</h5>
 	<div class="clearfix"></div>
 	<div data-ng-repeat="m in reminders.milestoneReleases">
-		<span data-ng-if="m.overdue" class="fa fa-warning text-danger"></span> <b>{{m.plannedReleaseDate|date:'dd.MM.yyyy':'UTC'}}</b><br/>
+		<span data-ng-if="m.overdue" class="fa fa-warning text-danger"></span> <b>{{m.plannedReleaseDate|date:'dd.MM.yyyy'}}</b><br/>
 		Das Release für <strong>{{m.customer.name}}</strong> <a href="#/milestones/{{m._id}}/edit">{{m.name}} ({{m.version}})</a> steht an!
 		<br/><br/>
 	</div>	
@@ -31,7 +31,7 @@
 		<h5 class="pull-right">Pflichtenhefte fertigstellen</h5>
 		<div class="clearfix"></div>
 		<div data-ng-repeat="m in reminders.milestoneSpecsDone">
-			<span data-ng-if="m.overdue" class="fa fa-warning text-danger"></span> <b>{{m.plannedCompletionDate|date:'dd.MM.yyyy':'UTC'}}</b><br/>
+			<span data-ng-if="m.overdue" class="fa fa-warning text-danger"></span> <b>{{m.plannedCompletionDate|date:'dd.MM.yyyy'}}</b><br/>
 			Das <a href="#/milestones/{{m._id}}/edit">Pflichtenheft für Version {{m.version}}</a> muss heute an den Kunden gesendet werden!
 			<br/><br/>
 		</div>

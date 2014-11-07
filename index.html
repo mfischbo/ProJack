@@ -45,9 +45,13 @@
                         <li><a style="font-size:20px; display:none;" id="spinner"><span class="fa fa-circle-o-notch fa-spin"></span></a></li>
                         
                        	<li data-ng-controller="ReminderController" data-ng-class="{active : panelVisible}">
-                       		<a href="javascript:void('')" data-ng-click="toggleVisible()" style="font-size:20px;"><span class="fa fa-bell"></span> <span class="badge">{{reminders.length}}</span></a>
+                       		<a href="javascript:void('')" data-ng-click="toggleVisible()" style="font-size:20px;">
+                       			<span class="fa fa-bell"></span> 
+                       			<span class="badge" style="position:relative;top:-10px;margin-left:-7px;">{{reminders.length}}</span>
+                       		</a>
 							<div id="reminder-panel" data-ng-show="panelVisible">
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-form.html'"></div>
+								<hr/>
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-list.html'"></div>
 								<audio id="projack-player">
 									<source src="./resources/media/coin-sound.mp3">
