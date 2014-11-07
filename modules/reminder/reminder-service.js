@@ -8,7 +8,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 				description : '',
 				alertAt		: new Date(),
 				alertTime	: '',
-				deleted		: false
+				userCreated : securityService.getCurrentUserName(),
 			}
 		},
 		
@@ -19,7 +19,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 			var endKey   = '[' + x.getFullYear() + ',' + (x.getUTCMonth() + 1) + ',' + x.getUTCDate() + ',' + (x.getUTCHours() + 1) + ',' + x.getUTCMinutes() + ']';
 			
 			var that = this;
-			return $http.get(ProJack.config.dbUrl + '/_design/timefeed/_view/reminders?startkey=' + startKey + '&endkey=' + endKey)
+			return $http.get(ProJack.config.dbUrl + '/_design/timefeed/_list/userFilter/reminders?startkey=' + startKey + '&endkey=' + endKey)
 				.then(function(response) {
 					retval = {
 							length : 0,
@@ -57,7 +57,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 						}
 						
 						// issues
-						if (k == 3 && v.assignedTo !== undefined && v.assignedTo == currentUser) {
+						if (k == 3) {
 							var r = moment(v.resolveUntil);
 							v.overdue = that.isOverdue(r, 1);
 							retval.issues.push(v);
