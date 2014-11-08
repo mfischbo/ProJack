@@ -62,7 +62,7 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 	$scope.updateMilestone = function() {
 		service.updateMilestone($scope.milestone).then(function(data) {
 			KT.alert("Alle Änderungen gespeichert");
-			$scope.milestone._rev = data.data.rev;
+			$scope.milestone._rev = data.rev;
 			service.getAggregation($scope.milestone).then(function(aggr) {
 				$scope.aggregation = aggr;
 			});

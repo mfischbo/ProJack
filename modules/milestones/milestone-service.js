@@ -43,7 +43,7 @@ ProJack.milestones.service("MilestoneService",
 		 */
 		newFeature : function() {
 			return {
-				_id 			: KT.UUID(),
+				_id				: KT.UUID(),
 				title  			: '',
 				requirement 	: '',
 				implementation 	: '',
@@ -62,7 +62,6 @@ ProJack.milestones.service("MilestoneService",
 		 */
 		newQuestion : function() {
 			return {
-				_id 		: KT.UUID(),
 				question 	: '',
 				answer   	: '',
 				answeredBy 	: '',
@@ -146,42 +145,70 @@ ProJack.milestones.service("MilestoneService",
 		 */
 		updateMilestone : function(milestone) {
 			milestone.dateModified = new Date().getTime();
-			
-			// collect all features into a hashmap
-			var features = {};
-			for (var k in milestone.specification.features)
-				features[milestone.specification.features[k]._id] = milestone.specification.features[k];
-			
-			// add a new issue if createIssue is true
-			for (var k in milestone.specification.features) {
-				var f = milestone.specification.features[k];
-				if (f.createIssue && f.createIssue == true) {
-					var i = iService.newIssue();
-					i.title = f.title;
-					i.description = "<b>Anforderung</b><br/>" + f.requirement + "<br/><br/><b>Umsetzung</b><br/>" + f.implementation;
-					i.milestone = milestone._id;
-					i.feature = f._id;
-					i.customer = milestone.customer;
-					i.issuetype = "FEATURE";
-					i.resolveUntil = milestone.plannedReleaseDate,
-					f.createIssue = false;
-					iService.createIssue(i);
-				} else {
-					// update a given features text if specification changes
-					iService.getIssueByFeature(f).then(function(issue) {
-						var tmp = features[issue.feature];
-						issue.description = "<b>Anforderung</b><br/>" + tmp.requirement + "<br/><br/><b>Umsetzung</b><br/>" + tmp.implementation;
-						iService.updateIssue(issue);
-					});
-				}
-			}
 		
-			return $http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
+			var def = $q.defer();
+			
+			// update the milestone document
+			$http.put(ProJack.config.dbUrl + "/" + milestone._id, milestone)
 				.success(function(response) {
-					return response.data;
+			
+					// assign the returned value
+					milestone._rev = response.rev;
+					
+					// collect all features into a hashmap
+					var features = {};
+					for (var k in milestone.specification.features)
+						features[milestone.specification.features[k]._id] = milestone.specification.features[k];
+
+					// collect issues into an array
+					var issues = [];
+					for (var k in milestone.specification.features) {
+						var f = milestone.specification.features[k];
+						
+						if (f.createIssue && f.createIssue == true) {
+							var i = iService.newIssue();
+							i.title = f.title;
+							i.description = "<b>Anforderung</b><br/>" + f.requirement + "<br/><br/><b>Umsetzung</b><br/>" + f.implementation;
+							i.milestone = milestone._id;
+							i.feature = f._id;
+							i.customer = milestone.customer._id;
+							i.issuetype = "FEATURE";
+							i.resolveUntil = milestone.plannedReleaseDate,
+							f.createIssue = false;
+							issues.push(i);
+						} else {
+							issues.push(iService.getIssueByFeature(f));	
+						}
+					}
+					
+					// process all new and updated issues
+					$q.all(issues).then(function(results) {
+						for (var x in results) {
+							
+							// update issue texts of already inserted issued
+							var issue = results[x];
+							if (issue._id) {
+								var f = features[issue.feature];
+								issue.title        = f.title;
+								issue.resolveUntil = milestone.plannedReleaseDate;
+								issue.description  = '<b>Anforderung</b><br/>' + f.requirement + '<br/><br/><b>Umsetzung</b><br/>' + f.implementation;
+							}
+						}
+						
+						// since we might changed the state of a feature, do a bulk update
+						results.push(milestone);
+						$http.post(ProJack.config.dbUrl + '/_bulk_docs', { docs : results }).success(function(iResp) {
+							console.log(iResp);
+							var retval = KT.find('id', milestone._id, iResp);
+							def.resolve(retval);
+						}).error(function() {
+							def.reject();
+						});
+					});
 				}).error(function(response) {
-					return "OOPS!";
+					KT.alert('Beim speichern des Milestones ist ein Fehler aufgetreten', 'error');
 				});
+			return def.promise;
 		},
 	
 		/**
