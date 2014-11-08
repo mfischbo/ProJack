@@ -181,8 +181,12 @@ ProJack.milestones.service("MilestoneService",
 						}
 					}
 					
+					issues.push(iService.getNextIssueNumber());
+					
 					// process all new and updated issues
 					$q.all(issues).then(function(results) {
+						var q = 0;
+						var number = results.pop().nextNumber;
 						for (var x in results) {
 							
 							// update issue texts of already inserted issued
@@ -192,6 +196,9 @@ ProJack.milestones.service("MilestoneService",
 								issue.title        = f.title;
 								issue.resolveUntil = milestone.plannedReleaseDate;
 								issue.description  = '<b>Anforderung</b><br/>' + f.requirement + '<br/><br/><b>Umsetzung</b><br/>' + f.implementation;
+							} else {
+								issue.number = (q + number);
+								q++;
 							}
 						}
 						

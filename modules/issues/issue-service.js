@@ -184,6 +184,20 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			});
 		},
 		
+		
+		getNextIssueNumber : function() {
+			var def = $q.defer();
+			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/count?group=false').success(function(data) {
+				if (data.rows.length == 0)
+					def.resolve({ nextNumber : 1 });
+				else 
+					def.resolve({ nextNumber : parseInt(data.rows[0].value) + 1});
+			}).error(function() {
+				def.reject();
+			});
+			return def.promise;
+		},
+		
 		addAttachment : function(issue, file) {
 			var deferred = $q.defer();
 			var fr = new FileReader();
