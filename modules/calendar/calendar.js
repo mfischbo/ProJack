@@ -52,6 +52,8 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	
 	$scope.currentMonth = new Date().getMonth() + 1;
 	$scope.currentYear  = new Date().getFullYear();
+	
+	$scope.focusedMilestone = undefined;
 
 	
 	$scope.getEntries = function() {
@@ -70,6 +72,12 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		});
 	};
 	$scope.getEntries();
+	
+	
+	$scope.showDetails = function(doc) {
+		if (doc.type == 'milestone')
+			$scope.focusedMilestone = doc;
+	};
 	
 	
 	$scope.subMonth = function() {

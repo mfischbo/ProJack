@@ -1,4 +1,4 @@
-/**
+/*
  * Service for managing milestones
  */
 ProJack.milestones.service("MilestoneService", 
@@ -16,7 +16,7 @@ ProJack.milestones.service("MilestoneService",
 				customer 			: '',
 				factor				: 1.6,
 				rate				: 60.00,
-				estimatedTotalTime  : 0,
+				estimatedDevelopmentTime  : 0,
 				dateCreated 		: new Date().getTime(),
 				dateModified 		: new Date().getTime(),
 				name 				: '',
@@ -349,6 +349,7 @@ ProJack.milestones.service("MilestoneService",
 			var def = $q.defer();
 			var that = this;
 			
+			// load the stats for this milestone
 			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/milestoneStats?group=true&key="' + milestone._id + '"')
 				.success(function(data) {
 					var a = {
@@ -372,16 +373,27 @@ ProJack.milestones.service("MilestoneService",
 						a.issues[i].timeSpent = moment.duration(a.issues[i].timeSpent, 'seconds').format("HH:mm");
 					}
 				
-					for (var i in milestone.specification.features) {
-						var q = milestone.specification.features[i].estimatedEffort.split(":");
-						a.totalTime += that.calculateFeatureTime(milestone, milestone.specification.features[i]);
-						a.developmentTime += (q[0] * 3600 + q[1] * 60);
+					if (milestone.specification.features && milestone.specification.features.length > 0) {
+						
+						// sum up times for all features
+						for (var i in milestone.specification.features) {
+							var q = milestone.specification.features[i].estimatedEffort.split(":");
+							a.totalTime += that.calculateFeatureTime(milestone, milestone.specification.features[i]);
+							a.developmentTime += (q[0] * 3600 + q[1] * 60);
+						}
+					} else {
+						// calculate the times from the given estimated effort time of the milestone
+						a.totalTime = Math.ceil(milestone.estimatedDevelopmentTime * milestone.factor) * 3600;
+						a.developmentTime = milestone.estimatedDevelopmentTime * 3600;
 					}
-					//a.totalTime = milestone.factor * a.developmentTime;
 					a.budget    = milestone.rate   * (a.totalTime / 3600);
 					a.issuestats.totalTrend = moment.duration(a.issuestats.totalTimeSpent - a.developmentTime, 'seconds').format("HH:mm");
 					a.issuestats.totalTimeSpent = moment.duration(a.issuestats.totalTimeSpent, 'seconds').format("HH:mm");
-					a.budgetPerFeature = a.budget / milestone.specification.features.length;
+					
+					if (milestone.specification.features.length > 0)
+						a.budgetPerFeature = a.budget / milestone.specification.features.length;
+					else
+						a.budgetPerFeature = 0;
 					a.overhead  = moment.duration(a.totalTime - a.developmentTime, 'seconds').format("HH:mm");
 					a.timePerFeature = moment.duration(a.totalTime / milestone.specification.features.length, 'seconds').format("HH:mm");
 					a.developmentTime = moment.duration(a.developmentTime, 'seconds').format('HH:mm', { forceLength : true });

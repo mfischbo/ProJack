@@ -45,19 +45,19 @@
 						<td>{{date|date:'EEE'}}</td>
 						<td>{{date|date:'dd.MM.yyyy'}}</td>
 						<td>
-							<div data-ng-repeat="g in m.specsdone">
+							<div data-ng-repeat="g in m.specsdone" style="cursor:pointer;" data-ng-click="showDetails(g)">
 								<span class="label label-default">Specs fertig</span>
 								{{g.customer.name}} - {{g.name}} <small>{{g.version}}</small><br/>
 							</div>
-							<div data-ng-repeat="r in m.releases">
+							<div data-ng-repeat="r in m.releases" style="cursor:pointer;" data-ng-click="showDetails(r)">
 								<span class="label label-info">Release</span> 
 								{{r.customer.name}} - {{r.name}} <small>{{r.version}}</small><br/>
 							</div>
-							<div data-ng-repeat="a in m.approvals">
+							<div data-ng-repeat="a in m.approvals" style="cursor:pointer;" data-ng-click="showDetails(a)">
 								<span class="label label-warning">Freigabe</span>
 								{{a.customer.name}} - {{a.name}} <small>{{a.version}}</small><br/>
 							</div>
-							<div data-ng-repeat="p in m.payments">
+							<div data-ng-repeat="p in m.payments" style="cursor:pointer;" data-ng-click="showDetails(p)">
 								<span class="label label-success">Zahlungseingang</span>
 								{{p.customer.name}} {{p.name}} <small>{{p.version}}</small><br/>
 							</div>
@@ -78,5 +78,19 @@
 				Einnahmen : {{totalPayments | currency : '&euro;'}}	
 			</div>
 		</div>
+	
+		<!-- 	
+		<div class="panel panel-default" data-ng-if="focusedMilestone">
+			<div class="panel-heading">
+				<h5 class="panel-title">Milestone</h5>
+			</div>
+			
+			<div class="panel-body">
+				<h5>{{focusedMilestone.name}}</h5>
+				<div class="col-md-4 col-xs-4">Specs fertig am</div>
+				<div class="col-md-8 col-xs-8">{{focusedMilestone.</div>
+			</div>
+		</div>
+		-->
 	</div>
 </div>
