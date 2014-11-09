@@ -16,14 +16,21 @@ ProJack.security.controller("UserEditController", ['$scope', '$routeParams', 'Se
 	};
 }]);
 
-ProJack.security.controller("UserCreateController", ['$scope', 'SecurityService', function($scope, service) {
+ProJack.security.controller("UserCreateController", ['$scope', 'KT', 'SecurityService', function($scope, KT, service) {
 	
 	$scope.user = service.newUser();
 	
 	$scope.createUser = function() {
-		service.createUser($scope.user).then(function(data) {
-			// add the user to the list of members for this db
-			service.addUserAsMember($scope.user);
+		$scope.user.passwordConfirmation = undefined;
+		
+		service.createUser($scope.user).success(function(data) {
+			service.addUserAsMember($scope.user).success(function() {
+				KT.alert('Der Benutzer wurde erfolgreich angelegt');
+			}).error(function() {
+				KT.alert('Beim anlegen des Benutzers ist ein Fehler aufgetreten', 'error');
+			});
+		}).error(function() {
+			KT.alert('Beim anlegen des Benutzers ist ein Fehler aufgetreten. Sind sie Admin?', 'error');
 		});
 	};
 }]);

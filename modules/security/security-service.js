@@ -1,4 +1,4 @@
-ProJack.security.service("SecurityService", ['$http', function($http) {
+ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) {
 	
 	return {
 	
@@ -46,21 +46,31 @@ ProJack.security.service("SecurityService", ['$http', function($http) {
 		
 		createUser : function(user) {
 			return $http.put(ProJack.config.srvUrl + "/_users/org.couchdb.user:" + user.name, user)
-				.then(function(response) {
+				.success(function(response) {
 					return response.data;
+				}).error(function() {
+					return undefined;
 				});
 		},
 		
 		addUserAsMember : function(user) {
-			$http.get(ProJack.config.dbUrl + "/_security").then(function(response) {
+			var def = $q.defer();
+			$http.get(ProJack.config.dbUrl + "/_security").success(function(response) {
 				var data = response.data;
 				if (data.members.names.indexOf(user.name) > -1)
 					return;
 				else {
 					data.members.names.push(user.name);
-					$http.put(ProJack.config.dbUrl + "/_security", data); // shit always goes right!
+					$http.put(ProJack.config.dbUrl + "/_security", data).success(function(data) {
+						def.resolve(data);
+					}).error(function() {
+						def.reject();
+					});
 				}
+			}).error(function() {
+				def.reject();
 			});
+			return def.promise;
 		},
 		
 		updateUser : function(user) {

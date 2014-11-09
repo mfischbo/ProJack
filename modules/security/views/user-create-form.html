@@ -1,12 +1,12 @@
 <form name="userForm">
 	<div class="form-group">
 		<label>Login</label>
-		<input type="text" data-ng-model="user.name" class="form-control">
+		<input type="text" data-ng-model="user.name" class="form-control" required>
 	</div>
 	<div class="form-group">
 		<label>Password</label>
-		<input type="password" data-ng-model="user.password" class="form-control" placeholder="Password"><br/>
-		<input type="password" data-ng-model="passwordConfirmation" class="form-control" placeholder="Nochmal bitte...">
+		<input type="password" data-ng-model="user.password" class="form-control" placeholder="Password" required><br/>
+		<input type="password" data-ng-model="user.passwordConfirmation" class="form-control" placeholder="Nochmal bitte..." required >
 	</div>
 	
 	<div class="form-group">
