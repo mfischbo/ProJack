@@ -259,6 +259,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		},
 		
 		startTimeTracking : function(issue) {
+			var def = $q.defer();
+			
 			if (!issue.times) issue.times = [];
 	
 			var user = secService.getCurrentUserName();
@@ -269,6 +271,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issue.times.push(track);
 				this.updateIssue(issue).then(function(data) {
 					issue._rev = data.rev;
+					def.resolve();
 				});
 			} else {
 				// check for an error in the data model
@@ -284,8 +287,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				track.state = 'RUNNING';
 				this.updateIssue(issue).then(function(data) {
 					issue._rev = data.rev;
+					def.resolve();
 				});
 			}
+			return def.promise;
 		},
 		
 		pauseTimeTracking : function(issue) {

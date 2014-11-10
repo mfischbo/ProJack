@@ -217,15 +217,18 @@ ProJack.issues.controller('IssueEditController',
 	$scope.removeTrackingOnUpdate = false;
 	
 	
+	// load the issue to be displayed
 	service.getIssueById($routeParams.id).then(function(data) {
 		$scope.issue = data;
 		$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
 		$scope.sanitizeHtml();
-	
+
+		// load the customer if the issue has one
 		customerService.getCustomerById($scope.issue.customer).then(function(data) {
 			$scope.customer = data;
 		});
-	
+
+		// load the milestone if the issue has one
 		if ($scope.issue.milestone != ProJack.config.lowId) {
 			milestoneService.getMilestoneById($scope.issue.milestone).then(function(data) {
 				$scope.milestone = data;
@@ -236,17 +239,25 @@ ProJack.issues.controller('IssueEditController',
 		}
 		
 		// check if there is active time tracking. If so set an interval to calculate the current ticket time
+		$scope.setTicketTimeInterval();
+	});
+
+	/**
+	 * Sets an interval to display the current tracking time
+	 */
+	$scope.setTicketTimeInterval = function() {
 		if (service.hasActiveTracking($scope.issue)) {
-		
 			$scope.time.currentSpent = service.getCurrentTimeTrackingData($scope.issue).time;
 			
 			timeIval = window.setInterval(function() {
 				var d = service.getCurrentTimeTrackingData($scope.issue);
 				console.log(d);
-				$scope.time.currentSpent = d.time;
+				$scope.$apply(function() {
+					$scope.time.currentSpent = d.time;
+				});
 			}, 30000);
-		}
-	});
+		}	
+	};
 	
 	$scope.sanitizeHtml = function() {
 		// add $sce for all notes
@@ -310,8 +321,8 @@ ProJack.issues.controller('IssueEditController',
 		// remove tracking data if required
 		if ($scope.removeTrackingOnUpdate) {
 			service.removeTrackingData($scope.issue);
-			window.clearTimeout(timeIval);
-			$scope.time.currentSpent = undefined;
+			window.clearInterval(timeIval);
+			$scope.time.currentSpent = '00:00';
 		}
 	
 		service.updateIssue($scope.issue).then(function(data) {
@@ -362,7 +373,9 @@ ProJack.issues.controller('IssueEditController',
 	 * Starts or resumes time tracking for the current user on the given issue
 	 */
 	$scope.startTimeTracking = function() {
-		service.startTimeTracking($scope.issue);
+		service.startTimeTracking($scope.issue).then(function() {
+			$scope.setTicketTimeInterval();
+		});
 	};
 	
 	/**

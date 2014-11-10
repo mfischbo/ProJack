@@ -39,10 +39,10 @@
 		<td class="tools">
 			<a href="#/issues/{{i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 			
-			<a href="javascript:void('');" title="Zeit Starten" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeStartable(i)"><span class="fa fa-play"></span></a>
-			<a href="javascript:void('');" title="Pause beenden" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeResumable(i)"><span class="fa fa-play blink"></span></a>
-			<a href="javascript:void('');" title="Zeit pausieren" data-ng-click="pauseTimeTracking(i)" data-ng-if="isTimePauseable(i)"><span class="fa fa-pause"></span></a>
-			<a href="javascript:void('');" title="Zeit anhalten" data-ng-click="stopTimeTracking(i)" data-ng-if="isTimeStoppable(i)"><span class="fa fa-stop"></span></a>	
+			<a href="javascript:void('');" title="Timetracking starten" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeStartable(i)"><span class="fa fa-play"></span></a>
+			<a href="javascript:void('');" title="Timetracking fortsetzen" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeResumable(i)"><span class="fa fa-play blink"></span></a>
+			<a href="javascript:void('');" title="Take a break... have a KitKat!" data-ng-click="pauseTimeTracking(i)" data-ng-if="isTimePauseable(i)"><span class="fa fa-pause"></span></a>
+			<a href="javascript:void('');" title="Timetracking stoppen" data-ng-click="stopTimeTracking(i)" data-ng-if="isTimeStoppable(i)"><span class="fa fa-stop"></span></a>	
 		</td>
 	</tr>
 </tbody>
