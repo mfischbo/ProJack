@@ -3,6 +3,12 @@ ProJack.app = angular.module("ProJack",
 		 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 
 		 'IssuesModule', 'MailModule', 'CalendarModule']);
 
+ProJack.app.filter('numberFixedLen', function () {
+    return function(a,b){
+        return(1e4+a+"").slice(-b)
+    }
+});
+
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
