@@ -24,7 +24,17 @@
 	<div class="col-md-6 col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h5 class="panel-title">Ticket Status</h5>
+				<div class="pull-left">
+					<h5 class="panel-title">Ticket Status</h5>
+				</div>
+				<div class="pull-right">
+					<span data-ng-if="isTimePausable() || isTimeStoppable()">Aktuelle Zeit <small>(ohne Pausen)</small>: {{time.currentSpent}}&nbsp;&nbsp;</span>
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeStartable()" data-ng-click="startTimeTracking()"><span class="fa fa-play"></span></button>	
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeResumable()" data-ng-click="startTimeTracking()"><span class="fa fa-play blink"></span></button>	
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimePauseable()" data-ng-click="pauseTimeTracking()"><span class="fa fa-pause"></span></button>	
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeStoppable()" data-ng-click="stopTimeTracking()"><span class="fa fa-stop"></span></button>	
+				</div>
+				<div class="clearfix"></div>
 			</div>
 			
 			<div class="panel-body">

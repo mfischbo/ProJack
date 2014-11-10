@@ -1,7 +1,8 @@
-ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
-                                                   function($scope, KT, service, customerService, milestoneService) {
+ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$modal',
+                                                   function($scope, KT, service, customerService, milestoneService, secService, $modal) {
 
 	var locKey = "__IssuesIndex_Criteria";
+	var user   = secService.getCurrentUserName();
 	
 	$scope.criteria = {
 		type   : '',
@@ -60,7 +61,113 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		});
 	}, true);
 	
+	
+	/**
+	 * Returns whether or not the user is able to start time tracking on this issue
+	 */
+	$scope.isTimeStartable = function(issue) {
+		return service.isTimeStartable(issue);
+	};
+
+
+	/**
+	 * Returns whether or not the user is able to pause the time tracking on this issue
+	 */
+	$scope.isTimePauseable = function(issue) {
+		return service.isTimePauseable(issue);
+	};
+	
+	/**
+	 * Returns whether or not the user is able to resume time tracking on this issue
+	 */	
+	$scope.isTimeResumable = function(issue) {
+		return service.isTimeResumable(issue);
+
+	};
+	
+	/**
+	 * Returns whether or not the user is able to stop time tracking on the given issue
+	 */
+	$scope.isTimeStoppable = function(issue) {
+		return service.isTimePauseable(issue);
+	};
+
+	/**
+	 * Starts or resumes time tracking for the current user on the given issue
+	 */
+	$scope.startTimeTracking = function(issue) {
+		service.startTimeTracking(issue);
+	};
+	
+	/**
+	 * Pauses time tracking for the current user on the given issue
+	 */
+	$scope.pauseTimeTracking = function(issue) {
+		service.pauseTimeTracking(issue);
+	};
+	
+	/**
+	 * Stops time tracking for the current user on the given issue and opens
+	 * a modal dialog in order to leave a note for the tracking
+	 */
+	$scope.stopTimeTracking = function(issue) {
+		$modal.open({
+			controller		: 'IssueTimeTrackModalController',
+			templateUrl 	: './modules/issues/views/timetrack-modal.html',
+			size			: 'lg',
+			resolve : {
+				data : function() {
+					return { user : user, issue : issue };
+				}
+			}
+		});
+	};
+	
 }]);
+
+ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalInstance', 'KT', 'IssueService', 'data', function($scope, $modalInstance, KT, service, data) {
+
+	$scope.issue = data.issue;
+	$scope.user  = data.user;
+	$scope.endTime = new Date().getTime();
+
+	$scope.note = service.newNote();
+	
+	// find the tracking for the given user
+	var t = service.getCurrentTimeTrackingData($scope.issue);
+	
+	$scope.startTime = t.startTime;
+	$scope.endTime = t.endTime;
+	$scope.pauseTime = t.pauseTime;
+	$scope.result = t.result;
+	$scope.time = { spent : t.time };
+	
+	$scope.ok = function() {
+		
+		// remove tracking information
+		service.removeTrackingData(issue);
+		
+		// calculate the spent time for the note
+		var t = $scope.time.spent.split(":");
+		$scope.note.timeSpentHours = parseInt(t[0]);
+		$scope.note.timeSpentMinutes = parseInt(t[1]);
+		
+		// add the note to the issue
+		$scope.issue.notes.push($scope.note);
+		
+		// update the issue using the service
+		service.updateIssue($scope.issue).then(function(data) {
+			$scope.issue._rev = data.rev;
+			KT.alert('Notiz wurde erfolgreich hinzugefügt');
+			$modalInstance.close();
+		});
+	}
+	
+	$scope.cancel = function() {
+		$modalInstance.dismiss();
+	}
+}]);
+
 
 ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
                                                     function($scope, $location, KT, service, customerService, milestoneService) {
@@ -99,6 +206,15 @@ ProJack.issues.controller('IssueEditController',
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
 	
+	var timeIval = undefined;
+	
+	// indicates whether or not to remove the users time tracking when
+	// the issue is updated.
+	// This will be set to true, when the user stops tracking and posts
+	// the actual note.
+	// This should be initially set to false, in order to allow adding notes
+	// when tracking is active without removing the tracking data
+	$scope.removeTrackingOnUpdate = false;
 	
 	
 	service.getIssueById($routeParams.id).then(function(data) {
@@ -117,6 +233,18 @@ ProJack.issues.controller('IssueEditController',
 					$scope.feature = KT.find("_id", $scope.issue.feature, $scope.milestone.specification.features);
 				}
 			});
+		}
+		
+		// check if there is active time tracking. If so set an interval to calculate the current ticket time
+		if (service.hasActiveTracking($scope.issue)) {
+		
+			$scope.time.currentSpent = service.getCurrentTimeTrackingData($scope.issue).time;
+			
+			timeIval = window.setInterval(function() {
+				var d = service.getCurrentTimeTrackingData($scope.issue);
+				console.log(d);
+				$scope.time.currentSpent = d.time;
+			}, 30000);
 		}
 	});
 	
@@ -174,15 +302,96 @@ ProJack.issues.controller('IssueEditController',
 			$scope.note.timeSpentHours = parseInt(tmp[0]);
 			$scope.note.timeSpentMinutes = parseInt(tmp[1]);
 		}
-		
+	
+		// unset the note
 		$scope.note = undefined;
 		$scope.time.spent = "";
 		
+		// remove tracking data if required
+		if ($scope.removeTrackingOnUpdate) {
+			service.removeTrackingData($scope.issue);
+			window.clearTimeout(timeIval);
+			$scope.time.currentSpent = undefined;
+		}
+	
 		service.updateIssue($scope.issue).then(function(data) {
 			$scope.issue._rev = data.rev;
 			$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
 			$scope.sanitizeHtml();
 			KT.alert("Notiz gespeichert");
+		
+			$scope.removeTrackingData = false;
 		});
+	};
+
+	
+	/**
+	 * Returns whether or not the user is able to start time tracking on this issue
+	 */
+	$scope.isTimeStartable = function() {
+		if (!$scope.issue) return false;
+		return service.isTimeStartable($scope.issue);
+	};
+
+
+	/**
+	 * Returns whether or not the user is able to pause the time tracking on this issue
+	 */
+	$scope.isTimePauseable = function() {
+		if (!$scope.issue) return false;
+		return service.isTimePauseable($scope.issue);
+	};
+	
+	/**
+	 * Returns whether or not the user is able to resume time tracking on this issue
+	 */	
+	$scope.isTimeResumable = function() {
+		if (!$scope.issue) return false;
+		return service.isTimeResumable($scope.issue);
+	};
+	
+	/**
+	 * Returns whether or not the user is able to stop time tracking on the given issue
+	 */
+	$scope.isTimeStoppable = function() {
+		if (!$scope.issue) return false;
+		return service.isTimePauseable($scope.issue);
+	};
+
+	/**
+	 * Starts or resumes time tracking for the current user on the given issue
+	 */
+	$scope.startTimeTracking = function() {
+		service.startTimeTracking($scope.issue);
+	};
+	
+	/**
+	 * Pauses time tracking for the current user on the given issue
+	 */
+	$scope.pauseTimeTracking = function() {
+		service.pauseTimeTracking($scope.issue);
+	};
+	
+	/**
+	 * Stops time tracking for the current user on the given issue and opens
+	 * a modal dialog in order to leave a note for the tracking
+	 */
+	$scope.stopTimeTracking = function() {
+		
+		if ($scope.note) {
+			KT.confirm('Achtung! Wenn Sie fortfahren wird die aktuelle Notiz verworfen! Weiter?', function() {
+				$scope.unfocusNote();
+				$scope.addNoteFromTracking();
+			});
+		} else {
+			$scope.addNoteFromTracking();
+		}
+	};
+	
+	$scope.addNoteFromTracking = function() {
+		var data = service.getCurrentTimeTrackingData($scope.issue);
+		$scope.time.spent = data.time;
+		$scope.note = service.newNote();
+		$scope.removeTrackingOnUpdate = true;
 	};
 }]);

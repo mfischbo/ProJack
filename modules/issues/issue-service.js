@@ -18,7 +18,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateModified: new Date().getTime(),
 				estimatedTime: 0,
 				resolveUntil: '',
-				notes		: []
+				notes		: [],
+				times		: []	// array of time tracking object for all users
 			};
 		},
 		
@@ -33,6 +34,24 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateModified	: new Date().getTime(),
 				userCreated 	: secService.getCurrentUserName(),
 				userModified	: secService.getCurrentUserName()
+			};
+		},
+		
+		newTimeTrack : function(username) {
+			return {
+				_id			: KT.UUID(),
+				user		: username,
+				state		: 'RUNNING', // possible values: RUNNING, PAUSED
+				startTime	: new Date().getTime(),
+				endTime     : -1,
+				pauseTimes  : 0,
+				pause		: {}
+			};
+		},
+		
+		newPause: function() {
+			return {
+				startTime : new Date().getTime(),
 			};
 		},
 		
@@ -217,6 +236,121 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 			}
 			return deferred.promise;
+		},
+		
+		isTimeStartable : function(issue) {
+			// condition: times is empty, or no entry for the current user
+			if (!issue.times || issue.times.length == 0) return true;
+			return (KT.find('user', secService.getCurrentUserName(), issue.times) === undefined);
+		},
+		
+		isTimePauseable : function(issue) {
+			// condition: times must be available and the current user has an entry with state == 'RUNNING'
+			if (!issue.times || issue.times.length == 0) return false;
+			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
+			return track.state == 'RUNNING';
+		},
+		
+		isTimeResumable : function(issue) {
+			// condition: times must be available for the current user and state == 'PAUSED'
+			if (!issue.times || issue.times.length == 0) return false;
+			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
+			return track.state == 'PAUSED';
+		},
+		
+		startTimeTracking : function(issue) {
+			if (!issue.times) issue.times = [];
+	
+			var user = secService.getCurrentUserName();
+			var track = KT.find('user', user, issue.times);
+			if (!track) {
+				// create a new time tracking
+				track = this.newTimeTrack(user);
+				issue.times.push(track);
+				this.updateIssue(issue).then(function(data) {
+					issue._rev = data.rev;
+				});
+			} else {
+				// check for an error in the data model
+				if (track.state == 'RUNNING')
+					return;
+				
+				// resume the given time tracking by removing the break,
+				// and set the paused times in the track
+				var eTime = new Date().getTime();
+				var pauseTime = eTime - track.pause.startTime;
+				track.pauseTimes += pauseTime;
+				track.pause = undefined;
+				track.state = 'RUNNING';
+				this.updateIssue(issue).then(function(data) {
+					issue._rev = data.rev;
+				});
+			}
+		},
+		
+		pauseTimeTracking : function(issue) {
+			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
+			if (track) {
+				var b = this.newPause();
+				track.pause = b;
+				track.state = 'PAUSED';
+				this.updateIssue(issue).then(function(data) {
+					issue._rev = data.rev;
+				});
+			}
+		},
+		
+		getCurrentTimeTrackingData : function(issue) {
+			var retval = {
+					startTime : 0,
+					pauseTime : 0,
+					endTime   : new Date().getTime(),
+					result    : 0,
+					time      : '',
+			}
+		
+			var user = secService.getCurrentUserName();
+			var track = undefined;
+			
+			for (var i in issue.times) {
+				if (issue.times[i].user == user) {
+					track = issue.times[i];
+			
+					retval.startTime = track.startTime;
+					
+					// calculate the pauses in minutes
+					retval.pauseTime = Math.round(track.pauseTimes / (60 * 1000));
+					
+					// calculate the overall time
+					var msecs = retval.endTime - track.startTime - track.pauseTimes;
+					retval.result = Math.round(msecs / (60 * 1000));
+				
+					var hours = Math.floor(msecs / (3600 * 1000));
+					var mins  = Math.round((msecs / (60 * 1000)) % 60); 
+					
+					if (hours < 10)
+						hours = '0' + hours;
+					if (mins < 10)
+						mins = '0' + mins;
+					retval.time = hours + ':' + mins;
+				}
+			}
+			return retval;
+		},
+		
+		removeTrackingData : function(issue) {
+			var user = secService.getCurrentUserName();
+			for (var i in issue.times) {
+				if (issue.times[i] && issue.times[i].user == user) {
+					issue.times.splice(i,1);
+				}
+			}
+			return issue;
+		},
+		
+		hasActiveTracking : function(issue) {
+			var user = secService.getCurrentUserName();
+			return (KT.find('user', user, issue.times) !== undefined)
 		}
 	};
 }]);
