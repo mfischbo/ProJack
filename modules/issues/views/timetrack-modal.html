@@ -1,0 +1,62 @@
+<form name="notesForm">
+	<div class="modal-header">
+		<h4 class="modal-title">Zeit Erfassung Ticket #{{issue.number}} {{issue.title}}</h4>
+	</div>
+	
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-md-12">
+				<h4>Zusammenfassung</h4>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">Gestartet um</div>	
+			<div class="col-md-3">{{startTime|date:'dd.MM.yyyy HH:mm'}}</div>
+			<div class="col-md-3">Beedet um</div>
+			<div class="col-md-3">{{endTime|date:'dd.MM.yyyy HH:mm'}}</div>
+		</div>
+	
+		<div class="row">
+			<div class="col-md-3">Pausen</div>	
+			<div class="col-md-3">{{pauseTime}} Minuten</div>
+			<div class="col-md-3"><strong>Gesamtzeit</strong></div>
+			<div class="col-md-3"><strong>{{result}} Minuten</strong></div>
+		</div>
+		
+		<div class="row">
+			<div class="col-md-12"><hr/></div>
+		</div>
+	
+		<div class="row">
+			<div class="col-md-12">
+				<h4>Notiz hinzufügen</h4>
+				<div class="form-group">
+					<label>Notiz</label>
+					<textarea data-ng-model="note.text" rows="4" class="form-control" data-ui-tinymce required></textarea>
+				</div>
+				
+				<div class="form-group">
+					<label>Tasktype</label>
+					<select data-ng-model="note.tasktype" class="form-control">
+						<option value="GENERAL">Generell</option>
+						<option value="BACKEND">Backend</option>
+						<option value="FRONTEND">Frontend</option>
+					</select>
+				</div>
+				
+				<div class="form-group">
+					<label>Zeitaufwand</label>
+					<input type="text" data-ng-model="time.spent" class="form-control" placeholder="HH:mm" required>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<div class="pull-right">
+			<button type="button" class="btn btn-danger" data-ng-click="cancel()">Abbrechen</button>
+			<button type="button" class="btn btn-success" data-ng-click="ok()" data-ng-disabled="notesForm.$invalid">OK</button>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</form>
