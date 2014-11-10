@@ -145,7 +145,7 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 	$scope.ok = function() {
 		
 		// remove tracking information
-		service.removeTrackingData(issue);
+		service.removeTrackingData($scope.issue);
 		
 		// calculate the spent time for the note
 		var t = $scope.time.spent.split(":");
