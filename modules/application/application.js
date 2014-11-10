@@ -107,7 +107,7 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
             	
                 // safety check: are we logged in?
             	if (!localStorage.getItem(ProJack.config.sessionKey))
-            		window.location.href = "./login";
+            		window.location.href = "./login.html";
             	
                 if (config.method == "PATCH")
                     config.headers['Content-Type'] = "application/json";
@@ -125,7 +125,7 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 
             'responseError' : function(rejection) {
                 if (rejection.status == 401)
-                    window.location.href = "./login";
+                    window.location.href = "./login.html";
                
                 /*
                 if (rejection.status == 503)
