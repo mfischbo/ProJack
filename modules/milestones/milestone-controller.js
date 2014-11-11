@@ -91,8 +91,8 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 		$scope.milestone.specification.features.push($scope.focusedFeature);
 	};
 	
-	$scope.printMilestone = function() {
-		service.printMilestone($scope.milestone, $scope.template).then(function() {
+	$scope.printMilestone = function(type) {
+		service.printMilestone($scope.milestone, $scope.template, type).then(function() {
 			KT.alert("Das Pflichtenheft wurde erfolgreich angelegt");
 		});
 	};

@@ -101,7 +101,8 @@
 			
 			<div class="panel-footer">
 				<div class="pull-right">
-					<button class="btn btn-primary" data-ng-click="printMilestone()" data-ng-disabled="!template._id || template._id.length == 0">Erstellen</button>
+					<button class="btn btn-primary" data-ng-click="printMilestone('PDF')" data-ng-disabled="!template._id || template._id.length == 0">PDF Erstellen</button>
+					<button class="btn btn-primary" data-ng-click="printMilestone('ODT')" data-ng-disabled="!template._id || template._id.length == 0">ODT Erstellen</button>
 				</div>
 				<div class="clearfix"></div>
 			</div>

@@ -46,7 +46,7 @@
                        	<li data-ng-controller="ReminderController" data-ng-class="{active : panelVisible}">
                        		<a href="javascript:void('')" data-ng-click="toggleVisible()" style="font-size:20px;">
                        			<span class="fa fa-bell"></span> 
-                       			<span class="badge" style="position:relative;top:-10px;margin-left:-7px;">{{reminders.length}}</span>
+                       			<span data-ng-class="{'badge' : true, 'badge-danger' : reminders.length > 0}" style="position:relative;top:-10px;margin-left:-7px;">{{reminders.length}}</span>
                        		</a>
 							<div id="reminder-panel" data-ng-show="panelVisible">
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-form.html'"></div>
@@ -58,7 +58,7 @@
 							</div>
 						</li>	
                         <li><a href="#/admin/users/self" style="font-size:20px;"><span class="fa fa-user"></span></a></li>
-                        <li><a href="./login#/logout" style="font-size:20px;"><span class="fa fa-power-off"></span></a></li>
+                        <li><a href="./login.html#/logout" style="font-size:20px;"><span class="fa fa-power-off"></span></a></li>
                     </ul>
 				</div>
 			</div>

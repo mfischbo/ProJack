@@ -20,6 +20,10 @@ td.tools a {
     z-index:9999;
 }
 
+td a , td a:hover{
+	color:#666;
+}
+
 #alert-panel .alert {
     padding:5px;
     text-align:center;
@@ -54,6 +58,10 @@ tr.weekend {
 	background-image:url('../images/white-opacity-95.png');
 	background-repeat:repeat;
 	padding:24px;
+}
+
+.badge-danger {
+	background-color:#e51c23;
 }
 
 .blink {

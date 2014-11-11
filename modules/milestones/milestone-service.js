@@ -252,7 +252,7 @@ ProJack.milestones.service("MilestoneService",
 		 * @param milestone The milestone to be printed
 		 * @param template The template to be used for printing the milestone
 		 */
-		printMilestone : function(milestone, template) {
+		printMilestone : function(milestone, template, type) {
 			var def = $q.defer();
 			var that = this;
 			
@@ -299,8 +299,13 @@ ProJack.milestones.service("MilestoneService",
 							model    : JSON.stringify(milestone),
 							filename : milestone.name + ".pdf"
 					}
-					$http.post(ProJack.config.serviceUrl + "/reports", post).success(function(data) {
-						that.addAttachment(milestone, { name : milestone.name + ".pdf", type : "application/pdf", data : data }).then(function() {
+					$http.post(ProJack.config.serviceUrl + "/reports?type=" + type, post).success(function(data) {
+						var meta = { ext : '.pdf', mimetype : 'application/pdf'};
+			
+						if (type == 'ODT') {
+							meta = { ext : '.odt', mimetype : 'application/vnd.oasis.opendocument.text' };
+						}
+						that.addAttachment(milestone, { name : milestone.name + meta.ext, type : meta.mimetype, data : data }).then(function() {
 							def.resolve();
 						});
 					});
