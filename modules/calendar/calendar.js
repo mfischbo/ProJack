@@ -66,26 +66,25 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 				}
 				for (var k in entries[i]['specsdone']) {
 					var milestone = entries[i]['specsdone'][k];
-					d.events.push( { type : 'Pflichtenheft absenden', milestone : this.transformMilestone(milestone) });
+					d.events.push( { type : 0, milestone : this.transformMilestone(milestone) });
 				}
 				for (var k in entries[i]['approvals']) {
 					var milestone = entries[i]['approvals'][k];
-					d.events.push( { type : 'Pflichtenheft freigabe', milestone : this.transformMilestone(milestone) });
+					d.events.push( { type : 1, milestone : this.transformMilestone(milestone) });
 				}
 				for (var k in entries[i]['releases']) {
 					var milestone = entries[i]['releases'][k];
-					d.events.push( { type : 'Release', milestone : this.transformMilestone(milestone) });
+					d.events.push( { type : 2, milestone : this.transformMilestone(milestone) });
 				}
 				for (var k in entries[i]['payments']) {
 					var milestone = entries[i]['payments'][k];
 					var budget    = mService.getMilestoneBudget(milestone).budget;
 					retval.income += budget;
-					d.events.push( { type : 'Zahlungseingang', milestone : this.transformMilestone(milestone), income : mService.getMilestoneBudget(milestone).budget });
+					d.events.push( { type : 3, milestone : this.transformMilestone(milestone), income : mService.getMilestoneBudget(milestone).budget });
 				}
 				retval.days.push(d);
 			}
 			
-			//var m = moment(retval.days[0].date).locale('de');
 			retval.month = m.format("MMMM");
 			retval.year  = m.format("YYYY");
 			console.log(retval);
