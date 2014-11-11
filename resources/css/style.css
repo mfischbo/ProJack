@@ -44,13 +44,13 @@ tr.weekend {
 	background-color:#eee;
 }
 
-#reminder-panel {
+.overlay-panel {
 	min-width: 600px;
 	min-height: 100vh;
 	border: 1px solid #ddd;
 	position: fixed;
 	right: 0;
-	top: 70px;
+	top: 83px;
 	margin-top: -17px;
 	z-index: 9000;
 	overflow-y: scroll;

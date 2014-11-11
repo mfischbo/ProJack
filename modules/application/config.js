@@ -18,6 +18,9 @@ ProJack.config = {
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		
+		// server url for elasticsearch
+		esUrl : '/es/pj',
+		
 		// session key where user data is stored in the session storage
 		sessionKey : "__ProJack_Session",
 		
@@ -32,6 +35,8 @@ ProJack.config = {
 		
 		// enable / disable reminder polling
 		reminderPollingEnabled : true,
+		
+		searchDelayTimeout : 350,
 		
 		// default options for tinymce
 		tinyOptions : {
