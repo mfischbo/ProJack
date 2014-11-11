@@ -1,5 +1,5 @@
-ProJack.calendar = angular.module("CalendarModule", ['Utils', 'MileStonesModule']);
-ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', function($http, $q, KT) {
+ProJack.calendar = angular.module("CalendarModule", ['Utils', 'MileStonesModule', 'TemplateModule']);
+ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneService', function($http, $q, KT, mService) {
 	
 	return {
 		getEntries : function(year, month) {
@@ -39,9 +39,86 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', function($http
 					console.log(retval);
 					return retval;
 				});
+		},
+		
+		transformMilestone : function(milestone) {
+			var q = {
+					customer : milestone.customer.name || "",
+					version  : milestone.version || "",
+			};
+			return q;
+		},
+		
+		
+		transformToReportModel : function(entries) {
+			var retval = {
+				month : '',
+				year  : '',
+				income : 0,
+				days : []
+			};
+			
+			for (var i in entries) {
+				var m = moment(parseInt(i)).locale('de');
+				var d = {
+						date : m.format("DD.MM.YYYY"),
+						events : []
+				}
+				for (var k in entries[i]['specsdone']) {
+					var milestone = entries[i]['specsdone'][k];
+					d.events.push( { type : 'Pflichtenheft absenden', milestone : this.transformMilestone(milestone) });
+				}
+				for (var k in entries[i]['approvals']) {
+					var milestone = entries[i]['approvals'][k];
+					d.events.push( { type : 'Pflichtenheft freigabe', milestone : this.transformMilestone(milestone) });
+				}
+				for (var k in entries[i]['releases']) {
+					var milestone = entries[i]['releases'][k];
+					d.events.push( { type : 'Release', milestone : this.transformMilestone(milestone) });
+				}
+				for (var k in entries[i]['payments']) {
+					var milestone = entries[i]['payments'][k];
+					var budget    = mService.getMilestoneBudget(milestone).budget;
+					retval.income += budget;
+					d.events.push( { type : 'Zahlungseingang', milestone : this.transformMilestone(milestone), income : mService.getMilestoneBudget(milestone).budget });
+				}
+				retval.days.push(d);
+			}
+			
+			//var m = moment(retval.days[0].date).locale('de');
+			retval.month = m.format("MMMM");
+			retval.year  = m.format("YYYY");
+			console.log(retval);
+			return retval;
+		},
+		
+		printReport : function(model, template, type) {
+			
+			// load the attachment
+			$http({
+				method : 'GET',
+				url    : ProJack.config.dbUrl + '/' + template._id + '?attachments=true',
+				headers: {'Accept' : 'application/json'}
+			}).then(function(response) {
+				var name = undefined;
+				for (var i in response.data._attachments) {
+					name = i;
+					break;
+				}
+				var attachment = response.data._attachments[name];
+				
+				var data = {
+						template : attachment.data,
+						model    : JSON.stringify(model),
+						filename : 'Report-' + model.month + '-' + model.year + '.' + type.toLowerCase()
+				};
+				
+				$http.post(ProJack.config.serviceUrl + '/reports?type=' + type, data).success(function(d) {
+					var w = window.open('data:application/pdf;base64,' + d);
+				});
+			});
 		}
 	}
-	
 }]);
 
 ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'CalendarService', 'MilestoneService', 
@@ -54,6 +131,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	$scope.currentYear  = new Date().getFullYear();
 	
 	$scope.focusedMilestone = undefined;
+	
+	// the template selection for printing the milestone
+	$scope.template = { _id : undefined };
 
 	
 	$scope.getEntries = function() {
@@ -77,6 +157,11 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	$scope.showDetails = function(doc) {
 		if (doc.type == 'milestone')
 			$scope.focusedMilestone = doc;
+	};
+	
+	$scope.printReport = function(type) {
+		var model = service.transformToReportModel($scope.entries);
+		service.printReport(model, $scope.template, type);
 	};
 	
 	

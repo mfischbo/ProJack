@@ -344,6 +344,25 @@ ProJack.milestones.service("MilestoneService",
 			return fTime;
 		},
 		
+	
+		getMilestoneBudget : function(milestone) {
+			var a = { developmentTime : 0, totalTime : 0};
+			if (milestone.specification.features && milestone.specification.features.length > 0) {
+						
+				// sum up times for all features
+				for (var i in milestone.specification.features) {
+					var q = milestone.specification.features[i].estimatedEffort.split(":");
+					a.totalTime += this.calculateFeatureTime(milestone, milestone.specification.features[i]);
+					a.developmentTime += (parseInt(q[0]) * 3600 + parseInt(q[1]) * 60);
+				}
+			} else {
+				// calculate the times from the given estimated effort time of the milestone
+				a.totalTime = Math.ceil(milestone.estimatedDevelopmentTime * milestone.factor) * 3600;
+				a.developmentTime = milestone.estimatedDevelopmentTime * 3600;
+			}
+			a.budget = (milestone.rate) * (a.totalTime / 3600);
+			return a;
+		},
 		
 		/**
 		 * Calculates the aggregation for the given milestone
@@ -378,20 +397,11 @@ ProJack.milestones.service("MilestoneService",
 						a.issues[i].timeSpent = moment.duration(a.issues[i].timeSpent, 'seconds').format("HH:mm");
 					}
 				
-					if (milestone.specification.features && milestone.specification.features.length > 0) {
-						
-						// sum up times for all features
-						for (var i in milestone.specification.features) {
-							var q = milestone.specification.features[i].estimatedEffort.split(":");
-							a.totalTime += that.calculateFeatureTime(milestone, milestone.specification.features[i]);
-							a.developmentTime += (q[0] * 3600 + q[1] * 60);
-						}
-					} else {
-						// calculate the times from the given estimated effort time of the milestone
-						a.totalTime = Math.ceil(milestone.estimatedDevelopmentTime * milestone.factor) * 3600;
-						a.developmentTime = milestone.estimatedDevelopmentTime * 3600;
-					}
-					a.budget    = milestone.rate   * (a.totalTime / 3600);
+					var cashflow = that.getMilestoneBudget(milestone);
+					
+					a.budget    = cashflow.budget;
+					a.totalTime = cashflow.totalTime;
+					a.developmentTime = cashflow.developmentTime;
 					a.issuestats.totalTrend = moment.duration(a.issuestats.totalTimeSpent - a.developmentTime, 'seconds').format("HH:mm");
 					a.issuestats.totalTimeSpent = moment.duration(a.issuestats.totalTimeSpent, 'seconds').format("HH:mm");
 					
