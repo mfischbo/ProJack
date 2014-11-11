@@ -64,10 +64,20 @@ tr.weekend {
 	background-color:#e51c23;
 }
 
+
+.milestone-marker {
+	padding-left:8px;
+	padding-right:8px;
+	padding-top:2px;
+	padding-bottom:2px;
+	border-radius:10px;	
+}
+
 div.lane {
-	width:100%;
+	max-width:50px;
 	min-height:23px;
 	cursor:cell;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);	
 }
 
 .blink {

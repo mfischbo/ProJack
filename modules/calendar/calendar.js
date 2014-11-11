@@ -31,7 +31,8 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 		
 		
 		saveAssignments : function(assignments) {
-			return $http.post(ProJack.config.dbUrl + '/_bulk_docs', { docs : assignments }).then(function(response) {
+			var def = $q.defer();
+			$http.post(ProJack.config.dbUrl + '/_bulk_docs', { docs : assignments }).success(function(response) {
 				
 				// update revision numbers on each assignment
 				for (var i in response.data) {
@@ -40,7 +41,11 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 						a._rev = response.data[i].rev;
 					}
 				}
+				def.resolve(response);
+			}).error(function() {
+				def.reject();
 			});
+			return def.promise;
 		},
 		
 		getAllAssignments : function(lowerDate, upperDate) {
@@ -224,6 +229,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	
 	// the list of assignemnts
 	$scope.assignments = [];
+	
+	// show only releases and approvals
+	$scope.laneFilter = false;
 
 
 	/**
@@ -239,7 +247,6 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		// fetch the entries for the current month / year selection
 		service.getEntries($scope.currentYear, $scope.currentMonth).then(function(entries) {
 			$scope.entries = entries;
-			console.log(entries);
 			
 			// fetch milestone data aggregation for each milestone
 			var keys = [];
@@ -290,7 +297,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	
 	
 	$scope.saveAssignments = function() {
-		service.saveAssignments($scope.assignments);
+		service.saveAssignments($scope.assignments).then(function() {
+			KT.alert('Alle Zuweisungen wurden gespeichert');
+		});
 	};
 	
 	$scope.getAssignment = function(date, user) {
@@ -306,6 +315,11 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	},
 	
 	$scope.assignSlice = function(date, user, loru, $event) {
+		
+		if (!$event.ctrlKey && !$scope.focusedMilestone) {
+			KT.alert("Bitte zuerst auf einen Milestone klicken", 'warning');
+			return;
+		}
 		
 		// find the assignment or return use a new one
 		var assignment = undefined;
@@ -356,9 +370,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		for (var i in $scope.assignments) {
 			var a = $scope.assignments[i];
 			
-			if (a.lower.milestone.length > 0)
+			if (a.lower.milestone == milestone._id)
 				retval += (4 * 3600);
-			if (a.upper.milestone.length > 0)
+			if (a.upper.milestone == milestone._id)
 				retval += (4 * 3600);
 		}
 		return retval;

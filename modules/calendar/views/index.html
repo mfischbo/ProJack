@@ -26,8 +26,15 @@
 					</h4>
 				</div>
 				<div class="pull-right">
-					<button class="btn btn-primary " data-ng-click="subMonth()"><span class="fa fa-chevron-left"></span></button>&nbsp;
-					<button class="btn btn-primary " data-ng-click="addMonth()"><span class="fa fa-chevron-right"></span></button>	
+						<form class="form-inline">
+							<div class="checkbox">
+								<label class="checkbox">
+									<input type="checkbox" data-ng-model="laneFilter" class="form-control"> Nur Freigaben / Releases
+								</label>
+							</div>
+							<button class="btn btn-primary " data-ng-click="subMonth()"><span class="fa fa-chevron-left"></span></button>&nbsp;
+							<button class="btn btn-primary " data-ng-click="addMonth()"><span class="fa fa-chevron-right"></span></button>	
+						</form>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -44,21 +51,21 @@
 					<tr data-ng-repeat="(date, m) in entries" data-ng-class="{today: isToday(date), weekend : isWeekend(date)}">
 						<td>{{date|date:'EEE'}} {{date|date:'dd.MM.yyyy'}}</td>
 						<td>
-							<div data-ng-repeat="g in m.specsdone" style="cursor:pointer;" data-ng-click="showDetails(g)">
+							<div data-ng-repeat="g in m.specsdone" style="cursor:pointer;" data-ng-click="showDetails(g)" data-ng-if="!laneFilter">
 								<div class="col-md-2"><span class="label label-default">Specs fertig</span></div>
-								<span style="background-color: #{{g.laneColor}}; color:#fff;"> {{g.customer.name}} - {{g.name}}</span> <small>{{g.version}}</small><br/>
+								<span class="milestone-marker" style="background-color: #{{g.laneColor}}; color:#fff;"> {{g.customer.name}} - {{g.name}}</span> <small>{{g.version}}</small><br/>
 							</div>
 							<div data-ng-repeat="r in m.releases" style="cursor:pointer;" data-ng-click="showDetails(r)">
 								<div class="col-md-2 col-md-offset-2"><span class="label label-info">Release</span></div>
-								<span style="background-color: #{{r.laneColor}}; color:#fff;"> {{r.customer.name}} - {{r.name}}</span> <small>{{r.version}}</small><br/>
+								<span class="milestone-marker" style="background-color: #{{r.laneColor}}; color:#fff;"> {{r.customer.name}} - {{r.name}}</span> <small>{{r.version}}</small><br/>
 							</div>
 							<div data-ng-repeat="a in m.approvals" style="cursor:pointer;" data-ng-click="showDetails(a)">
 								<div class="col-md-2 col-md-offset-1"><span class="label label-warning">Freigabe</span></div>
-								<span style="background-color:#{{a.laneColor}}; color:#fff;"> {{a.customer.name}} - {{a.name}}</span> <small>{{a.version}}</small><br/>
+								<span class="milestone-marker" style="background-color:#{{a.laneColor}}; color:#fff;"> {{a.customer.name}} - {{a.name}}</span> <small>{{a.version}}</small><br/>
 							</div>
-							<div data-ng-repeat="p in m.payments" style="cursor:pointer;" data-ng-click="showDetails(p)">
+							<div data-ng-repeat="p in m.payments" style="cursor:pointer;" data-ng-click="showDetails(p)" data-ng-if="!laneFilter">
 								<div class="col-md-2 col-md-offset-3"><span class="label label-success">Zahlung</span></div>
-								<span style="background-color:#{{p.laneColor}}; color:#fff;"> {{p.customer.name}} {{p.name}}</span> <small>{{p.version}}</small><br/>
+								<span class="milestone-marker" style="background-color:#{{p.laneColor}}; color:#fff;"> {{p.customer.name}} {{p.name}}</span> <small>{{p.version}}</small><br/>
 							</div>
 						</td>
 						<td data-ng-repeat="u in users" style="text-align:center;">
@@ -140,13 +147,54 @@
 			</div>
 			
 			<div class="panel-body">
-				Gesamtzeit (mit Overhead) : {{getTotalTime(focusedMilestone) | secsToTime }}<br/>
-				Entwicklungszeit (geschaetzt) : {{focusedMilestone.estimatedDevelopmentTime}} h<br/>
-				Entwicklungszeit (laut Features) : {{getFeatureSum(focusedMilestone) | secsToTime }}<br/>
-				Backend: {{getFeatureSum(focusedMilestone, true) | secsToTime}}<br/>
-				Frontend: {{getFeatureSum(focusedMilestone, false) | secsToTime}}<br/>
-				<br/>
-				Zugeteilt: {{getAssignedTime(focusedMilestone, true) | secsToTime}} 
+				<div class="row">
+					<div class="col-md-6">
+						Gesamtzeit (mit Overhead) : 
+					</div>
+					<div class="col-md-6">
+						{{getTotalTime(focusedMilestone) | secsToTime }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						Entwicklungszeit (geschaetzt) :
+					</div>
+					<div class="col-md-6">
+						{{focusedMilestone.estimatedDevelopmentTime}} h
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						Entwicklungszeit (laut Features) :
+					</div>
+					<div class="col-md-6">
+				 		{{getFeatureSum(focusedMilestone) | secsToTime }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						Backend: 
+					</div>
+					<div class="col-md-6">
+						{{getFeatureSum(focusedMilestone, true) | secsToTime}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						Frontend: 
+					</div>
+					<div class="col-md-6">
+						{{getFeatureSum(focusedMilestone, false) | secsToTime}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<strong>Zugeteilt :</strong> 
+					</div>
+					<div class="col-md-6">
+						<strong>{{getAssignedTime(focusedMilestone, true) | secsToTime}}</strong>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
