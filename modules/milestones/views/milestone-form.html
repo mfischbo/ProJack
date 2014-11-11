@@ -9,13 +9,23 @@
 	</div>
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-9">
+			<div class="col-md-6">
 				<label>Kunde</label>
 				<select data-ng-model="milestone.customer" class="form-control" data-ng-options="c as c.name for c in customers"></select>
 			</div>	
 			<div class="col-md-3">
 				<label>Version</label>		
 				<input type="text" data-ng-model="milestone.version" class="form-control" placeholder="prefix-major.minor.patchlevel">
+			</div>
+			<div class="col-md-3">
+				<label>Farbe</label>
+				<select data-ng-model="milestone.laneColor" class="form-control">
+					<option value="6B0C22" style="color:#6B0C22;">Weinrot</option>
+					<option value="D9042B" style="color:#D9042B;">Rot</option>
+					<option value="F4CB89" style="color:#F4CB89;">Sandy</option>
+					<option value="588C8C" style="color:#588C8C;">Blaugrau</option>
+					<option value="011C26" style="color:#011C26;">Blau</option>
+				</select>
 			</div>
 		</div>
 	</div>

@@ -36,34 +36,44 @@
 				<table class="table table-condensed">
 				<tbody>
 					<tr>
-						<th>&nbsp;</th>
 						<th>Datum</th>
 						<th>&nbsp;</th>
+						<th data-ng-repeat="u in users">{{u.login}}</th>
 					</tr>
 				</tbody>
 					<tr data-ng-repeat="(date, m) in entries" data-ng-class="{today: isToday(date), weekend : isWeekend(date)}">
-						<td>{{date|date:'EEE'}}</td>
-						<td>{{date|date:'dd.MM.yyyy'}}</td>
+						<td>{{date|date:'EEE'}} {{date|date:'dd.MM.yyyy'}}</td>
 						<td>
 							<div data-ng-repeat="g in m.specsdone" style="cursor:pointer;" data-ng-click="showDetails(g)">
 								<div class="col-md-2"><span class="label label-default">Specs fertig</span></div>
-								{{g.customer.name}} - {{g.name}} <small>{{g.version}}</small><br/>
+								<span style="background-color: #{{g.laneColor}}; color:#fff;"> {{g.customer.name}} - {{g.name}}</span> <small>{{g.version}}</small><br/>
 							</div>
 							<div data-ng-repeat="r in m.releases" style="cursor:pointer;" data-ng-click="showDetails(r)">
-								<div class="col-md-2"><span class="label label-info">Release</span></div>
-								{{r.customer.name}} - {{r.name}} <small>{{r.version}}</small><br/>
+								<div class="col-md-2 col-md-offset-2"><span class="label label-info">Release</span></div>
+								<span style="background-color: #{{r.laneColor}}; color:#fff;"> {{r.customer.name}} - {{r.name}}</span> <small>{{r.version}}</small><br/>
 							</div>
 							<div data-ng-repeat="a in m.approvals" style="cursor:pointer;" data-ng-click="showDetails(a)">
-								<div class="col-md-2"><span class="label label-warning">Freigabe</span></div>
-								{{a.customer.name}} - {{a.name}} <small>{{a.version}}</small><br/>
+								<div class="col-md-2 col-md-offset-1"><span class="label label-warning">Freigabe</span></div>
+								<span style="background-color:#{{a.laneColor}}; color:#fff;"> {{a.customer.name}} - {{a.name}}</span> <small>{{a.version}}</small><br/>
 							</div>
 							<div data-ng-repeat="p in m.payments" style="cursor:pointer;" data-ng-click="showDetails(p)">
-								<div class="col-md-2"><span class="label label-success">Zahlungseingang</span></div>
-								{{p.customer.name}} {{p.name}} <small>{{p.version}}</small><br/>
+								<div class="col-md-2 col-md-offset-3"><span class="label label-success">Zahlung</span></div>
+								<span style="background-color:#{{p.laneColor}}; color:#fff;"> {{p.customer.name}} {{p.name}}</span> <small>{{p.version}}</small><br/>
 							</div>
+						</td>
+						<td data-ng-repeat="u in users" style="text-align:center;">
+							<div class="lane" style="background-color:#{{getAssignment(date, u).lower.laneColor}};" title="{{u.login}}" data-ng-click="assignSlice(date, u, 'lower', $event)"></div>
+							<div class="lane" style="background-color:#{{getAssignment(date, u).upper.laneColor}};" title="{{u.login}}" data-ng-click="assignSlice(date, u, 'upper', $event)"></div>	
 						</td>
 					</tr>
 				</table>
+			</div>
+			
+			<div class="panel-footer">
+				<div class="pull-right">
+					<button class="btn btn-success" data-ng-click="saveAssignments()">Alle Speichern</button>
+				</div>
+				<div class="clearfix"></div>
 			</div>
 		</div>
 	</div>
@@ -119,6 +129,24 @@
 					<button type="button" class="btn btn-primary" data-ng-click="printReport('PDF')" data-ng-disabled="!template._id">Als PDF drucken</button>
 				</div>	
 				<div class="clearfix"></div>
+			</div>
+		</div>
+		
+		<div class="panel panel-default" data-ng-if="focusedMilestone" style="position:fixed; bottom:0; width:31.53%; margin-top:12px;">
+			<div class="panel-heading">
+				<h5 class="panel-title">{{focusedMilestone.customer.name}} // {{focusedMilestone.name}}</h5>
+				<div class="pull-right" style="background-color:#{{focusedMilestone.laneColor}}; width:145px; height:15px;margin-top:-15px;">&nbsp;</div>
+				<div class="clearfix"></div>
+			</div>
+			
+			<div class="panel-body">
+				Gesamtzeit (mit Overhead) : {{getTotalTime(focusedMilestone) | secsToTime }}<br/>
+				Entwicklungszeit (geschaetzt) : {{focusedMilestone.estimatedDevelopmentTime}} h<br/>
+				Entwicklungszeit (laut Features) : {{getFeatureSum(focusedMilestone) | secsToTime }}<br/>
+				Backend: {{getFeatureSum(focusedMilestone, true) | secsToTime}}<br/>
+				Frontend: {{getFeatureSum(focusedMilestone, false) | secsToTime}}<br/>
+				<br/>
+				Zugeteilt: {{getAssignedTime(focusedMilestone, true) | secsToTime}} 
 			</div>
 		</div>
 	</div>

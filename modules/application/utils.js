@@ -110,6 +110,13 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 				    params[d(pair[0])] = d(pair[1]);
 				}
 				return params;	
+			},
+			
+			timeToSecs : function(time) {
+				var retval = 0;
+				var q = time.split(":");
+				retval = parseInt(q[0] * 3600) + parseInt(q[1] * 60);
+				return parseInt(retval);
 			}
 	};
 

@@ -365,6 +365,19 @@ ProJack.milestones.service("MilestoneService",
 			return a;
 		},
 		
+		getFeatureSum : function(milestone, backend) {
+			var retval = 0;
+			for (var i in milestone.specification.features) {
+				if (backend) 
+					retval += KT.timeToSecs(milestone.specification.features[i].estimatedBE || '00:00');
+				if (backend == false)
+					retval += KT.timeToSecs(milestone.specification.features[i].estimatedUI || '00:00');
+				if (backend == undefined) 
+					retval += KT.timeToSecs(milestone.specification.features[i].estimatedEffort || '00:00');
+			}
+			return retval;
+		},
+		
 		/**
 		 * Calculates the aggregation for the given milestone
 		 * @param The milestone to calculate the aggregation for

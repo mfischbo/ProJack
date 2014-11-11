@@ -3,7 +3,7 @@
  * Displays the timefeed (milestones, other events) in a table and generates reports
  * @author: M.Fischboeck
  */
-ProJack.calendar = angular.module("CalendarModule", ['Utils', 'MileStonesModule', 'TemplateModule']);
+ProJack.calendar = angular.module("CalendarModule", ['Utils', 'MileStonesModule', 'TemplateModule', 'SecurityModule']);
 
 
 /**
@@ -13,6 +13,53 @@ ProJack.calendar = angular.module("CalendarModule", ['Utils', 'MileStonesModule'
 ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneService', function($http, $q, KT, mService) {
 	
 	return {
+		newAssignment : function(date, user) {
+			return {
+				type : 'assignment',
+				user : user.login,
+				date : date,
+				lower : {
+					milestone : '',
+					laneColor : 'ffffff'
+				},
+				upper : {
+					milestone : '',
+					laneColor : 'ffffff',
+				}
+			}
+		},
+		
+		
+		saveAssignments : function(assignments) {
+			return $http.post(ProJack.config.dbUrl + '/_bulk_docs', { docs : assignments }).then(function(response) {
+				
+				// update revision numbers on each assignment
+				for (var i in response.data) {
+					var a = KT.find('_id', response.data[i].id, assignments);
+					if (a) {
+						a._rev = response.data[i].rev;
+					}
+				}
+			});
+		},
+		
+		getAllAssignments : function(lowerDate, upperDate) {
+			var key = 'startkey=["' + lowerDate + '"]&endkey=["' + upperDate + '"]';
+			return $http.get(ProJack.config.dbUrl + "/_design/assignments/_view/byDateAndUser?" + key).then(function(response) {
+				var retval = [];
+				for (var i in response.data.rows) {
+					retval.push(response.data.rows[i].value);
+				}
+				return retval;
+			});
+		},
+		
+		deleteAssignment : function(assignment) {
+			return $http({
+				url : ProJack.config.dbUrl + "/" + assignment._id + '?rev=' + assignment._rev,
+				method : 'DELETE'
+			});
+		},
 		
 		/**
 		 * Fetches all entries from the couch timefeed for milestones
@@ -157,8 +204,8 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 /**
  * Controller for the index page of the calendar
  */
-ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'CalendarService', 'MilestoneService', 
-                                                        function($scope, KT, service, mService) {
+ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'CalendarService', 'MilestoneService', 'SecurityService',
+                                                        function($scope, KT, service, mService, secService) {
 
 	// aggregation data
 	$scope.totalPayments = 0;
@@ -174,6 +221,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	
 	// the template selection for printing the milestone
 	$scope.template = { _id : undefined };
+	
+	// the list of assignemnts
+	$scope.assignments = [];
 
 
 	/**
@@ -189,9 +239,12 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		// fetch the entries for the current month / year selection
 		service.getEntries($scope.currentYear, $scope.currentMonth).then(function(entries) {
 			$scope.entries = entries;
-		
+			console.log(entries);
+			
 			// fetch milestone data aggregation for each milestone
+			var keys = [];
 			for (var i in $scope.entries) {
+				keys.push(i);
 				var e = $scope.entries[i];
 				for (var q in e.payments) {
 					mService.getAggregation(e.payments[q]).then(function(data) {
@@ -204,7 +257,17 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 						$scope.totalTime += (parseInt(q[0]) * 3600) + (parseInt(q[1]) * 60);
 					});
 				}
+				
+
 			}
+		
+			service.getAllAssignments(keys[0], keys[keys.length -1]).then(function(assignments) {
+				$scope.assignments = assignments;
+			});
+			
+			secService.getAllUserNames().then(function(users) {
+				$scope.users = users;
+			});
 		});
 	};
 	
@@ -225,6 +288,81 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		service.printReport(model, $scope.template, type);
 	};
 	
+	
+	$scope.saveAssignments = function() {
+		service.saveAssignments($scope.assignments);
+	};
+	
+	$scope.getAssignment = function(date, user) {
+		for (var i in $scope.assignments) {
+			var a = $scope.assignments[i];
+			if (a.date == date && a.user == user.login) {
+				return a;
+			}
+		}
+		
+		// not found ... return white
+		return { lower : { laneColor : 'ffffff' }, upper : { laneColor : 'ffffff' } };
+	},
+	
+	$scope.assignSlice = function(date, user, loru, $event) {
+		
+		// find the assignment or return use a new one
+		var assignment = undefined;
+		var currentIdx = 0;		// remember for when removing a assignment
+		for (var i in $scope.assignments) {
+			var a = $scope.assignments[i];
+			if (a.date == date && a.user == user.login) {
+				assignment = a;
+				break;
+			}
+			currentIdx++;
+		}
+		
+		// if none found and ctrl key is not pressed created a new one and add to assignments
+		if (!assignment && !$event.ctrlKey) {
+			assignment = service.newAssignment(date, user);
+			$scope.assignments.push(assignment);
+		}
+		
+		if (!$event.ctrlKey) {
+			assignment[loru].milestone = $scope.focusedMilestone._id;
+			assignment[loru].laneColor = $scope.focusedMilestone.laneColor;
+		} else {
+			assignment[loru].milestone = '';
+			assignment[loru].laneColor = 'ffffff';
+		
+			// if both slots are empty purge the assignment
+			if (assignment['lower'].milestone.length == 0 && assignment['upper'].milestone.length == 0) {
+				service.deleteAssignment(assignment).success(function() {
+					$scope.assignments.splice(currentIdx, 1);
+				});
+			}
+		}
+	};
+	
+	
+	$scope.getTotalTime = function(milestone) {
+		return mService.getMilestoneBudget(milestone).totalTime;
+	};
+	
+	$scope.getFeatureSum = function(milestone, backend) {
+		return mService.getFeatureSum(milestone, backend);
+	};
+	
+	$scope.getAssignedTime = function(milestone, backend) {
+		
+		retval = 0;
+		for (var i in $scope.assignments) {
+			var a = $scope.assignments[i];
+			
+			if (a.lower.milestone.length > 0)
+				retval += (4 * 3600);
+			if (a.upper.milestone.length > 0)
+				retval += (4 * 3600);
+		}
+		return retval;
+	};
 	
 	$scope.subMonth = function() {
 		$scope.currentMonth--;

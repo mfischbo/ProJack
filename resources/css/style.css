@@ -64,6 +64,12 @@ tr.weekend {
 	background-color:#e51c23;
 }
 
+div.lane {
+	width:100%;
+	min-height:23px;
+	cursor:cell;
+}
+
 .blink {
   animation: blink 1s steps(5, start) infinite;
   -webkit-animation: blink 1s steps(5, start) infinite;

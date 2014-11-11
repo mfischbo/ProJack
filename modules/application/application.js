@@ -17,7 +17,8 @@ ProJack.app.filter('secsToTime', function() {
 		if (mins  < 10) mins  = "0" + mins;
 		return hours + ":" + mins;
 	}
-})
+});
+
 
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
