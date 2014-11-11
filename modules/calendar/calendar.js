@@ -1,7 +1,22 @@
+/**
+ * Calendar Module
+ * Displays the timefeed (milestones, other events) in a table and generates reports
+ * @author: M.Fischboeck
+ */
 ProJack.calendar = angular.module("CalendarModule", ['Utils', 'MileStonesModule', 'TemplateModule']);
+
+
+/**
+ * Service to fetch data from the db and transforming the model into a format used for displaying in the 
+ * calendar view and in reports.
+ */
 ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneService', function($http, $q, KT, mService) {
 	
 	return {
+		
+		/**
+		 * Fetches all entries from the couch timefeed for milestones
+		 */
 		getEntries : function(year, month) {
 			return $http.get(ProJack.config.dbUrl + '/_design/timefeed/_view/milestones?startKey=['+year+','+month+',0,"MILESTONE", 0]&endKey=['+year+','+month+',31,"MILESTONE", 3]')
 				.then(function(response) {
@@ -36,11 +51,15 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 							}
 						}
 					}
-					console.log(retval);
 					return retval;
 				});
 		},
+	
 		
+		/**
+		 * Transforms a single milestone into a more lightweight form.
+		 * This could be used in reports, where not all milestone data is required
+		 */
 		transformMilestone : function(milestone) {
 			var q = {
 					customer : milestone.customer.name || "",
@@ -50,6 +69,9 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 		},
 		
 		
+		/**
+		 * Transforms the calendar into a model suitable for reporting
+		 */
 		transformToReportModel : function(entries) {
 			var retval = {
 				month : '',
@@ -91,7 +113,19 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 			return retval;
 		},
 		
+		
+		/**
+		 * Generates a report from the given parameters and opens a new browser view displaying the output.
+		 * Currently only supports milestone documents, but more could be added easily if required.
+		 * The
+		 * @param model - The data model to be transformed
+		 * @param template - Object containing the _id of the attachment to be used
+		 * @param type - Currently only 'PDF' is supported
+		 */
 		printReport : function(model, template, type) {
+		
+			// currently only PDF is supported
+			if (!type || type !== 'PDF') type = 'PDF';
 			
 			// load the attachment
 			$http({
@@ -113,46 +147,74 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 				};
 				
 				$http.post(ProJack.config.serviceUrl + '/reports?type=' + type, data).success(function(d) {
-					var w = window.open('data:application/pdf;base64,' + d);
+					var w = window.open('data:application/pdf;base64,' + d, '_blank');
 				});
 			});
 		}
 	}
 }]);
 
+/**
+ * Controller for the index page of the calendar
+ */
 ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'CalendarService', 'MilestoneService', 
                                                         function($scope, KT, service, mService) {
 
+	// aggregation data
 	$scope.totalPayments = 0;
 	$scope.developmentHours = 0;
-	
+	$scope.totalTime = 0;
+
+	// the current month / year selection
 	$scope.currentMonth = new Date().getMonth() + 1;
 	$scope.currentYear  = new Date().getFullYear();
-	
+
+	// currently unused
 	$scope.focusedMilestone = undefined;
 	
 	// the template selection for printing the milestone
 	$scope.template = { _id : undefined };
 
-	
+
+	/**
+	 * Fetches all entries for the calendar
+	 */
 	$scope.getEntries = function() {
+		
+		// reset aggregation data on each call
 		$scope.totalPayments = 0;
+		$scope.developmentHours = 0;
+		$scope.totalTime = 0;
+	
+		// fetch the entries for the current month / year selection
 		service.getEntries($scope.currentYear, $scope.currentMonth).then(function(entries) {
 			$scope.entries = entries;
-			
+		
+			// fetch milestone data aggregation for each milestone
 			for (var i in $scope.entries) {
 				var e = $scope.entries[i];
 				for (var q in e.payments) {
 					mService.getAggregation(e.payments[q]).then(function(data) {
 						$scope.totalPayments += data.budget;
+						
+						var q = data.developmentTime.split(":");
+						$scope.developmentHours += (parseInt(q[0]) * 3600) + (parseInt(q[1]) * 60);
+						
+						var q = data.totalTime.split(":");
+						$scope.totalTime += (parseInt(q[0]) * 3600) + (parseInt(q[1]) * 60);
 					});
 				}
 			}
 		});
 	};
+	
+	// initially load all entries
 	$scope.getEntries();
 	
-	
+	/**
+	 * Shows details for the given document
+	 * currently not used
+	 */
 	$scope.showDetails = function(doc) {
 		if (doc.type == 'milestone')
 			$scope.focusedMilestone = doc;

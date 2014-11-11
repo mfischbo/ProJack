@@ -9,6 +9,16 @@ ProJack.app.filter('numberFixedLen', function () {
     }
 });
 
+ProJack.app.filter('secsToTime', function() {
+	return function(secs) {
+		var hours = Math.floor(secs / 3600);
+		var mins  = Math.floor((secs % 3600) / 60);
+		if (hours < 10) hours = "0" + hours;
+		if (mins  < 10) mins  = "0" + mins;
+		return hours + ":" + mins;
+	}
+})
+
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider

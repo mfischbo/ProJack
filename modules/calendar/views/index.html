@@ -26,8 +26,8 @@
 					</h4>
 				</div>
 				<div class="pull-right">
-					<button type="button" class="btn" data-ng-click="subMonth()">&lt;</button>	
-					<button type="button" class="btn" data-ng-click="addMonth()">&gt;</button>	
+					<button class="btn btn-primary " data-ng-click="subMonth()"><span class="fa fa-chevron-left"></span></button>&nbsp;
+					<button class="btn btn-primary " data-ng-click="addMonth()"><span class="fa fa-chevron-right"></span></button>	
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -75,7 +75,30 @@
 			</div>
 			
 			<div class="panel-body">
-				Einnahmen : {{totalPayments | currency : '&euro;'}}	
+				<div class="row">
+					<div class="col-md-6">
+						Einnahmen	
+					</div>
+					<div class="col-md-6">
+						{{totalPayments | currency:'&euro;'}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						Gesamte gepl. Entwicklungszeit	
+					</div>
+					<div class="col-md-6">
+						{{developmentHours | secsToTime}}	
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						Gesamte Projektzeit	
+					</div>
+					<div class="col-md-6">
+						{{totalTime | secsToTime}}	
+					</div>
+				</div>
 			</div>
 		</div>
 	
