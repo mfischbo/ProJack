@@ -39,6 +39,8 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 	$scope.tab = 'MILESTONE';
 	$scope.template = { _id : undefined };
 	
+	$scope.tinyOptions = ProJack.config.tinyOptions;
+	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
 

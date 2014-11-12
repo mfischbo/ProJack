@@ -1,1 +1,1 @@
-ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule', 'TemplateModule']);
+ProJack.milestones = angular.module('MileStonesModule', ['Utils', 'CustomersModule', 'IssuesModule', 'TemplateModule', 'ui.tinymce']);
