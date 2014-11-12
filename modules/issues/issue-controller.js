@@ -169,8 +169,8 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 }]);
 
 
-ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
-                                                    function($scope, $location, KT, service, customerService, milestoneService) {
+ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
+                                                    function($scope, $location, $routeParams, KT, service, customerService, milestoneService) {
 	
 	$scope.issue = service.newIssue();
 	$scope.tinymceOptions = {
@@ -179,6 +179,14 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
+		if ($routeParams.cid) {
+			for (var i in $scope.customers) {
+				if ($scope.customers[i]._id == $routeParams.cid) {
+					$scope.issue.customer = $scope.customers[i]._id;
+					break;
+				}
+			}
+		}
 	});
 	
 	$scope.$watch('issue.customer', function(val) {
@@ -187,6 +195,14 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT',
 			.then(function(data) {
 				$scope.milestones = [{ version : 'Ohne Milestone', _id : ProJack.config.lowId }];
 				$scope.milestones = $scope.milestones.concat(data);
+				if ($routeParams.mid) {
+					for (var i in $scope.milestones) {
+						if ($scope.milestones[i]._id == $routeParams.mid) {
+							$scope.issue.milestone = $scope.milestones[i]._id;
+							break;
+						}
+					}
+				}
 			});
 	});
 	

@@ -85,7 +85,11 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 			controller : 'IssueIndexController',
 			templateUrl : './modules/issues/views/index.html'
 		})
-		.when('/issues/create', {
+		.when('/issues/customer/:cid/create', {
+			controller : 'IssueCreateController',
+			templateUrl : './modules/issues/views/create.html'
+		})
+		.when('/issues/customer/:cid/milestone/:mid/create', {
 			controller : 'IssueCreateController',
 			templateUrl : './modules/issues/views/create.html'
 		})
