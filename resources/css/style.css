@@ -91,3 +91,7 @@ div.lane {
 @-webkit-keyframes blink {
   to { visibility: hidden; }
 }
+
+select.colorpicker option {
+	color:#fff;
+}
