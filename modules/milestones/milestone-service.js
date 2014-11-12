@@ -23,10 +23,10 @@ ProJack.milestones.service("MilestoneService",
 				name 				: '',
 				description 		: '',
 				version 			: '',
-				plannedCompletionDate: '',
-				plannedApprovalDate : '',
-				plannedReleaseDate 	: '',
-				actualReleaseDate 	: '',
+				plannedCompletionDate: undefined,
+				plannedApprovalDate :  undefined,
+				plannedReleaseDate 	:  undefined,
+				actualReleaseDate 	:  undefined, 
 				approvedBy			: '',
 				certifiedBy			: '',
 				status				: 'NEW', // NEW, APPROVAL_REQUESTED, APPROVED, CERTIFIED
@@ -112,18 +112,6 @@ ProJack.milestones.service("MilestoneService",
 					for (var i in retval._attachments) 
 						retval.attachments.push({ name : i, type : retval._attachments[i]['content_type'], size : retval._attachments[i].length });
 					
-					// format dates correctly 
-					if (retval.plannedApprovalDate && retval.plannedApprovalDate.length > 0)
-						retval.plannedApprovalDate = new Date(retval.plannedApprovalDate);
-					
-					if (retval.plannedReleaseDate && retval.plannedReleaseDate.length > 0)
-						retval.plannedReleaseDate = new Date(retval.plannedReleaseDate);
-				
-					if (retval.actualReleaseDate && retval.actualReleaseDate.length > 0)
-						retval.actualReleaseDate = new Date(retval.actualReleaseDate);
-				
-					if (retval.plannedCompletionDate && retval.plannedCompletionDate.length > 0)
-						retval.plannedCompletionDate = new Date(retval.plannedCompletionDate);
 					return retval;
 				});
 			return p;

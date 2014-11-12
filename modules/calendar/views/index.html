@@ -45,7 +45,7 @@
 					<tr>
 						<th>Datum</th>
 						<th>&nbsp;</th>
-						<th data-ng-repeat="u in users">{{u.login}}</th>
+						<th data-ng-repeat="u in users">{{u.login.substring(0,5)}}</th>
 					</tr>
 				</tbody>
 					<tr data-ng-repeat="(date, m) in entries" data-ng-class="{today: isToday(date), weekend : isWeekend(date)}">

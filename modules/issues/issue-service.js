@@ -17,7 +17,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
 				estimatedTime: 0,
-				resolveUntil: '',
+				resolveUntil: undefined,
 				notes		: [],
 				times		: []	// array of time tracking object for all users
 			};

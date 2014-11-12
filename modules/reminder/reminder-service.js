@@ -6,7 +6,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 			return {
 				type		: 'reminder',
 				description : '',
-				alertAt		: new Date(),
+				alertAt		: new Date().getTime(),
 				alertTime	: '',
 				userCreated : securityService.getCurrentUserName(),
 			}
@@ -86,9 +86,10 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 		},
 		
 		getMomentForReminder : function(reminder) {
-			var d = reminder.alertAt.split('T')[0];
-			var t = reminder.alertTime.split('T')[1];
-			return moment(d + 'T' + t);
+			//var d = reminder.alertAt.split('T')[0];
+			//var t = reminder.alertTime.split('T')[1];
+			var q = new Date(reminder.alertTime).getTime();
+			return moment(reminder.alertAt + q);
 		},
 		
 		isOverdue : function(m, dayOffset) {
