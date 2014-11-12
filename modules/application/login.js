@@ -34,6 +34,6 @@ T.controller("LoginController", ['$scope', 'SecurityService', function($scope, s
 T.controller("LogoutController", ['$scope', 'SecurityService', function($scope, service) {
 	service.logout().then(function() {
 		localStorage.removeItem(ProJack.config.sessionKey);
-		window.location.href = ProJack.config.appUrl + "/login";
+		window.location.href = ProJack.config.appUrl + "/login.html";
 	});
 }]);
