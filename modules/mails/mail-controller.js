@@ -3,7 +3,7 @@ ProJack.mails.controller("MailboxIndexController", ['$scope', 'MailService', fun
 	$scope.accounts = [{
 		name : "markus@socialmeta.de",
 		login: "markus@socialmeta.de",
-		password : "vj3KNjf3cU",
+		password : "",
 		host : "sslmailpool.ispgateway.de",
 		folders : []
 	}];

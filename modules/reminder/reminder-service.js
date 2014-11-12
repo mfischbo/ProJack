@@ -16,7 +16,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 		getAllActiveReminders : function() {
 			var x = new Date();
 			var startKey = '[1983,7,3,8,28]'; // hrhr
-			var endKey   = '[' + x.getFullYear() + ',' + (x.getUTCMonth() + 1) + ',' + x.getUTCDate() + ',' + (x.getUTCHours() + 1) + ',' + x.getUTCMinutes() + ']';
+			var endKey   = '[' + x.getFullYear() + ',' + (x.getUTCMonth() + 1) + ',' + x.getUTCDate() + ',' + (x.getUTCHours() + 1) + ',' + (x.getMinutes()+1) + ']&inclusive_end=true';
 			
 			var that = this;
 			return $http.get(ProJack.config.dbUrl + '/_design/timefeed/_list/userFilter/reminders?startkey=' + startKey + '&endkey=' + endKey)

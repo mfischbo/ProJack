@@ -15,6 +15,7 @@
 				<thead>
 					<tr>
 						<th>Name</th>
+						<th>Bearbeitet am</th>
 						<th>Kunde</th>
 						<th>Version</th>
 						<th>Status</th>
@@ -22,8 +23,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="m in milestones">
+					<tr data-ng-repeat="m in milestones|orderBy:'dateModified':true">
 						<td><a href="#/milestones/{{m._id}}/edit">{{m.name}}</a></td>
+						<td>{{m.dateModified | date:'dd.MM.yyyy HH:mm'}}</td>
 						<td>{{m.customer.name}}</td>
 						<td>{{m.version}}</td>
 						<td>

@@ -85,7 +85,7 @@
 		</div>
 	</div>
 	
-	<div class="col-md-4 col-xs-12">
+	<div class="col-md-4 col-xs-12" style="position:fixed;right:0;">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h5 class="panel-title">Aggregation</h5>
@@ -139,7 +139,7 @@
 			</div>
 		</div>
 		
-		<div class="panel panel-default" data-ng-if="focusedMilestone" style="position:fixed; bottom:0; width:31.53%; margin-top:12px;">
+		<div class="panel panel-default" data-ng-if="focusedMilestone">
 			<div class="panel-heading">
 				<h5 class="panel-title">{{focusedMilestone.customer.name}} // {{focusedMilestone.name}}</h5>
 				<div class="pull-right" style="background-color:#{{focusedMilestone.laneColor}}; width:145px; height:15px;margin-top:-15px;">&nbsp;</div>
@@ -192,7 +192,7 @@
 						<strong>Zugeteilt :</strong> 
 					</div>
 					<div class="col-md-6">
-						<strong>{{getAssignedTime(focusedMilestone, true) | secsToTime}}</strong>
+						<strong>{{getAssignedTime(focusedMilestone) | secsToTime}}</strong>
 					</div>
 				</div>
 			</div>

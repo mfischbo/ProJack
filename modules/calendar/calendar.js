@@ -59,6 +59,16 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 			});
 		},
 		
+		getAssignedMilestoneHours : function() {
+			return $http.get(ProJack.config.dbUrl + '/_design/assignments/_view/hoursByMilestone?group=true&group_level=1').then(function(response) {
+				var retval = {};
+				for (var i in response.data.rows) {
+					retval[response.data.rows[i].key] = response.data.rows[i].value;
+				}
+				return retval;
+			});
+		},
+		
 		deleteAssignment : function(assignment) {
 			return $http({
 				url : ProJack.config.dbUrl + "/" + assignment._id + '?rev=' + assignment._rev,
@@ -233,6 +243,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	// show only releases and approvals
 	$scope.laneFilter = false;
 
+	// a set of key value pairs containing the assigned time
+	// for each milestone
+	$scope.milestoneHours = {};
 
 	/**
 	 * Fetches all entries for the calendar
@@ -270,6 +283,10 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		
 			service.getAllAssignments(keys[0], keys[keys.length -1]).then(function(assignments) {
 				$scope.assignments = assignments;
+			});
+			
+			service.getAssignedMilestoneHours().then(function(data) {
+				$scope.milestoneHours = data;
 			});
 			
 			secService.getAllUserNames().then(function(users) {
@@ -347,7 +364,7 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 			assignment[loru].laneColor = 'ffffff';
 		
 			// if both slots are empty purge the assignment
-			if (assignment['lower'].milestone.length == 0 && assignment['upper'].milestone.length == 0) {
+			if (assignment['lower'].milestone.length == 0 && assignment['upper'].milestone.length == 0 && assignment._id) {
 				service.deleteAssignment(assignment).success(function() {
 					$scope.assignments.splice(currentIdx, 1);
 				});
@@ -364,15 +381,17 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		return mService.getFeatureSum(milestone, backend);
 	};
 	
-	$scope.getAssignedTime = function(milestone, backend) {
+	$scope.getAssignedTime = function(milestone) {
 		
-		retval = 0;
+		retval = $scope.milestoneHours[milestone._id] * 3600; // saved times
+		
+		// sum up all non saved assignments
 		for (var i in $scope.assignments) {
 			var a = $scope.assignments[i];
 			
-			if (a.lower.milestone == milestone._id)
+			if (a.lower.milestone == milestone._id && !a._id)
 				retval += (4 * 3600);
-			if (a.upper.milestone == milestone._id)
+			if (a.upper.milestone == milestone._id && !a._id)
 				retval += (4 * 3600);
 		}
 		return retval;
