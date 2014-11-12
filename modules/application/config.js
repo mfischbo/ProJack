@@ -31,7 +31,7 @@ ProJack.config = {
 		serviceUrl : "/services",
 		
 		// time in ms how often the reminder api should be polled
-		reminderPollTime : 10000,
+		reminderPollTime : 60000,
 		
 		// enable / disable reminder polling
 		reminderPollingEnabled : true,

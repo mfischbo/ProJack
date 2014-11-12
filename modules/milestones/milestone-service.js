@@ -206,7 +206,6 @@ ProJack.milestones.service("MilestoneService",
 						// since we might changed the state of a feature, do a bulk update
 						results.push(milestone);
 						$http.post(ProJack.config.dbUrl + '/_bulk_docs', { docs : results }).success(function(iResp) {
-							console.log(iResp);
 							var retval = KT.find('id', milestone._id, iResp);
 							def.resolve(retval);
 						}).error(function() {

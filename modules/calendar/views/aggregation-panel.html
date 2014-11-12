@@ -1,0 +1,32 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h5 class="panel-title">Aggregation</h5>
+	</div>
+	
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-md-6">
+				Einnahmen	
+			</div>
+			<div class="col-md-6">
+				{{totalPayments | currency:'&euro;'}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				Gesamte gepl. Entwicklungszeit	
+			</div>
+			<div class="col-md-6">
+				{{developmentHours | secsToTime}}	
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				Gesamte Projektzeit	
+			</div>
+			<div class="col-md-6">
+				{{totalTime | secsToTime}}	
+			</div>
+		</div>
+	</div>
+</div>

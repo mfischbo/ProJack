@@ -19,7 +19,6 @@ ProJack.app.filter('secsToTime', function() {
 	}
 });
 
-
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider

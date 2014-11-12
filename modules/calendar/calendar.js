@@ -277,8 +277,6 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 						$scope.totalTime += (parseInt(q[0]) * 3600) + (parseInt(q[1]) * 60);
 					});
 				}
-				
-
 			}
 		
 			service.getAllAssignments(keys[0], keys[keys.length -1]).then(function(assignments) {
@@ -395,6 +393,45 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 				retval += (4 * 3600);
 		}
 		return retval;
+	};
+
+	$scope.$watch('focusedMilestone.plannedApprovalDate', function(nval, oval) {
+		if (!nval || !oval) return;
+		var sd = new Date(oval);
+		var src = new Date(sd.getFullYear() + "-" + (sd.getMonth()+1) + "-" + sd.getDate()).getTime();
+		var td = new Date(nval);
+		var dst = new Date(td.getFullYear()  + "-" + (td.getMonth()+1) + "-" + td.getDate()).getTime();
+		
+		for (var i in $scope.entries[src]['approvals']) {
+			if ($scope.entries[src]['approvals'][i]._id == $scope.focusedMilestone._id) {
+				$scope.entries[src]['approvals'].splice(i,1);
+				break;
+			}
+		}
+		$scope.entries[dst]['approvals'].push($scope.focusedMilestone);
+	});
+
+	$scope.$watch('focusedMilestone.plannedReleaseDate', function(nval, oval) {
+		if (!nval || !oval) return;
+		var sd = new Date(oval);
+		var src = new Date(sd.getFullYear() + "-" + (sd.getMonth()+1) + "-" + sd.getDate()).getTime();
+		var td = new Date(nval);
+		var dst = new Date(td.getFullYear()  + "-" + (td.getMonth()+1) + "-" + td.getDate()).getTime();
+		
+		for (var i in $scope.entries[src]['releases']) {
+			if ($scope.entries[src]['releases'][i]._id == $scope.focusedMilestone._id) {
+				$scope.entries[src]['releases'].splice(i,1);
+				break;
+			}
+		}
+		$scope.entries[dst]['releases'].push($scope.focusedMilestone);
+	});
+	
+	
+	$scope.saveMilestone = function() {
+		mService.updateMilestone($scope.focusedMilestone).then(function(data) {
+			$scope.focusedMilestone._rev = data.rev;
+		});
 	};
 	
 	$scope.subMonth = function() {

@@ -170,6 +170,24 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 	return x;
 }]);
 
+ProJack.utils.directive('dateFormat', function() {
+	return {
+		require : 'ngModel',
+		link    : function(scope, element, attrs, ngModelCtrl) {
+			ngModelCtrl.$formatters.push(function(modelValue) {
+				return new Date(modelValue);
+			});
+		
+			
+			ngModelCtrl.$parsers.push(function(inputValue) {
+				return new Date(inputValue).getTime();
+			});
+			
+		}
+	}
+});
+
+
 ProJack.utils.controller("ConfirmationInstanceController", ['$scope', '$modalInstance', 'text', function($scope, $instance, text) {
 	
 	$scope.text = text;

@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h5 class="panel-title">Report drucken</h5>
+	</div>
+	
+	<div class="panel-body">
+		<div class="form-group">
+			<label>Template</label>
+			<div data-template-selector data-select-as="template._id"></div>
+		</div>
+	</div>
+	
+	<div class="panel-footer">
+		<div class="pull-right">
+			<button type="button" class="btn btn-primary" data-ng-click="printReport('PDF')" data-ng-disabled="!template._id">Als PDF drucken</button>
+		</div>	
+		<div class="clearfix"></div>
+	</div>
+</div>
