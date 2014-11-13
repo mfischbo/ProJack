@@ -55,13 +55,12 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 		
 		addUserAsMember : function(user) {
 			var def = $q.defer();
-			$http.get(ProJack.config.dbUrl + "/_security").success(function(response) {
-				var data = response.data;
-				if (data.members.names.indexOf(user.name) > -1)
+			$http.get(ProJack.config.dbUrl + "/_security").success(function(security) {
+				if (security.members.names.indexOf(user.name) > -1)
 					return;
 				else {
-					data.members.names.push(user.name);
-					$http.put(ProJack.config.dbUrl + "/_security", data).success(function(data) {
+					security.members.names.push(user.name);
+					$http.put(ProJack.config.dbUrl + "/_security", security).success(function(data) {
 						def.resolve(data);
 					}).error(function() {
 						def.reject();
@@ -79,12 +78,21 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 					return response.data;
 				});
 		},
-		
-		login : function(username, password) {
-			return $http.post(ProJack.config.srvUrl + "/_session", {name : username, password : password })
-				.then(function(response) {
-					return response.data;
-				});
+	
+		isAdminUser : function() {
+			var def = $q.defer();
+			var current = this.getCurrentUserName();
+
+			$http.get(ProJack.config.dbUrl + "/_security").success(function(security) {
+				if (!security) 
+					def.reject();
+				if (security.admins.names.indexOf(current) > -1) {
+					def.resolve(true);
+				} else {
+					def.resolve(false);
+				}
+			});
+			return def.promise;
 		},
 		
 		getCurrentSession : function() {
@@ -96,6 +104,13 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 		getCurrentUserName : function() {
 			var u = JSON.parse(localStorage.getItem(ProJack.config.sessionKey));
 			return u.name;
+		},
+	
+		login : function(username, password) {
+			return $http.post(ProJack.config.srvUrl + "/_session", {name : username, password : password })
+				.then(function(response) {
+					return response.data;
+				});
 		},
 		
 		logout : function() {

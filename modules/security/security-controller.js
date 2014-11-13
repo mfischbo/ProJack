@@ -16,21 +16,32 @@ ProJack.security.controller("UserEditController", ['$scope', '$routeParams', 'Se
 	};
 }]);
 
-ProJack.security.controller("UserCreateController", ['$scope', 'KT', 'SecurityService', function($scope, KT, service) {
+ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT', 'SecurityService', function($scope, $location, KT, service) {
 	
 	$scope.user = service.newUser();
+	
+	// check if the current user is an admin on the current db
+	service.isAdminUser().then(function(isAdmin) {
+		if (isAdmin != true) {
+			KT.alert("Sie haben keine Berechtigung einen neuen Benutzer anzulegen! Hinweis: Der aktuelle Benutzer ist nicht in der Admin Gruppe", 'warning');
+			$location.path('/admin/users');
+		}
+	});
 	
 	$scope.createUser = function() {
 		$scope.user.passwordConfirmation = undefined;
 		
-		service.createUser($scope.user).success(function(data) {
-			service.addUserAsMember($scope.user).success(function() {
-				KT.alert('Der Benutzer wurde erfolgreich angelegt');
-			}).error(function() {
-				KT.alert('Beim anlegen des Benutzers ist ein Fehler aufgetreten', 'error');
-			});
-		}).error(function() {
-			KT.alert('Beim anlegen des Benutzers ist ein Fehler aufgetreten. Sind sie Admin?', 'error');
+		service.createUser($scope.user).then(function(response) {
+			if (response.data.ok) { 
+				service.addUserAsMember($scope.user).then(function(isOk) {
+					if (isOk.ok)
+						KT.alert('Der Benutzer wurde erfolgreich angelegt');
+					else
+						KT.alert('Beim anlegen der Berechtigungen des Benutzers ist ein Problem aufgetreten');
+				});
+			} else {
+				KT.alert('Beim anlegen des Benutzers ins ein Fehler aufgetreten', 'error');
+			}
 		});
 	};
 }]);

@@ -48,7 +48,7 @@
 									<input type="text" data-ng-model="query"  class="form-control" placeholder="Finde..." data-ng-change="checkVisible()">
 								</div>
 							</form>	
-							<div id="flashlight-panel" class="overlay-panel" data-ng-show="panelVisible">
+							<div id="flashlight-panel" class="overlay-panel ng-hide" data-ng-show="panelVisible">
 								<div data-ng-include data-src="'./modules/flashlight/views/search-results.html'"></div>
 							</div>
 						</li>	
@@ -59,7 +59,7 @@
                        			<span class="fa fa-bell"></span> 
                        			<span data-ng-class="{'badge' : true, 'badge-danger' : reminders.length > 0}" style="position:relative;top:-10px;margin-left:-7px;">{{reminders.length}}</span>
                        		</a>
-							<div id="reminder-panel" class="overlay-panel" data-ng-show="panelVisible">
+							<div id="reminder-panel" class="overlay-panel ng-hide" data-ng-show="panelVisible">
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-form.html'"></div>
 								<hr/>
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-list.html'"></div>
