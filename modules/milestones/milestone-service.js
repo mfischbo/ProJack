@@ -2,8 +2,8 @@
  * Service for managing milestones
  */
 ProJack.milestones.service("MilestoneService", 
-		['$http', '$q', 'KT', 'IssueService', 
-		 function($http, $q, KT, iService) {
+		['$http', '$filter', '$q', 'KT', 'IssueService', 
+		 function($http, $filter, $q, KT, iService) {
 	
 	return {
 		
@@ -293,13 +293,13 @@ ProJack.milestones.service("MilestoneService",
 						
 							// calculate the total time for that issue and the total time for the milestone
 							var x = that.calculateFeatureTime(milestone, f);
-							f.featureTime = moment.duration(x, 'seconds').format("HH:mm");
+							f.featureTime = $filter('secsToTime')(x);
 							milestone.totalTime += x;
 						}
 						issue = undefined;
 					}
 					// format the milestone time to a string
-					milestone.totalTime = moment.duration(milestone.totalTime, 'seconds').format("HH:mm");
+					milestone.totalTime = $filter('secsToTime')(milestone.totalTime);
 					
 					// create the report
 					var post = {
