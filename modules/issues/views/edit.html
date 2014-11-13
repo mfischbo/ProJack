@@ -8,7 +8,7 @@
 	<div class="col-md-6 col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h5 class="panel-title pull-right">Time spent {{timeOnIssue | secsToTime }} <span data-ng-if="feature">- Time for Feature {{feature.estimatedEffort}}</span></h5>
+				<h5 class="panel-title pull-right">Time spent {{timeOnIssue | secsToTime }} <span data-ng-if="feature">- Time for Feature {{feature.estimatedEffort | secsToTime }}</span></h5>
 				<div class="clearfix"></div>
 			</div>
 	

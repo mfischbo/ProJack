@@ -181,6 +181,7 @@ ProJack.milestones.service("MilestoneService",
 							i.customer = milestone.customer._id;
 							i.issuetype = "FEATURE";
 							i.resolveUntil = milestone.plannedReleaseDate,
+							i.estimatedTime = f.estimatedEffort;
 							f.createIssue = false;
 							issues.push(i);
 						} else {
@@ -202,6 +203,7 @@ ProJack.milestones.service("MilestoneService",
 								var f = features[issue.feature];
 								issue.title        = f.title;
 								issue.resolveUntil = milestone.plannedReleaseDate;
+								issue.estimatedTime = f.estimatedEffort;
 								issue.description  = '<b>Anforderung</b><br/>' + f.requirement + '<br/><br/><b>Umsetzung</b><br/>' + f.implementation;
 							} else {
 								issue.number = (q + number);
