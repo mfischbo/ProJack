@@ -1,0 +1,46 @@
+<div class="panel panel-default" data-ng-controller="AssignedTasksController" data-ng-init="initialize()">
+	<div class="panel-heading">
+		<h3 class="panel-title">Dir zugewiesene Projekte</h3>
+	</div>
+	
+	<div class="panel-body">
+		<div class="row" data-ng-repeat="a in assignments">
+			
+			<div class="col-md-12 col-xs-12">
+				<h5 class="pull-right">{{a.date | date: 'EEE dd.MM.yyyy'}}</h5>
+			</div>
+			
+			<div data-ng-if="a.lower.milestone._id == a.upper.milestone._id">
+				<div class="col-md-2 col-xs-2">
+					Ganztags
+				</div>
+				<div class="col-md-8 col-xs-8">
+					<span data-ng-if="a.lower.milestone == ''"><i>Eis essen!</i></span>
+					<span data-ng-if="a.lower.milestone != ''">
+						<span class="milestone-marker" style="background-color:#{{a.lower.milestone.laneColor}};">{{a.lower.milestone.name}}</span>
+					</span>
+				</div>
+			</div>
+		
+			<div data-ng-if="a.lower.milestone._id !== a.upper.milestone._id">
+				<div class="col-md-2 col-xs-2">
+					Halbtags<br/>Halbtags
+				</div>
+				<div class="col-md-8 col-xs-8">
+					<span data-ng-if="a.lower.milestone == ''"><i>Eis essen!</i></span>
+					<span data-ng-if="a.lower.milestone != ''">
+						<span class="milestone-marker" style="background-color:#{{a.lower.milestone.laneColor}};">{{a.lower.milestone.name}}</span><br/>
+					</span>
+					<span data-ng-if="a.upper.milestone == ''"><i>Eis essen!</i></span>
+					<span data-ng-if="a.upper.milestone != ''">
+						<span class="milestone-marker" style="background-color:#{{a.upper.milestone.laneColor}};">{{a.upper.milestone.name}}</span><br/>
+					</span>
+				</div>
+			</div>
+			
+			<div class="col-md-12">
+				<hr/>
+			</div>
+		</div>
+	</div>
+</div>
