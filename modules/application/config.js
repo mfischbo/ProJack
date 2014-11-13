@@ -14,12 +14,14 @@ ProJack.config = {
 		srvUrl : "/cdb",
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/projack",
+		dbUrl :  "/cdb/projack-stage",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		
 		// server url for elasticsearch
-		esUrl : '/es/pj',
+		esEndpoint  : '/es',
+		esIndex		: 'pj',
+		esUrl 		: '/es/pj',
 		
 		// session key where user data is stored in the session storage
 		sessionKey : "__ProJack_Session",

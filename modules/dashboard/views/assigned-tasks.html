@@ -1,11 +1,15 @@
 <div class="panel panel-default" data-ng-controller="AssignedTasksController" data-ng-init="initialize()">
 	<div class="panel-heading">
-		<h3 class="panel-title">Dir zugewiesene Projekte</h3>
+		<h3 class="panel-title"><span class="fa fa-bars"></span> &nbsp; Dir zugewiesene Projekte</h3>
 	</div>
 	
 	<div class="panel-body">
+		<div data-ng-if="assignments.length == 0">
+			<span class="fa fa-smile-o" style="font-size:18px;"></span><i>&nbsp;Dir sind aktuell keine Projekte zugewiesen</i>
+		</div>
+	
 		<div class="row" data-ng-repeat="a in assignments">
-			
+		
 			<div class="col-md-12 col-xs-12">
 				<h5 class="pull-right">{{a.date | date: 'EEE dd.MM.yyyy'}}</h5>
 			</div>

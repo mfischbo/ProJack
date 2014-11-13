@@ -1,4 +1,4 @@
-ProJack.dashboard = angular.module('DashBoardModule', ['Utils', 'SecurityModule']);
+ProJack.dashboard = angular.module('DashBoardModule', ['Utils', 'SecurityModule', 'nvd3']);
 ProJack.dashboard.controller('DashBoardController', ['$scope',
 	function($scope) {
 
@@ -60,5 +60,56 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 			});
 		});
 	};
+}]);
+
+
+ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', function($scope, $http) {
 	
+	var colmap = { NEW: '#e51c23', ASSIGNED: '#bbbbbb', RESOLVED: '#9c27b0',  FEEDBACK: '#ff9800', CLOSED : '' };
+	var i18n   = { 
+			BUG : 'Bugs', CHANGE_REQUEST : 'Change Requests',
+			FEATURE : 'Features', SUPPORT : 'Support', 
+			CLOSED : 'Geschlossen', ASSIGNED : 'Zugewiesen', RESOLVED : 'Fertig', CLOSED : 'Geschlossen', NEW : 'Neu', FEEDBACK : 'Feedback' };
+	
+	$scope.issuesByType = [];
+	
+	$scope.ibtOptions = { 
+			chart : {
+				type : 'multiBarChart',
+				height : 350,
+				showControls : false,
+				x : function(d) {
+					return d[0];
+				},
+				y : function(d) {
+					return d[1];
+				},
+			}
+	};
+	
+	$scope.initialize = function() {
+		$http.get(ProJack.config.dbUrl + "/_design/issues/_view/byType?group=true").success(function(data) {
+			var data = data.rows; 	// the data 
+			var t = "";				// the key for the issuetype
+			var mMax = 0;
+			
+			var finDat = [];
+			for (var x=0; x < data.length; x++) {
+				if (t == data[x].key[0])
+					continue;
+				
+				t = data[x].key[0];
+				var series = { 'key' : i18n[t], values : [] };
+		
+				for (var y in data) {
+					if (data[y].key[0] == t) {
+						series.values.push( [ i18n[data[y].key[1]], data[y].value ]);
+					}
+				}
+				finDat.push(series);
+			}
+			$scope.issuesByType = finDat;
+			
+		});
+	};
 }]);

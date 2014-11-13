@@ -1,9 +1,12 @@
 <div class="panel panel-default" data-ng-controller="ExpressTicketsController" data-ng-init="initialize()">
 	<div class="panel-heading">
-		<h3 class="panel-title">Express Tickets</h3>
+		<h3 class="panel-title"><span class="fa fa-clock-o"></span> &nbsp; Express Tickets</h3>
 	</div>
 	
 	<div class="panel-body">
+		<div data-ng-if="issues.length == 0">
+			<span class="fa fa-smile-o" style="font-size:18px;"></span><i> Aktuell liegen keine drigenden Tickets vor</i>	
+		</div>
 		<div class="row" data-ng-repeat="i in issues">
 			<div class="col-md-8">
 				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>

@@ -9,6 +9,7 @@
 	<link rel="shortcut icon" href="./resources/images/logo-small.png">
 	<link href="./resources/css/bootstrap-paper.min.css" rel="stylesheet">
 	<link href="./resources/css/font-awesome.min.css" rel="stylesheet">
+	<link href="./resources/css/nv.d3.css" rel="stylesheet">
 	<link href="./resources/css/style.css" rel="stylesheet">
 </head>
 <body style="padding-top:70px;">
@@ -28,9 +29,10 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Administration</a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a href="#/admin/users">Benutzer</a></li>
-								<li><a href="#/customers">Kunden</a></li>
-								<li><a href="#/admin/templates">Templates</a></li>
+								<li><a href="#/admin/users"><i class="fa fa-user fa-fw"></i>&nbsp;Benutzer</a></li>
+								<li><a href="#/customers">  <i class="fa fa-group fa-fw"></i>&nbsp;Kunden</a></li>
+								<li><a href="#/admin/templates"> <i class="fa fa-file-o fa-fw"></i>&nbsp;Templates</a></li>
+								<li><a href="#/admin/settings"> <i class="fa fa-gears fa-fw"></i>&nbsp;Einstellungen</a></li>
 							</ul>
 						</li>
 						<li><a href="#/milestones">Milestones</a></li>
@@ -101,6 +103,10 @@
 	<script src="./resources/js/tinymce.min.js"></script>
 	<script src="./resources/js/tinymce.js"></script> <!-- Which is an angular directive for tinymce -->
 	
+	<script src="./resources/js/d3.min.js"></script>
+	<script src="./resources/js/nv.d3.min.js"></script>
+	<script src="./resources/js/angular-nvd3.min.js"></script>
+	
 	<!-- configuration and utility deps -->
 	<script src="./modules/application/config.js"></script>
 	<script src="./modules/application/utils.js"></script>
@@ -150,6 +156,9 @@
 	
 	<script src="./modules/dashboard/dashboard.js"></script>
 	<script src="./modules/application/application.js"></script>
+	
+	<!-- Settings ... belongs to the core application -->
+	<script src="./modules/application/application-settings.js"></script>
 	
 	<script type="text/javascript">
 		angular.element(document).ready(function() {

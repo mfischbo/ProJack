@@ -67,6 +67,12 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 			controller : 'TemplateIndexController',
 			templateUrl : './modules/templates/views/index.html'
 		})
+		
+		// Application settings
+		.when('/admin/settings', {
+			controller : 'ApplicationSettingsController',
+			templateUrl: './modules/application/views/settings.html'
+		})
 	
 		// Milestones
 		.when('/milestones', {
