@@ -99,6 +99,10 @@ ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$
 		});
 	};
 	
+	$scope.recalcEstimation = function() {
+		$scope.focusedFeature.estimatedEffort = $scope.focusedFeature.estimatedBE + $scope.focusedFeature.estimatedUI;
+	}
+	
 	$scope.downloadAttachment = function(a) {
 		window.open(ProJack.config.dbUrl + "/" + $scope.milestone._id + "/" + a.name, '_blank');
 	};
