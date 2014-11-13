@@ -125,7 +125,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			
 			url += "&status=" + criteria.status;
 			
-			console.debug(url);
 			return $http.get(url).then(function(response) {
 				return response.data.rows;
 			});
