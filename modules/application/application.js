@@ -11,6 +11,9 @@ ProJack.app.filter('numberFixedLen', function () {
 
 ProJack.app.filter('secsToTime', function() {
 	return function(secs) {
+		if (secs == 0)
+			return '00:00';
+		
 		var hours = Math.floor(secs / 3600);
 		var mins  = Math.floor((secs % 3600) / 60);
 		if (hours < 10) hours = "0" + hours;

@@ -188,6 +188,38 @@ ProJack.utils.directive('dateFormat', function() {
 });
 
 
+/**
+ * Directive for entering durations in format HH:mm and parsing them to seconds!
+ */
+ProJack.utils.directive('durationFormat', function() {
+	
+	return {
+		require : 'ngModel',
+		link    : function(scope, elem, attrs, ngModelCtrl) {
+		
+			// from model to widget
+			ngModelCtrl.$formatters.push(function(val) {
+				var v = parseInt(val);
+				var h = Math.floor(val / 3600);
+				var m = Math.round((val % 3600) / 60);
+				if (h < 10) h = '0' + h;
+				if (m < 10) m = '0' + m;
+				return h + ':' + m;
+			});
+			
+			// from widget to model
+			ngModelCtrl.$parsers.push(function(val) {
+				if (val.indexOf(':') == -1) return 0;
+				
+				var t = val.split(":");
+				var r = parseInt(t[0]) * 3600 + parseInt(t[1] * 60);
+				return r;
+			});
+		}
+	}
+});
+
+
 ProJack.utils.controller("ConfirmationInstanceController", ['$scope', '$modalInstance', 'text', function($scope, $instance, text) {
 	
 	$scope.text = text;

@@ -50,9 +50,9 @@ ProJack.milestones.service("MilestoneService",
 				implementation 	: '',
 				result 			: '',
 				internalNote 	: '',
-				estimatedEffort : '00:00',
-				estimatedUI		: '00:00',
-				estimatedBE		: '00:00',
+				estimatedEffort : 0,
+				estimatedUI		: 0,
+				estimatedBE		: 0,
 				createIssue     : true,
 				questions 		: []
 			};

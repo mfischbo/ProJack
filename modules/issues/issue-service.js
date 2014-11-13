@@ -27,8 +27,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return {
 				_id				: KT.UUID(),
 				text 			: '',
-				timeSpentHours 	: 0,
-				timeSpentMinutes: 0,
+				timeSpent		: 0,
 				tasktype		: 'GENERAL',
 				dateCreated 	: new Date().getTime(),
 				dateModified	: new Date().getTime(),
@@ -135,24 +134,26 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			});
 		},
 		
+		/**
+		 * Returns the sum of all note.timeSpent (seconds) on this issue.
+		 */
 		calculateTimeOnIssue : function(issue) {
 			// calculate the overall time on this issue
-			var sumHours = 0;
-			var sumMins  = 0;
+			var retval = 0;
+			
 			for (var i in issue.notes) {
-				sumHours += issue.notes[i].timeSpentHours;
-				sumMins  += issue.notes[i].timeSpentMinutes;
+				// new format
+				if (issue.notes[i].timeSpent) {
+					retval += issue.notes[i].timeSpent;
+					
+				} else if (issue.notes[i].timeSpentHours != undefined) {
+					// old format
+					var spent = parseInt(issue.notes[i].timeSpentHours) * 3600;
+					spent +=    parseInt(issue.notes[i].timeSpentMinutes) * 60;
+					retval += spent;
+					issue.notes[i].timeSpent = spent;
+				}
 			}
-			sumHours += Math.floor(sumMins / 60);
-			sumMins   = sumMins%60;
-		
-			var retval = "";
-			if (sumHours < 10)
-				retval = "0";
-			retval += sumHours + ":";
-			if (sumMins < 10)
-				retval += "0";
-			retval += sumMins;
 			return retval;
 		},
 	
@@ -311,7 +312,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 					pauseTime : 0,
 					endTime   : new Date().getTime(),
 					result    : 0,
-					time      : '',
 			}
 		
 			var user = secService.getCurrentUserName();
@@ -323,21 +323,12 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			
 					retval.startTime = track.startTime;
 					
-					// calculate the pauses in minutes
-					retval.pauseTime = Math.round(track.pauseTimes / (60 * 1000));
+					// calculate the pauses in seconds 
+					retval.pauseTime = Math.round(track.pauseTimes / (1000));
 					
 					// calculate the overall time
 					var msecs = retval.endTime - track.startTime - track.pauseTimes;
-					retval.result = Math.round(msecs / (60 * 1000));
-				
-					var hours = Math.floor(msecs / (3600 * 1000));
-					var mins  = Math.round((msecs / (60 * 1000)) % 60); 
-					
-					if (hours < 10)
-						hours = '0' + hours;
-					if (mins < 10)
-						mins = '0' + mins;
-					retval.time = hours + ':' + mins;
+					retval.result = Math.floor(msecs / 1000);
 				}
 			}
 			return retval;

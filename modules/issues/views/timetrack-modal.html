@@ -18,9 +18,9 @@
 	
 		<div class="row">
 			<div class="col-md-3">Pausen</div>	
-			<div class="col-md-3">{{pauseTime}} Minuten</div>
+			<div class="col-md-3">{{pauseTime | secsToTime}}</div>
 			<div class="col-md-3"><strong>Gesamtzeit</strong></div>
-			<div class="col-md-3"><strong>{{result}} Minuten</strong></div>
+			<div class="col-md-3"><strong>{{result | secsToTime}}</strong></div>
 		</div>
 		
 		<div class="row">
@@ -46,7 +46,7 @@
 				
 				<div class="form-group">
 					<label>Zeitaufwand</label>
-					<input type="text" data-ng-model="time.spent" class="form-control" placeholder="HH:mm" required>
+					<input type="text" data-ng-model="note.timeSpent" class="form-control" placeholder="HH:mm" required data-duration-format>
 				</div>
 			</div>
 		</div>

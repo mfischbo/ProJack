@@ -140,17 +140,12 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 	$scope.endTime = t.endTime;
 	$scope.pauseTime = t.pauseTime;
 	$scope.result = t.result;
-	$scope.time = { spent : t.time };
+	$scope.note.timeSpent = t.result;
 	
 	$scope.ok = function() {
 		
 		// remove tracking information
 		service.removeTrackingData($scope.issue);
-		
-		// calculate the spent time for the note
-		var t = $scope.time.spent.split(":");
-		$scope.note.timeSpentHours = parseInt(t[0]);
-		$scope.note.timeSpentMinutes = parseInt(t[1]);
 		
 		// add the note to the issue
 		$scope.issue.notes.push($scope.note);
@@ -218,9 +213,11 @@ ProJack.issues.controller('IssueEditController',
 		['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
         function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload, $sce) {
 	
-	$scope.time = { spent : '' };
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
+	
+	// the time spent on this issue when tracking is active
+	$scope.currentSpent = 0;
 	
 	var timeIval = undefined;
 	
@@ -263,13 +260,13 @@ ProJack.issues.controller('IssueEditController',
 	 */
 	$scope.setTicketTimeInterval = function() {
 		if (service.hasActiveTracking($scope.issue)) {
-			$scope.time.currentSpent = service.getCurrentTimeTrackingData($scope.issue).time;
+			$scope.currentSpent = service.getCurrentTimeTrackingData($scope.issue).result;
 			
 			timeIval = window.setInterval(function() {
-				var d = service.getCurrentTimeTrackingData($scope.issue);
-				console.log(d);
+				var d = service.getCurrentTimeTrackingData($scope.issue).result;
+				
 				$scope.$apply(function() {
-					$scope.time.currentSpent = d.time;
+					$scope.currentSpent = d;
 				});
 			}, 30000);
 		}	
@@ -290,13 +287,11 @@ ProJack.issues.controller('IssueEditController',
 	
 	$scope.unfocusNote = function() {
 		$scope.note = undefined;
-		$scope.time.spent = "";
 	};
 	
 	$scope.focusNote = function(n) {
 		$scope.note = n;
 		$scope.note.userModified = secService.getCurrentUserName();
-		$scope.time.spent = n.timeSpentHours + ":" + n.timeSpentMinutes;
 	}
 	
 	$scope.deleteNote = function(n) {
@@ -324,21 +319,14 @@ ProJack.issues.controller('IssueEditController',
 			$scope.issue.notes.push($scope.note);
 		}
 		
-		if ($scope.time && $scope.time.spent.length > 0) {
-			var tmp = $scope.time.spent.split(":");
-			$scope.note.timeSpentHours = parseInt(tmp[0]);
-			$scope.note.timeSpentMinutes = parseInt(tmp[1]);
-		}
-	
 		// unset the note
 		$scope.note = undefined;
-		$scope.time.spent = "";
 		
 		// remove tracking data if required
 		if ($scope.removeTrackingOnUpdate) {
 			service.removeTrackingData($scope.issue);
 			window.clearInterval(timeIval);
-			$scope.time.currentSpent = '00:00';
+			$scope.currentSpent = 0;
 		}
 	
 		service.updateIssue($scope.issue).then(function(data) {
@@ -419,8 +407,8 @@ ProJack.issues.controller('IssueEditController',
 	
 	$scope.addNoteFromTracking = function() {
 		var data = service.getCurrentTimeTrackingData($scope.issue);
-		$scope.time.spent = data.time;
 		$scope.note = service.newNote();
+		$scope.note.timeSpent = data.result;
 		$scope.removeTrackingOnUpdate = true;
 	};
 }]);
