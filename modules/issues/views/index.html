@@ -43,7 +43,10 @@
 								<option value="4">Geschlossen</option>
 							</select>
 							&nbsp;&nbsp;
-							<a href="#/issues/customer/{{criteria.customer}}/milestone/{{criteria.milestone}}/create" class="btn btn-primary" data-ng-if="criteria.milestone"><span class="fa fa-plus"> Issue</span></a>
+							<a href="#/issues/customer/{{criteria.customer}}/milestone/{{criteria.milestone}}/create" class="btn btn-primary" data-ng-if="criteria.milestone.length > 0">
+								<span class="fa fa-plus"> Issue</span>
+							</a>
+							<a href="#/issues/customer/{{criteria.customer}}/create" class="btn btn-primary" data-ng-if="criteria.milestone.length == 0"><span class="fa fa-plus"> Issue</span></a>
 						</div>
 					</div>
 				</div>
