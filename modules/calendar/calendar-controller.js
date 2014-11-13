@@ -207,7 +207,11 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		}
 		$scope.entries[dst]['releases'].push($scope.focusedMilestone);
 	});
+
 	
+	$scope.unfocusMilestone = function() {
+		$scope.focusedMilestone = undefined;
+	};
 	
 	$scope.saveMilestone = function() {
 		mService.updateMilestone($scope.focusedMilestone).then(function(data) {
