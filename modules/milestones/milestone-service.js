@@ -50,9 +50,9 @@ ProJack.milestones.service("MilestoneService",
 				implementation 	: '',
 				result 			: '',
 				internalNote 	: '',
-				estimatedEffort : 0,
-				estimatedUI		: 0,
-				estimatedBE		: 0,
+				estimatedEffort : undefined,
+				estimatedUI		: undefined,
+				estimatedBE		: undefined,
 				createIssue     : true,
 				questions 		: []
 			};
@@ -105,16 +105,34 @@ ProJack.milestones.service("MilestoneService",
 		 * @param The id of the milestone to be returned
 		 */
 		getMilestoneById : function(id) {
+			var that = this;
 			var p = $http.get(ProJack.config.dbUrl + "/" + id)
 				.then(function(response) {
 					var retval = response.data;
 					retval.attachments = [];
 					for (var i in retval._attachments) 
 						retval.attachments.push({ name : i, type : retval._attachments[i]['content_type'], size : retval._attachments[i].length });
-					
+				
+					for (var i in retval.specification.features) {
+						var f = retval.specification.features[i];
+						f.estimatedEffort = that.handleTimeConversion(f.estimatedEffort);
+						f.estimatedBE     = that.handleTimeConversion(f.estimatedBE);
+						f.estimatedUI     = that.handleTimeConversion(f.estimatedUI);
+					}
 					return retval;
 				});
 			return p;
+		},
+	
+		/**
+		 * In older versions we've used a String 'HH:mm" to represent duration.
+		 * Recalculate this to seconds
+		 */
+		handleTimeConversion : function(value) {
+			if (value == undefined) return undefined;
+			if (typeof value === 'string' && value.indexOf(':') > -1)
+				return KT.timeToSecs(value);
+			return value;
 		},
 	
 		/**
@@ -310,9 +328,11 @@ ProJack.milestones.service("MilestoneService",
 		calculateFeatureTime : function(milestone, feature) {
 			var factor= milestone.factor;
 			
-			// time is stored as string 'HH:mm'
-			var tmp = feature.estimatedEffort.split(":");
-			var fTime = (parseInt(tmp[0]) * 3600) + parseInt(tmp[1]) * 60;
+			// if estimatedEffort is undefined we assume 0
+			if (feature.estimatedEffort == undefined)
+				return 0;
+
+			var fTime = feature.estimatedEffort;
 			
 			// multiply by the milestones factor
 			fTime = fTime * factor;
@@ -339,28 +359,39 @@ ProJack.milestones.service("MilestoneService",
 						
 				// sum up times for all features
 				for (var i in milestone.specification.features) {
-					var q = milestone.specification.features[i].estimatedEffort.split(":");
+					var feature = milestone.specification.features[i];
+					var q = feature.estimatedEffort;
+					
+					a.developmentTime += q;
 					a.totalTime += this.calculateFeatureTime(milestone, milestone.specification.features[i]);
-					a.developmentTime += (parseInt(q[0]) * 3600 + parseInt(q[1]) * 60);
 				}
 			} else {
 				// calculate the times from the given estimated effort time of the milestone
-				a.totalTime = Math.ceil(milestone.estimatedDevelopmentTime * milestone.factor) * 3600;
+				a.totalTime = milestone.estimatedDevelopmentTime * 3600 * milestone.factor;
 				a.developmentTime = milestone.estimatedDevelopmentTime * 3600;
 			}
 			a.budget = (milestone.rate) * (a.totalTime / 3600);
 			return a;
 		},
 		
+		
+		/**
+		 * Calculates the total time over all features
+		 */
 		getFeatureSum : function(milestone, backend) {
 			var retval = 0;
 			for (var i in milestone.specification.features) {
-				if (backend) 
-					retval += KT.timeToSecs(milestone.specification.features[i].estimatedBE || '00:00');
+				var feature = milestone.specification.features[i];
+				var base;
+				
+				if (backend)
+					base = feature.estimatedBE;
 				if (backend == false)
-					retval += KT.timeToSecs(milestone.specification.features[i].estimatedUI || '00:00');
-				if (backend == undefined) 
-					retval += KT.timeToSecs(milestone.specification.features[i].estimatedEffort || '00:00');
+					base = feature.estimatedUI;
+				if (backend == undefined)
+					base = feature.estimatedEffort;
+			
+				retval += base;
 			}
 			return retval;
 		},
@@ -392,10 +423,9 @@ ProJack.milestones.service("MilestoneService",
 					}
 					
 					for (var i in a.issues) {
-						a.issuestats.totalCount += a.issues[i].count;
-						a.issuestats.assignedCount += a.issues[i].assigned;
-						a.issuestats.totalTimeSpent += a.issues[i].timeSpent;
-						a.issues[i].timeSpent = moment.duration(a.issues[i].timeSpent, 'seconds').format("HH:mm");
+						a.issuestats.totalCount += a.issues[i].count || 0;
+						a.issuestats.assignedCount += a.issues[i].assigned|| 0;
+						a.issuestats.totalTimeSpent += a.issues[i].timeSpent || 0;
 					}
 				
 					var cashflow = that.getMilestoneBudget(milestone);
@@ -403,20 +433,21 @@ ProJack.milestones.service("MilestoneService",
 					a.budget    = cashflow.budget;
 					a.totalTime = cashflow.totalTime;
 					a.developmentTime = cashflow.developmentTime;
-					a.issuestats.totalTrend = moment.duration(a.issuestats.totalTimeSpent - a.developmentTime, 'seconds').format("HH:mm");
-					a.issuestats.totalTimeSpent = moment.duration(a.issuestats.totalTimeSpent, 'seconds').format("HH:mm");
+					
+					a.issuestats.totalTrend = a.issuestats.totalTimeSpent - a.developmentTime;
 					
 					if (milestone.specification.features.length > 0)
 						a.budgetPerFeature = a.budget / milestone.specification.features.length;
 					else
 						a.budgetPerFeature = 0;
-					a.overhead  = moment.duration(a.totalTime - a.developmentTime, 'seconds').format("HH:mm");
-					a.timePerFeature = moment.duration(a.totalTime / milestone.specification.features.length, 'seconds').format("HH:mm");
-					a.developmentTime = moment.duration(a.developmentTime, 'seconds').format('HH:mm', { forceLength : true });
-					a.totalTime = moment.duration(a.totalTime, 'seconds').format('hh:mm', { forceLength : true });
+					
+					a.overhead  = a.totalTime - a.developmentTime;
+					a.timePerFeature = Math.round(a.totalTime / milestone.specification.features.length);
 					
 					if (milestone.plannedReleaseDate) {
 						a.daysToGo = moment(milestone.plannedReleaseDate).diff(moment(), 'days');
+					} else {
+						a.daysToGo = 'n/a';
 					}
 				
 					def.resolve(a);				

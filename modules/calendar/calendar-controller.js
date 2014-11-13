@@ -52,11 +52,8 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 					mService.getAggregation(e.payments[q]).then(function(data) {
 						$scope.totalPayments += data.budget;
 						
-						var q = data.developmentTime.split(":");
-						$scope.developmentHours += (parseInt(q[0]) * 3600) + (parseInt(q[1]) * 60);
-						
-						var q = data.totalTime.split(":");
-						$scope.totalTime += (parseInt(q[0]) * 3600) + (parseInt(q[1]) * 60);
+						$scope.developmentHours += data.developmentTime;
+						$scope.totalTime += data.totalTime;
 					});
 				}
 			}
@@ -163,7 +160,9 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 	
 	$scope.getAssignedTime = function(milestone) {
 		
-		retval = $scope.milestoneHours[milestone._id] * 3600; // saved times
+		var retval = $scope.milestoneHours[milestone._id] * 3600; // saved times
+		if (!retval)
+			retval = 0;
 		
 		// sum up all non saved assignments
 		for (var i in $scope.assignments) {

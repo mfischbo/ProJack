@@ -4,19 +4,19 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		newIssue : function() {
 			return {
 				type		: 'issue',
-				number		: 0,
-				title		: '',
+				number		: 0,			// the issues ticket number to be displayed
+				title		: '',			
 				description : '',
-				milestone   : '', // id of the milestone this issue is related to
-				feature		: '', // id of the feature this issue is related to
-				customer	: '', // id of the customer this issue is related to
-				assignedTo  : '', // the user the issue is assigned to
+				milestone   : '', 			// id of the milestone this issue is related to
+				feature		: '', 			// id of the feature this issue is related to
+				customer	: '', 			// id of the customer this issue is related to
+				assignedTo  : '', 			// the user the issue is assigned to
 				reportedBy  : secService.getCurrentUserName(),
-				state		: 'NEW', // NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
-				issuetype	: 'BUG', // BUG, FEATURE, CHANGE_REQUEST, SUPPORT
+				state		: 'NEW', 		// NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
+				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
-				estimatedTime: 0,
+				estimatedTime: undefined,
 				resolveUntil: undefined,
 				notes		: [],
 				times		: []	// array of time tracking object for all users
@@ -27,7 +27,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return {
 				_id				: KT.UUID(),
 				text 			: '',
-				timeSpent		: 0,
+				timeSpent		: undefined,
 				tasktype		: 'GENERAL',
 				dateCreated 	: new Date().getTime(),
 				dateModified	: new Date().getTime(),
@@ -86,13 +86,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
-		getIssuesByCustomer : function(customer) {
-			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byCustomer?key="'+customer._id+'"')
-				.then(function(response) {
-					
-				});
-		},
-		
 		getIssuesByMilestone : function(milestone) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byMilestone?key="'+milestone._id+'"')
 				.then(function(response) {
@@ -110,6 +103,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
+		/**
+		 * Returns all issues matching the given filter criteria
+		 * @param The criteria to filter the issues
+		 */
 		getIssuesByCriteria : function(criteria) {
 			var status = criteria.status;
 			if (criteria.status == "")
@@ -171,8 +168,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			var d = $q.defer();
 		
 			// get the next available numerical ticket number
-			// TODO: This kinda sucks! It'll be way cooler if we could set the 
-			// number in couch on insert. Check out how this would be done
 			$http.get(ProJack.config.dbUrl + "/_design/issues/_view/count?group=false").success(function(data) {
 				if (data.rows.length == 0) {
 					issue.number = 1;
@@ -259,6 +254,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return track.state == 'PAUSED';
 		},
 		
+		/**
+		 * Starts or resumes the time tracking on the given issue.
+		 */
 		startTimeTracking : function(issue) {
 			var def = $q.defer();
 			
@@ -294,6 +292,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return def.promise;
 		},
 		
+		/**
+		 * Pauses the time tracking on the given issue
+		 */
 		pauseTimeTracking : function(issue) {
 			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
 			if (track) {
@@ -306,6 +307,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			}
 		},
 		
+		
+		/**
+		 * Returns an object containing the data for the current users time tracking session
+		 */
 		getCurrentTimeTrackingData : function(issue) {
 			var retval = {
 					startTime : 0,
@@ -334,6 +339,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return retval;
 		},
 		
+		/**
+		 * Removes tracking data for the current user from the specified issue
+		 */
 		removeTrackingData : function(issue) {
 			var user = secService.getCurrentUserName();
 			for (var i in issue.times) {
@@ -344,6 +352,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return issue;
 		},
 		
+		/**
+		 * Returns whether tracking is active for the current user on the given issue
+		 */
 		hasActiveTracking : function(issue) {
 			var user = secService.getCurrentUserName();
 			return (KT.find('user', user, issue.times) !== undefined)

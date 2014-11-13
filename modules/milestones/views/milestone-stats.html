@@ -6,19 +6,19 @@
 	</tr>
 	<tr>
 		<td>Zeit f. Entwicklung</td>
-		<td>{{aggregation.developmentTime}}</td>
+		<td>{{aggregation.developmentTime | secsToTime }}</td>
 	</tr>
 	<tr>
 		<td>Zeit f. Projektoverhead</td>
-		<td>{{aggregation.overhead}}</td>
+		<td>{{aggregation.overhead | secsToTime }}</td>
 	</tr>
 	<tr>
 		<td>Gesamtzeit</td>
-		<td><b>{{aggregation.totalTime}}</b></td>
+		<td><b>{{aggregation.totalTime | secsToTime }}</b></td>
 	</tr>
 	<tr>
 		<td>&Oslash; Zeit pro Feature</td>
-		<td>{{aggregation.timePerFeature}}</td>
+		<td>{{aggregation.timePerFeature | secsToTime }}</td>
 	</tr>
 	<tr>
 		<td>&Oslash; Budget pro Feature</td>
@@ -57,9 +57,9 @@
 		<td><b>Gesamt</b></td>
 		<td><b>{{aggregation.issuestats.totalCount}}</b></td>
 		<td><b>{{aggregation.issuestats.assignedCount}}</b></td>
-		<td><b>{{aggregation.issuestats.totalTimeSpent}}</b></td>
+		<td><b>{{aggregation.issuestats.totalTimeSpent | secsToTime}}</b></td>
 		<td>
-			<b>{{aggregation.issuestats.totalTrend}}</b>
+			<b>{{aggregation.issuestats.totalTrend | secsToTime}}</b>
 		</td>
 	</tr>
 </tbody>

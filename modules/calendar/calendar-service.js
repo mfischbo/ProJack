@@ -95,6 +95,13 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 							var k = e.key[0] + "-" + e.key[1] + "-" + e.key[2];
 							if (k == rk) {
 								var milestone = e.value;
+								for (var k in milestone.specification.features) {
+									var f = milestone.specification.features[k];
+									f.estimatedEffort = mService.handleTimeConversion(f.estimatedEffort);
+									f.estimatedUI     = mService.handleTimeConversion(f.estimatedUI);
+									f.estimatedBE     = mService.handleTimeConversion(f.estimatedBE);
+								}
+								
 								if (e.key[4] == 0)
 									retval[rd]['specsdone'].push(milestone);
 								if (e.key[4] == 1)

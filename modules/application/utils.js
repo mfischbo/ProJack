@@ -199,6 +199,16 @@ ProJack.utils.directive('durationFormat', function() {
 		
 			// from model to widget
 			ngModelCtrl.$formatters.push(function(val) {
+				
+				// handle undefined values
+				if (val == undefined)
+					return '';
+				
+				// handle wrong format ('HH:mm')
+				if (typeof val === 'string' && val.indexOf(':') > -1) {
+					return val;
+				}
+				
 				var v = parseInt(val);
 				var h = Math.floor(val / 3600);
 				var m = Math.round((val % 3600) / 60);
@@ -209,7 +219,7 @@ ProJack.utils.directive('durationFormat', function() {
 			
 			// from widget to model
 			ngModelCtrl.$parsers.push(function(val) {
-				if (val.indexOf(':') == -1) return 0;
+				if (val.indexOf(':') == -1) return undefined;
 				
 				var t = val.split(":");
 				var r = parseInt(t[0]) * 3600 + parseInt(t[1] * 60);
