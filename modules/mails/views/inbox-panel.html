@@ -1,0 +1,35 @@
+<div data-ng-repeat="a in accounts">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h4><span class="fa fa-inbox" style="font-size:24px;"></span>&nbsp;&nbsp;{{a.name}}</h4>
+		</div>
+	</div>
+
+	<div class="row" data-ng-if="a.messages.length == 0">
+		<div class="col-md-12">
+			<p class="text-center">
+				<i>Deine Mailbox enthält keine ungelesenen Nachrichten</i>
+			</p>
+		</div>
+	</div>
+
+	
+	<div class="row" data-ng-repeat="m in a.messages | orderBy: 'dateReceived': true" id="accordion-{{$index}}">	
+	
+
+		<hr/>
+		<div class="col-md-10">
+			<a style="text-decoration:none; color:#000;" class="collapsed" data-toggle="collapse" data-parent="#accordion-{{$parent.$index}}" data-target="#content-{{$index}}" data-ng-click="markAsRead(m)">
+				<span data-ng-class="{'text-bold' : !m.read}">{{m.subject}}</span><br/> 
+				von {{m.from | senderFormat }} ({{m.dateReceived | date:'dd.MM.yyyy HH:mm'}})
+			</a>
+		</div>
+		<div class="col-md-2">
+			<button class="btn btn-xs btn-danger pull-right" data-ng-click="removeMessage(a, m)"><span class="fa fa-trash-o"></span></button>
+		</div>
+		<div class="col-md-12 collapse" id="content-{{$index}}">
+			<div data-ng-bind-html="m.textContent | textFormat"></div>	
+		</div>	
+	</div>
+</div>

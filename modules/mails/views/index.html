@@ -36,22 +36,26 @@
 							<th>From</th>
 							<th>Subject</th>
 							<th>Eingang</th>
+							<th>&nbsp;</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr data-ng-repeat="m in messages">
-							<td><a href="javascript:void('');" data-ng-click="focusMessage(m)">{{m.from}}</a></td>
+							<td><a href="javascript:void('');" data-ng-click="focusMessage(m)">{{m.from | senderFormat }}</a></td>
 							<td>{{m.subject}}</td>
 							<td>{{m.dateReceived|date:'dd.MM.yyyy HH:mm'}}</td>
+							<td>
+								<button class="btn btn-warning btn-sm"><span class="fa fa-bug"></span></button>
+							</td>
 						</tr>
 					</tbody>
 					</table>
 				</div>
-				<div class="message-details">
-					{{focusedMessage.subject}}
+				<div class="message-details" style="padding-top:24px;">
+					<strong>{{focusedMessage.subject}}</strong><br/>
 					<div data-ng-repeat="p in focusedMessage.parts">
 						<div data-ng-if="p.contentType.indexOf('text/plain') >= 0">
-							<pre>{{p.content}}</pre>
+							<textarea data-ng-model="p.content" rows="10" class="form-control" readonly></textarea>
 						</div>
 					</div>
 				</div>

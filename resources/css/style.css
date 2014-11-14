@@ -50,8 +50,7 @@ tr.weekend {
 	max-height: 100vh;
 	border: 1px solid #ddd;
 	position: absolute;
-	right: 0;
-	top: 83px;
+	top: 84px;
 	margin-top: -17px;
 	z-index: 9000;
 	overflow-y: scroll;
@@ -80,6 +79,10 @@ div.lane {
 	min-height:23px;
 	cursor:cell;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);	
+}
+
+.text-bold {
+	font-weight:bold;
 }
 
 .blink {
