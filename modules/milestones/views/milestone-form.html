@@ -17,7 +17,7 @@
 				<label>Version</label>		
 				<input type="text" data-ng-model="milestone.version" class="form-control" placeholder="prefix-major.minor.patchlevel">
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<label>Farbe</label>
 				<select data-ng-model="milestone.laneColor" class="form-control colorpicker">
 					<option value="011C26" style="background-color:#011C26;">Dunkelblau</option>
@@ -30,8 +30,11 @@
 					<option value="BEDB39" style="background-color:#BEDB39;">Green I</option>
 					<option value="FFE11A" style="background-color:#FFE11A;">Gelb</option>
 					<option value="FD7400" style="background-color:#FD7400;">Orange</option>
-					
 				</select>
+			</div>
+			<div class="col-md-1">
+				<label>&nbsp;</label>
+				<span class="fa fa-circle form-control" style="color:#{{milestone.laneColor}}; font-size:24px; box-shadow:none;"></span>
 			</div>
 		</div>
 	</div>

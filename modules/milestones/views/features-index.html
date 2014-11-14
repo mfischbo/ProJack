@@ -3,7 +3,9 @@
 	<tr>
 		<th>#</th>
 		<th>Name</th>
-		<th>Aufwand</th>
+		<th class="text-center">Aufwand Backend</th>
+		<th class="text-center">Aufwand Frontend</th>
+		<th class="text-center">Aufwand Gesamt</th>
 		<th>&nbsp;</th>
 	</tr>
 </thead>
@@ -11,9 +13,11 @@
 	<tr data-ng-repeat="f in milestone.specification.features">
 		<td>{{$index + 1}}</td>
 		<td><a href="javascript:void('');" data-ng-click="focusFeature(f)">{{f.title}}</a></td>
-		<td>{{f.estimatedEffort | secsToTime }}</td>
+		<td class="text-center">{{f.estimatedBE | secsToTime }}</td>
+		<td class="text-center">{{f.estimatedUI | secsToTime }}</td>
+		<td class="text-center"><strong>{{f.estimatedEffort | secsToTime }}</strong></td>
 		<td class="tools">
-			<a href="javascript:void('');" data-ng-click="focusFeature(f)" title="Bearbeiten"><span class="fa fa-pencil"></span></a>|
+			<a href="javascript:void('');" data-ng-click="focusFeature(f)" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 			<a href="javascript:void('');" data-ng-click="removeFeature(f)" title="Entfernen"><span class="fa fa-trash-o"></span></a>
 		</td>
 	</tr>
