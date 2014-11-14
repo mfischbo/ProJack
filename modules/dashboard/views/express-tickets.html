@@ -1,9 +1,10 @@
 <div class="panel panel-default" data-ng-controller="ExpressTicketsController" data-ng-init="initialize()">
 	<div class="panel-heading">
-		<h3 class="panel-title"><span class="fa fa-clock-o"></span> &nbsp; Express Tickets</h3>
+		<h3 class="panel-title"><span class="fa fa-bug"></span> &nbsp; Issues</h3>
 	</div>
 	
 	<div class="panel-body">
+		<h5>Dringende Tickets</h5>
 		<div data-ng-if="issues.length == 0">
 			<span class="fa fa-smile-o" style="font-size:18px;"></span><i> Aktuell liegen keine drigenden Tickets vor</i>	
 		</div>
@@ -23,5 +24,25 @@
 				<hr/>
 			</div>
 		</div>	
+		
+		<h5>Dir zugewiesen</h5>
+		<div data-ng-if="assigned.length == 0">
+			<span class="fa fa-smile-o" style="font-size:18px;"></span><i> Aktuell sind dir keine Tickets zugewiesen</i>	
+		</div>
+		<div class="row" data-ng-repeat="i in assigned">
+				<div class="col-md-8">
+				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>
+			</div>
+			<div class="col-md-4">
+				<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
+				<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
+				<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
+				<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
+			</div>
+			
+			<div class="col-md-12">
+				<hr/>
+			</div>
+		</div>
 	</div>
 </div>

@@ -44,6 +44,7 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 	$scope.user = secService.getCurrentUserName();
 	
 	$scope.issues = [];
+	$scope.assigned = [];
 	
 	$scope.initialize = function() {
 		
@@ -57,6 +58,13 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 				for (var i in data.rows) {
 					$scope.issues.push(data.rows[i].value);
 				}
+			});
+			
+			// fetch all assigned to user
+			var key = '?startkey=["'+$scope.user+'", "ASSIGNED", 0]&endkey=["'+$scope.user+'", "ASSIGNED", {}]';
+			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/byUserAndResolveDate' + key).success(function(data) {
+				for (var i in data.rows) 
+					$scope.assigned.push(data.rows[i].value);
 			});
 		});
 	};
@@ -77,13 +85,38 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 			chart : {
 				type : 'multiBarChart',
 				height : 350,
-				showControls : false,
+				showControls : true,
 				x : function(d) {
 					return d[0];
 				},
 				y : function(d) {
 					return d[1];
 				},
+				color: function(d) {
+					if (d.key == 'RESOLVED') return 'rgb(195, 195, 195)';
+					if (d.key == 'ASSIGNED') return 'rgb(208, 87, 229)';
+					if (d.key == 'NEW') return 'rgb(250, 106, 101)';
+					if (d.key == 'CLOSED') return 'rgb(127, 242, 79)';
+					if (d.key == 'FEEDBACK') return '#FDC169';
+				},
+				tooltip : function(key, x, y) {
+					return '<h5 class="popover-title"><strong>' + x + '</strong></h5><p>' + y + ' sind ' + i18n[key] + '</p>';
+				},
+				legend : {
+					key : function(v) {
+						return i18n[v.key];
+					}
+				},
+				yAxis : {
+					tickFormat : function(v) {
+						return v;
+					}
+				},
+				xAxis : {
+					tickFormat: function(v) {
+						return i18n[v];
+					}
+				}
 			}
 	};
 	
@@ -98,18 +131,24 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 				if (t == data[x].key[0])
 					continue;
 				
+				var b = ['BUG', 'CHANGE_REQUEST', 'FEATURE', 'SUPPORT'];
 				t = data[x].key[0];
-				var series = { 'key' : i18n[t], values : [] };
+				var series = { 'key' : t, values : [] };
 		
 				for (var y in data) {
 					if (data[y].key[0] == t) {
-						series.values.push( [ i18n[data[y].key[1]], data[y].value ]);
+						series.values.push( [ data[y].key[1], data[y].value ]);
+						b.splice(b.indexOf(data[y].key[1]), 1);
 					}
 				}
+				// TODO: entries from b need to be in the same order
+				for (var q in b) {
+					series.values.push([ b[q], 0 ]);
+				}
+				
 				finDat.push(series);
 			}
 			$scope.issuesByType = finDat;
-			
 		});
 	};
 }]);
