@@ -1,0 +1,58 @@
+<project name="Minzgruen Trackingpixel UI" default="build-all">
+
+	<property name="distdir" value="${basedir}/dist"/>
+	<property name="name"    value="ProJack"/>
+	
+	<target name="clean" description="Removes the dist directory">
+		<delete dir="${distdir}" includeemptydirs="true"/>
+	</target>
+
+	<target name="test" description="[Internal] Seeks for .js resources in the html file">
+		
+	</target>
+	
+	<target name="build" description="Creates all static resources">
+		<mkdir dir="${distdir}/resources"/>
+		<mkdir dir="${distdir}/modules"/>
+		
+		<echo>Copying vendor resources and SPA HTML Files</echo>
+		<copy todir="${distdir}/resources">
+			<fileset dir="${basedir}/resources"/>
+		</copy>
+		<copy file="${basedir}/index.html" todir="${distdir}/"/>
+		<copy file="${basedir}/login.html" todir="${distdir}/"/>
+		
+		<echo>Building directory structure for modules</echo>
+		<copy todir="${distdir}/modules">
+			<fileset dir="${basedir}/modules">
+				<!--<type type="dir"/>-->
+				<exclude name="**/*.js"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="gzip" description="Packs the dist directory ready for deployment">
+		<echo>gzipping dist</echo>
+		<tar destfile="${distdir}/${name}.tar" basedir="${distdir}"/>
+		<gzip destfile="${distdir}/${name}.tar.gz" src="${distdir}/${name}.tar"/>
+		<delete file="${distdir}/${name}.tar"/>
+	</target>
+		
+	<target name="minify" description="Runs YUICompressor on js sources">
+		<apply executable="java" parallel="false" dest="${distdir}/modules" verbose="true">
+			<fileset dir="${basedir}/modules" includes="**/*.js"/>
+			<arg line="-jar"/>
+			<arg path="${basedir}/lib/yuicompressor-2.4.8.jar"/>
+			<srcfile/>
+			<arg line="--line-break 180 -o"/>
+			<mapper type="glob" from="*.js" to="*.js"/>
+			<targetfile/>
+		</apply>
+	</target>
+	
+	
+	<target name="build-all" depends="clean, build, minify, gzip" description="Does it all">
+		<echo>Building...</echo>
+	</target>
+	
+</project>

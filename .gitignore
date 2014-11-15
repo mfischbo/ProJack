@@ -1,6 +1,7 @@
 .project
 .settings/
 /tool.html
+/dist/
 
 /.idea/.name
 /.idea/encodings.xml
