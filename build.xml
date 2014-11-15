@@ -7,10 +7,6 @@
 		<delete dir="${distdir}" includeemptydirs="true"/>
 	</target>
 
-	<target name="test" description="[Internal] Seeks for .js resources in the html file">
-		
-	</target>
-	
 	<target name="build" description="Creates all static resources">
 		<mkdir dir="${distdir}/resources"/>
 		<mkdir dir="${distdir}/modules"/>

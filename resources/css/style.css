@@ -1,14 +1,14 @@
-td.tools {
+.tools {
     text-align:right;
     white-space:nowrap;
 }
 
-td.tools span {
+.tools span {
     width:20px;
     text-align:center;
 }
 
-td.tools a {
+.tools a {
 	text-decoration:none;
 }
 

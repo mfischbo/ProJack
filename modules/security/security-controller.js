@@ -47,5 +47,58 @@ ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT'
 }]);
 
 ProJack.security.controller("UserProfileController", ['$scope', 'SecurityService', function($scope, service) {
+
+	$scope.mode = 'list';
+	$scope.masterpass = '';
 	
+	service.getCurrentUser().then(function(user) {
+		$scope.user = user;
+	});
+
+	
+	$scope.saveUser = function() {
+		service.updateUser($scope.user).then(function(data) {
+			KT.alert('Alle Daten wurden aktualisiert!');
+		});
+	};
+	
+	$scope.addMailAccount = function() {
+		$scope.account = {};
+		$scope.mode    = 'create';
+	};
+	
+	$scope.createAccount = function() {
+		if (!$scope.user.mailAccounts) 
+			$scope.user.mailAccounts = [];
+	
+		// AES encrypt all account passwords with the master password
+		$scope.account.password = Aes.Ctr.encrypt($scope.account.password, $scope.masterpass, 256);
+		
+		$scope.user.mailAccounts.push($scope.account);
+		$scope.account = undefined;
+		$scope.mode = 'list';
+		
+		console.log($scope.user);
+	};
+	
+	$scope.focusAccount = function(account) {
+		$scope.account = account;
+		$scope.mode = 'create';
+	};
+	
+	
+
+	$scope.removeAccount = function(account) {
+		for (var i in $scope.user.mailAccounts) {
+			var a = $scope.user.mailAccounts[i];
+			if (a.host == account.host && a.login == account.login)
+				return $scope.user.mailAccounts.splice(i,1);
+		}
+	};
+	
+	
+	$scope.cancelCreate = function() {
+		$scope.account = undefined;
+		$scope.mode    = 'list';
+	};
 }]);

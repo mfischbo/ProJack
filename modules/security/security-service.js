@@ -101,6 +101,13 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			});
 		},
 		
+		getCurrentUser : function() {
+			var uname = this.getCurrentUserName();
+			return $http.get(ProJack.config.srvUrl + '/_users/org.couchdb.user:' + uname).then(function(response) {
+				return response.data;
+			});
+		},
+		
 		getCurrentUserName : function() {
 			var u = JSON.parse(localStorage.getItem(ProJack.config.sessionKey));
 			return u.name;
