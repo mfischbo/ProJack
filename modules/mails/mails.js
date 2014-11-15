@@ -1,4 +1,4 @@
-ProJack.mails = angular.module("MailModule", []);
+ProJack.mails = angular.module("MailModule", ['SecurityModule']);
 
 ProJack.mails.filter('senderFormat', function() {
 	return function(sender) {

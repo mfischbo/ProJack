@@ -46,10 +46,10 @@ ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT'
 	};
 }]);
 
-ProJack.security.controller("UserProfileController", ['$scope', 'SecurityService', function($scope, service) {
+ProJack.security.controller("UserProfileController", ['$scope', 'KT', 'SecurityService', function($scope, KT, service) {
 
 	$scope.mode = 'list';
-	$scope.masterpass = '';
+	$scope.m = { mp :  ''};
 	
 	service.getCurrentUser().then(function(user) {
 		$scope.user = user;
@@ -72,7 +72,8 @@ ProJack.security.controller("UserProfileController", ['$scope', 'SecurityService
 			$scope.user.mailAccounts = [];
 	
 		// AES encrypt all account passwords with the master password
-		$scope.account.password = Aes.Ctr.encrypt($scope.account.password, $scope.masterpass, 256);
+		console.log("encrypting : " + $scope.account.password + " with masterpassword " + $scope.m.mp);
+		$scope.account.password = Aes.Ctr.encrypt($scope.account.password, $scope.m.mp, 256);
 		
 		$scope.user.mailAccounts.push($scope.account);
 		$scope.account = undefined;

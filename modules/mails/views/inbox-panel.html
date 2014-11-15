@@ -1,4 +1,20 @@
-<div data-ng-repeat="a in accounts">
+<div class="row">
+	<div class="col-md-12">
+		<h3>Mail Inbox</h3>
+	</div>
+	<div class="col-md-12">
+		<div class="form-inline">
+			<input type="password" data-ng-model="m.mp" class="form-control" placeholder="Your masterpassword">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" data-ng-model="persistPass" data-ng-click="toggleLSState()" class="form-control">Im Browser speichern (unsicher!)
+				</label>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-ng-repeat="a in accounts" data-ng-if="m.mp.length > 0">
 
 	<div class="row">
 		<div class="col-md-12">
