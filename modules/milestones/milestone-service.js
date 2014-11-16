@@ -30,6 +30,7 @@ ProJack.milestones.service("MilestoneService",
 				approvedBy			: '',
 				certifiedBy			: '',
 				status				: 'NEW', // NEW, APPROVAL_REQUESTED, APPROVED, CERTIFIED
+				installation		: '',
 				specification : {
 					authors 	: [],
 					dateCreated : new Date().getTime(),

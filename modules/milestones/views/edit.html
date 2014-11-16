@@ -9,6 +9,7 @@
 					<li class="active"> <a data-target="#basedata" data-toggle="tab" data-ng-click="tab = 'MILESTONE'">Milestone</a></li>
 					<li>				<a data-target="#specification" data-toggle="tab" data-ng-click="tab = 'SPECIFICATION'">Pflichtenheft</a></li>
 					<li>				<a data-target="#features" data-toggle="tab" data-ng-click="tab = 'FEATURES'">Features</a></li>
+					<li>				<a data-target="#install" data-toggle="tab" data-ng-click="tab = 'INSTALL'">Installation</a></li>
 					<li>				<a data-target="#attachments" data-toggle="tab" data-ng-click="tab = 'ATTACHMENTS'">Dokumente</a></li>
 				</ul>
 				
@@ -24,6 +25,10 @@
 					<div class="tab-pane fade in" id="features">
 						<div data-ng-include data-ng-if="!focusedFeature" data-src="'./modules/milestones/views/features-index.html'"></div>
 						<div data-ng-include data-ng-if="focusedFeature" data-src="'./modules/milestones/views/feature-form.html'"></div>
+					</div>
+					
+					<div class="tab-pane fade in" id="install">
+						<div data-ng-include data-src="'./modules/milestones/views/installation-form.html'"></div>
 					</div>
 					
 					<div class="tab-pane fade in" id="attachments">
