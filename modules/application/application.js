@@ -162,28 +162,6 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
             'responseError' : function(rejection) {
                 if (rejection.status == 401)
                     window.location.href = "./login.html";
-               
-                /*
-                if (rejection.status == 503)
-                	KT.alert("Ein verwendeter Dienst ist derzeit nicht erreichbar", 'error');
-                
-                
-                if (rejection.status == 405 || rejection.status == 415)
-                    KT.alert("Leider ist ein Fehler aufgetreten", 'error');
-
-                if (rejection.status == 403) {
-                    var m = rejection.config.method;
-                    if (m == "POST" || m == "PATCH" || m == "PUT" || m == "DELETE")
-                        KT.alert("Sie haben nicht die notwendigen Rechte um diese Aktion durchzuf&uuml;hren", 'error');
-                }
-
-                if (rejection.status == 500) {
-                    KT.alert("Ooops! Da ist leider etwas schief gelaufen", 'error');
-                }
-
-                // disable spinner
-                KT.disableSpinner();
-                */
                 return $q.reject(rejection);
             }
         };

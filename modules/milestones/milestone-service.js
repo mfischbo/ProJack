@@ -1,9 +1,7 @@
 /*
  * Service for managing milestones
  */
-ProJack.milestones.service("MilestoneService", 
-		['$http', '$filter', '$q', 'KT', 'IssueService', 
-		 function($http, $filter, $q, KT, iService) {
+ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 'IssueService', function($http, $filter, $q, KT, iService) {
 	
 	return {
 		

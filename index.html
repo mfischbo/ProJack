@@ -7,10 +7,14 @@
 		var ProJack = {};
 	</script>
 	<link rel="shortcut icon" href="./resources/images/logo-small.png">
+	
+	<!--Ant:CSS:Replace-->
 	<link href="./resources/css/bootstrap-paper.min.css" rel="stylesheet">
 	<link href="./resources/css/font-awesome.min.css" rel="stylesheet">
 	<link href="./resources/css/nv.d3.css" rel="stylesheet">
 	<link href="./resources/css/style.css" rel="stylesheet">
+	<!--/Ant:CSS:Replace-->
+	
 </head>
 <body style="padding-top:70px;">
 	<nav class="navbar navbar-default navbar-fixed-top" data-role="navigation">
@@ -117,6 +121,7 @@
 		</div>
 	</div>
 
+	<!--Ant:JSLibs:Replace-->
 	<!-- 3rd party libs -->
 	<script src="./resources/js/jquery-2.1.1.min.js"></script>
 	<script src="./resources/js/bootstrap.min.js"></script>
@@ -139,7 +144,9 @@
 	<!-- Encryption -->
 	<script src="./resources/js/aes.js"></script>
 	<script src="./resources/js/aes-ctr.js"></script>
-	
+	<!--/Ant:JSLibs:Replace-->
+
+	<!--Ant:JS:Replace-->
 	<!-- configuration and utility deps -->
 	<script src="./modules/application/config.js"></script>
 	<script src="./modules/application/utils.js"></script>
@@ -192,7 +199,8 @@
 	
 	<!-- Settings ... belongs to the core application -->
 	<script src="./modules/application/application-settings.js"></script>
-	
+	<!--/Ant:JS:Replace-->
+
 	<script type="text/javascript">
 		angular.element(document).ready(function() {
 			angular.bootstrap(document, ['ProJack', 'ReminderModule', 'FlashLightModule', 'MailModule']);

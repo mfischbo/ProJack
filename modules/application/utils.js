@@ -170,6 +170,10 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 	return x;
 }]);
 
+
+/**
+ * Directive for entering dates. Use in conjunction with input type="date"
+ */
 ProJack.utils.directive('dateFormat', function() {
 	return {
 		require : 'ngModel',

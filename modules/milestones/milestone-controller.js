@@ -1,5 +1,5 @@
-ProJack.milestones.controller('MileStonesController', ['$http', '$scope', 'MilestoneService', 'KT',
-	function($http, $scope, service, KT) {
+ProJack.milestones.controller('MileStonesController', ['$scope', 'MilestoneService', 'KT',
+	function($scope, service, KT) {
 	
 	service.getAllMilestones().then(function(data) {
 		$scope.milestones = data;
@@ -16,8 +16,8 @@ ProJack.milestones.controller('MileStonesController', ['$http', '$scope', 'Miles
 	
 }]);
 
-ProJack.milestones.controller('MileStonesCreateController', ['$http', '$scope', '$location', 'KT', 'MilestoneService', 'CustomerService',
-	function($http, $scope, $location, KT, service, customerService) {
+ProJack.milestones.controller('MileStonesCreateController', ['$scope', '$location', 'KT', 'MilestoneService', 'CustomerService',
+	function($scope, $location, KT, service, customerService) {
 
 	$scope.milestone = service.newMilestone();
 
@@ -33,8 +33,8 @@ ProJack.milestones.controller('MileStonesCreateController', ['$http', '$scope', 
 	};
 }]);
 
-ProJack.milestones.controller('MileStonesEditController', ['$http', '$scope', '$routeParams', 'KT', 'MilestoneService', 'CustomerService', 'IssueService', 
-	function($http, $scope, $routeParams, KT, service, customerService, issueService) {
+ProJack.milestones.controller('MileStonesEditController', ['$scope', '$routeParams', 'KT', 'MilestoneService', 'CustomerService', 'IssueService', 
+	function($scope, $routeParams, KT, service, customerService, issueService) {
 
 	$scope.tab = 'MILESTONE';
 	$scope.template = { _id : undefined };
