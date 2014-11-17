@@ -27,27 +27,23 @@
 
 
 <div data-ng-if="reminders.milestoneSpecsDone.length != 0">
+	<h5 class="pull-right">Pflichtenhefte fertigstellen</h5>
+	<div class="clearfix"></div>
 	<div data-ng-repeat="m in reminders.milestoneSpecsDone">
-		<h5 class="pull-right">Pflichtenhefte fertigstellen</h5>
-		<div class="clearfix"></div>
-		<div data-ng-repeat="m in reminders.milestoneSpecsDone">
-			<span data-ng-if="m.overdue" class="fa fa-warning text-danger"></span> <b>{{m.plannedCompletionDate|date:'dd.MM.yyyy'}}</b><br/>
-			Das <a href="#/milestones/{{m._id}}/edit">Pflichtenheft für Version {{m.version}}</a> muss heute an den Kunden gesendet werden!
-			<br/><br/>
-		</div>
+		<span data-ng-if="m.overdue" class="fa fa-warning text-danger"></span> <b>{{m.plannedCompletionDate|date:'dd.MM.yyyy'}}</b><br/>
+		Das <a href="#/milestones/{{m._id}}/edit">Pflichtenheft für Version {{m.version}}</a> muss heute an den Kunden gesendet werden!
+		<br/><br/>
 	</div>
 </div>
 
 
 <div data-ng-if="reminders.issues.length != 0">
+	<h5 class="pull-right">Issues mit Deadline</h5>
+	<div class="clearfix"></div>
 	<div data-ng-repeat="i in reminders.issues">
-		<h5 class="pull-right">Issues mit Deadline</h5>
-		<div class="clearfix"></div>
-		<div data-ng-repeat="i in reminders.issues">
-			<span data-ng-if="i.overdue" class="fa fa-warning text-danger"></span> <b>{{i.resolveUntil|date:'dd.MM.yyyy':'UTC'}}</b><br/>
-			Das Issue <a href="#/issues/{{i._id}}/edit" title="{{i.title}}">#{{i.number}}</a> muss heute fertig gestellt werden
-			<br/>
-		</div>
+		<span data-ng-if="i.overdue" class="fa fa-warning text-danger"></span> <b>{{i.resolveUntil|date:'dd.MM.yyyy':'UTC'}}</b><br/>
+		Das Issue <a href="#/issues/{{i._id}}/edit" title="{{i.title}}">#{{i.number}}</a> muss heute fertig gestellt werden
+		<br/>
 	</div>
 </div>
 
