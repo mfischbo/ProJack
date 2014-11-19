@@ -207,6 +207,45 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
 	};
 }]);
 
+
+ProJack.issues.controller('IssueModifyController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', function($scope, $routeParams, KT, service, cService, mService) {
+	
+	$scope.tinymceOptions = ProJack.config.tinyOptions;
+
+	cService.getAllCustomers().then(function(customers) {
+		$scope.customers = customers;
+		service.getIssueById($routeParams.id).then(function(issue) {
+			$scope.issue = issue;
+		});
+	});
+	
+	$scope.updateIssue = function() {
+		service.updateIssue($scope.issue).then(function(data) {
+			$scope.issue._rev = data.rev;
+			KT.alert('Das Issue wurde erfolgreich gespeichert');
+		});
+	};
+	
+	$scope.$watch('issue.customer', function(val) {
+		if (!val || val.length == 0) return;
+		mService.getMilestonesByCustomer(KT.find('_id', val, $scope.customers))
+			.then(function(data) {
+				$scope.milestones = [{ version : 'Ohne Milestone', _id : ProJack.config.lowId }];
+				$scope.milestones = $scope.milestones.concat(data);
+				if ($routeParams.mid) {
+					for (var i in $scope.milestones) {
+						if ($scope.milestones[i]._id == $routeParams.mid) {
+							$scope.issue.milestone = $scope.milestones[i]._id;
+							break;
+						}
+					}
+				}
+			});
+	});
+	
+}]);
+
+
 ProJack.issues.controller('IssueEditController', 
 		['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
         function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload, $sce) {
@@ -216,6 +255,9 @@ ProJack.issues.controller('IssueEditController',
 	
 	// the time spent on this issue when tracking is active
 	$scope.currentSpent = 0;
+	
+	// the current display mode
+	$scope.viewMode = 'DISPLAY';
 	
 	var timeIval = undefined;
 	
@@ -309,6 +351,15 @@ ProJack.issues.controller('IssueEditController',
 	
 	$scope.downloadAttachment = function(a) {
 		window.open(ProJack.config.dbUrl + "/" + $scope.issue._id + "/" + a.filename, '_blank');
+	};
+	
+	
+	$scope.editIssue = function() {
+		$scope.viewMode = 'EDIT';
+	};
+	
+	$scope.cancelEdit = function() {
+		$scope.viewMode = 'DISPLAY';
 	};
 	
 	$scope.updateIssue = function() {

@@ -119,6 +119,10 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 			controller : 'IssueEditController',
 			templateUrl : './modules/issues/views/edit.html'
 		})
+		.when('/issues/:id/modify', {
+			controller : 'IssueModifyController',
+			templateUrl : './modules/issues/views/modify.html'
+		})
 		
 		// Calendar Module
 		.when('/calendar', {
