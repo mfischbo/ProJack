@@ -201,11 +201,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		getNextIssueNumber : function() {
 			var def = $q.defer();
-			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/count?group=false').success(function(data) {
+			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/search?descending=true&limit=1').success(function(data) {
 				if (data.rows.length == 0)
 					def.resolve({ nextNumber : 1 });
 				else 
-					def.resolve({ nextNumber : parseInt(data.rows[0].value) + 1});
+					def.resolve({ nextNumber : parseInt(data.rows[0].key) + 1});
 			}).error(function() {
 				def.reject();
 			});
