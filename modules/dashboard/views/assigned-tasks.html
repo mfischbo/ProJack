@@ -15,30 +15,30 @@
 			</div>
 			
 			<div data-ng-if="a.lower.milestone._id == a.upper.milestone._id">
-				<div class="col-md-2 col-xs-2">
+				<div class="col-md-4 col-xs-2">
 					Ganztags
 				</div>
 				<div class="col-md-8 col-xs-8">
 					<span data-ng-if="a.lower.milestone == ''"><i>Eis essen!</i></span>
-					<span data-ng-if="a.lower.milestone != ''">
-						<span class="milestone-marker" style="background-color:#{{a.lower.milestone.laneColor}};">{{a.lower.milestone.name}}</span>
-					</span>
+					<div data-ng-if="a.lower.milestone != ''">
+						<div class="milestone-marker" style="background-color:#{{a.lower.milestone.laneColor}};">{{a.lower.milestone.name}}</div>
+					</div>
 				</div>
 			</div>
 		
 			<div data-ng-if="a.lower.milestone._id !== a.upper.milestone._id">
-				<div class="col-md-2 col-xs-2">
+				<div class="col-md-4 col-xs-2">
 					Halbtags<br/>Halbtags
 				</div>
 				<div class="col-md-8 col-xs-8">
 					<span data-ng-if="a.lower.milestone == ''"><i>Eis essen!</i></span>
-					<span data-ng-if="a.lower.milestone != ''">
-						<span class="milestone-marker" style="background-color:#{{a.lower.milestone.laneColor}};">{{a.lower.milestone.name}}</span><br/>
-					</span>
+					<div data-ng-if="a.lower.milestone != ''">
+						<span class="milestone-marker" style="background-color:#{{a.lower.milestone.laneColor}};">{{a.lower.milestone.name}}</span>
+					</div>
 					<span data-ng-if="a.upper.milestone == ''"><i>Eis essen!</i></span>
-					<span data-ng-if="a.upper.milestone != ''">
-						<span class="milestone-marker" style="background-color:#{{a.upper.milestone.laneColor}};">{{a.upper.milestone.name}}</span><br/>
-					</span>
+					<div data-ng-if="a.upper.milestone != ''">
+						<span class="milestone-marker" style="background-color:#{{a.upper.milestone.laneColor}};">{{a.upper.milestone.name}}</span>
+					</div>
 				</div>
 			</div>
 			

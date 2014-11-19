@@ -4,7 +4,7 @@ ProJack.mails.filter('senderFormat', function() {
 	return function(sender) {
 		
 		// remove quoted printable from addresses
-		if (sender.indexOf('=?UTF-8') == 0) {
+		if (sender.indexOf('=?UTF-8') == 0 || sender.indexOf('=?utf-8') == 0) {
 			sender = sender.replace(/=\?UTF-8\?.*=/gi, '');
 		}
 		
