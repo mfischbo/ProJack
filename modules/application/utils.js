@@ -184,6 +184,8 @@ ProJack.utils.directive('dateFormat', function() {
 		
 			
 			ngModelCtrl.$parsers.push(function(inputValue) {
+				if (inputValue == "")
+					return undefined;
 				return new Date(inputValue).getTime();
 			});
 			
