@@ -82,6 +82,12 @@
 					<input type="text" data-ng-model="milestone.certifiedBy" placeholder="Max Mustermann" class="form-control" 
 						data-ng-disabled="milestone.status != 'CERTIFIED'">
 				</div>	
+				
+				<div class="form-group">
+					<label>Abgerechnet am</label>
+					<input type="date" data-ng-model="milestone.dateAccounted" class="form-control" data-date-format 
+						data-ng-disabled="milestone.status != 'CERTIFIED'">
+				</div>
 			</div>
 			<div class="panel-footer">
 				<div class="pull-right">
