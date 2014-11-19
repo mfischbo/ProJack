@@ -109,10 +109,10 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 					return d[1];
 				},
 				color: function(d) {
-					if (d.key == 'RESOLVED') return 'rgb(195, 195, 195)';
+					if (d.key == 'RESOLVED') return 'rgb(127, 242, 79)';
 					if (d.key == 'ASSIGNED') return 'rgb(208, 87, 229)';
 					if (d.key == 'NEW') return 'rgb(250, 106, 101)';
-					if (d.key == 'CLOSED') return 'rgb(127, 242, 79)';
+					if (d.key == 'CLOSED') return 'rgb(195,195,195)';
 					if (d.key == 'FEEDBACK') return '#FDC169';
 				},
 				tooltip : function(key, x, y) {
