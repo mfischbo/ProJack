@@ -35,6 +35,8 @@ ProJack.dashboard.controller('AssignedTasksController', ['$scope', '$http', 'Sec
 				}
 			});
 		});
+		
+
 	};
 }]);
 
@@ -45,6 +47,7 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 	
 	$scope.issues = [];
 	$scope.assigned = [];
+	$scope.currentTracked = [];
 	
 	$scope.initialize = function() {
 		
@@ -66,6 +69,19 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 				for (var i in data.rows) 
 					$scope.assigned.push(data.rows[i].value);
 			});
+		});
+		
+		// fetch currently running trackings
+		var tkey = '?key="' + $scope.user + '"';
+		$http.get(ProJack.config.dbUrl + '/_design/issues/_view/trackings' + tkey).success(function(data) {
+			for (var i in data.rows) {
+				var issue = data.rows[i].value;
+				for (var q in issue.times) {
+					if (issue.times[q].user == $scope.user)
+						issue.times = issue.times[q];
+				}
+				$scope.currentTracked.push(issue);
+			}
 		});
 	};
 }]);

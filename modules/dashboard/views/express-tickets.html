@@ -24,6 +24,23 @@
 				<hr/>
 			</div>
 		</div>	
+		<hr/>	
+		
+		<h5>Aktuell getracked</h5>	
+		<div data-ng-if="currentTracked.length == 0">
+			<i>Aktuell werden keine Tickets getracked</i>
+		</div>
+		<div class="row" data-ng-repeat="i in currentTracked">
+			<div class="col-md-8">
+				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>
+			</div>
+			<div class="col-md-4">
+				<span class="text-bold pull-right" data-ng-if="i.times.state == 'RUNNING'">Läuft</span>
+				<span class="text-bold pull-right" data-ng-if="i.times.state == 'PAUSED'">Pausiert</span>
+			</div>
+		</div>
+		
+		<hr/>	
 		
 		<h5>Dir zugewiesen</h5>
 		<div data-ng-if="assigned.length == 0">
@@ -34,10 +51,12 @@
 				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>
 			</div>
 			<div class="col-md-4">
-				<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
-				<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
-				<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
-				<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
+				<div class="pull-right">
+					<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
+					<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
+					<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
+					<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
+				</div>
 			</div>
 			
 			<div class="col-md-12">

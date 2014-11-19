@@ -6,6 +6,7 @@
 		<th class="text-center">Aufwand Backend</th>
 		<th class="text-center">Aufwand Frontend</th>
 		<th class="text-center">Aufwand Gesamt</th>
+		<th class="text-center">x {{milestone.factor}}</th>
 		<th>&nbsp;</th>
 	</tr>
 </thead>
@@ -16,6 +17,7 @@
 		<td class="text-center">{{f.estimatedBE | secsToTime }}</td>
 		<td class="text-center">{{f.estimatedUI | secsToTime }}</td>
 		<td class="text-center"><strong>{{f.estimatedEffort | secsToTime }}</strong></td>
+		<td class="text-center"><strong>{{f.estimatedEffort * milestone.factor | secsToTime }}</strong>
 		<td class="tools">
 			<a href="javascript:void('');" data-ng-click="focusFeature(f)" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 			<a href="javascript:void('');" data-ng-click="removeFeature(f)" title="Entfernen"><span class="fa fa-trash-o"></span></a>

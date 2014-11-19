@@ -32,7 +32,7 @@
 							<select data-ng-model="criteria.customer" class="form-control" data-ng-options="c._id as c.name for c in customers"></select>&nbsp;&nbsp;
 						
 							<label>Milestone</label>
-							<select data-ng-model="criteria.milestone" class="form-control" data-ng-options="m._id as m.version for m in milestones"></select>&nbsp;&nbsp;
+							<select data-ng-model="criteria.milestone" class="form-control" data-ng-options="m._id as (m.version + ' - ' + m.name) for m in milestones | orderBy: 'version'"></select>&nbsp;&nbsp;
 							
 							<label>Status bis</label>
 							<select data-ng-model="criteria.status" class="form-control">
