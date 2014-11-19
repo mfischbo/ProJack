@@ -168,9 +168,7 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
                                                     function($scope, $location, $routeParams, KT, service, customerService, milestoneService) {
 	
 	$scope.issue = service.newIssue();
-	$scope.tinymceOptions = {
-			menu : {}
-	};
+	$scope.tinymceOptions = ProJack.config.tinyOptions;
 	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
