@@ -49,7 +49,7 @@ ProJack.flashlight.service('FlashLightService', ['$http', function($http) {
 			
 			var q = this.prepareESQuery(query);
 			if (query.indexOf("#") == 0) {
-				return $http.get(ProJack.config.esUrl + "/issue/_search?q=number:>=" + q).then(this.parseResults);
+				return $http.get(ProJack.config.esUrl + "/issue/_search?q=number:" + q).then(this.parseResults);
 			} else {
 				return $http.get(ProJack.config.esUrl + "/_search?q=" + this.prepareESQuery(query)).then(this.parseResults);
 			}

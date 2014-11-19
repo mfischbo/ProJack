@@ -6,13 +6,14 @@
 
 
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">Services</h3>
 			</div>
 			
 			<div class="panel-body">
+				<h4><span class="fa fa-gear"></span>&nbsp;Dienste</h4>
 				<div class="row">
 					<div class="col-md-8">
 						Elasticsearch Available
@@ -32,7 +33,67 @@
 						<span class="fa fa-thumbs-o-up" data-ng-if="java.online"></span>
 					</div>
 				</div>
+				
+				<div class="row">
+					<div class="col-md-12">
+						<h5><span class="fa fa-wrench"></span>&nbsp;Reparaturservice</h5>
+					</div>
+					<div class="col-md-12">
+						<button type="button" class="btn btn-primary" data-ng-click="repairIssues()">Issues reparieren</button>
+					</div>
+				</div>
 			</div>
 		</div>
+	</div>
+	
+	
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="panel-title">Elasticsearch Index Maintainance</div>
+			</div>
+			
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="row">
+						<div class="col-md-4">
+							<label>CouchDB IP</label>
+							<input type="text" data-ng-model="esParams.couchdb.host" placeholder="127.0.0.1" class="form-control">
+						</div>
+						
+						<div class="col-md-4">
+							<label>CouchDB Port</label>
+							<input type="number" data-ng-model="esParams.couchdb.port" placeholder="5984" min="0" max="65535" class="form-control">
+						</div>
+						
+						<div class="col-md-4">
+							<label>CouchDB Name</label>
+							<input type="text" data-ng-model="esParams.couchdb.db" placeholder="projack" class="form-control">
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="row">	
+						<div class="col-md-4">
+							<label>Username</label>
+							<input type="text" data-ng-model="esParams.couchdb.user" placeholder="john.doe" class="form-control">
+						</div>
+						
+						<div class="col-md-4">
+							<label>Password</label>
+							<input type="password" data-ng-model="esParams.couchdb.password" class="form-control">
+						</div>
+					</div>
+				</div>	
+			</div>
+			
+			<div class="panel-footer">
+				<div class="pull-right">
+					<button type="button" class="btn btn-danger" data-ng-click="deleteESIndex()">Index löschen</button>
+					<button type="button" class="btn btn-success" data-ng-click="createESIndex()">Index anlegen</button>	
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>	
 	</div>
 </div>
