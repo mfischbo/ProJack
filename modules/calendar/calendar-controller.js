@@ -154,6 +154,10 @@ ProJack.calendar.controller('CalendarIndexController', ['$scope', 'KT', 'Calenda
 		return mService.getMilestoneBudget(milestone).totalTime;
 	};
 	
+	$scope.getTotalBudget = function(milestone) {
+		return mService.getMilestoneBudget(milestone).budget;
+	};
+	
 	$scope.getFeatureSum = function(milestone, backend) {
 		return mService.getFeatureSum(milestone, backend);
 	};
