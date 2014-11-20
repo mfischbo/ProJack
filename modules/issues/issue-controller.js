@@ -123,6 +123,12 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		});
 	};
 	
+	$scope.getMilestoneLabel = function(m) {
+		if (m._id == '') return 'Alle Versionen';
+		if (m._id == ProJack.config.lowId) return 'Ohne Milestone';
+		return m.version + ' - ' + m.name;
+	};
+	
 }]);
 
 ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalInstance', 'KT', 'IssueService', 'data', function($scope, $modalInstance, KT, service, data) {

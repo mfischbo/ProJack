@@ -302,6 +302,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			// condition: times must be available and the current user has an entry with state == 'RUNNING'
 			if (!issue.times || issue.times.length == 0) return false;
 			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
+			if (!track) return false;
 			return track.state == 'RUNNING';
 		},
 		
@@ -313,6 +314,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			// condition: times must be available for the current user and state == 'PAUSED'
 			if (!issue.times || issue.times.length == 0) return false;
 			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
+			if (!track) return false;
 			return track.state == 'PAUSED';
 		},
 		
