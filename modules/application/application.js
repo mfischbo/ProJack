@@ -87,6 +87,10 @@ ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, 
 			controller : 'MileStonesEditController',
 			templateUrl : './modules/milestones/views/edit.html'
 		})
+		.when('/milestones/:id/analyze', {
+			controller : 'MileStonesAnalyzeController',
+			templateUrl : './modules/milestones/views/analyze.html'
+		})
 		
 		// Customer Administration
 		.when('/customers', {

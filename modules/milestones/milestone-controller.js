@@ -33,6 +33,117 @@ ProJack.milestones.controller('MileStonesCreateController', ['$scope', '$locatio
 	};
 }]);
 
+
+
+ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeParams', '$filter', 'KT', 'MilestoneService', 'IssueService', 
+                                                              function($scope, $routeParams, $filter, KT, mService, iService) {
+
+	// the milestone that is being analyzed
+	$scope.milestone = undefined;
+	
+	// the issues related to this milestone
+	$scope.issues = [];
+	
+	// the times spent on all issues related to the milestone
+	$scope.times = undefined;
+	
+	$scope.trendChart = [ { key : 'Chart', values : [] }];
+	$scope.chartOpts = {
+			chart : {
+				type : 'discreteBarChart',
+				height: 400,
+				x  : function(d) {
+					return d.label;
+				},
+				y : function(d) {
+					return d.value
+				},
+				yAxis : {
+					tickFormat : function(p) {
+						return $filter('secsToTime')(p);
+					}
+				},
+				color : function(x, y) {
+					if (x.value < 0) return '#D9042B';
+					return '#BEDB39';
+				},
+				tooltipContent : function(key, x, y) {
+					return '<h5 class="popover-title"><strong>#' + x + '</strong></h5><p>'+ KT.find('number', x, $scope.issues).title +'</p><p>' + y + ' </p>'; 
+				}
+			}
+	};
+	
+	
+	mService.getMilestoneById($routeParams.id).then(function(milestone) {
+		$scope.milestone = milestone;
+		
+		iService.getIssuesByMilestone($scope.milestone).then(function(issues) {
+			$scope.issues = issues;
+			iService.getSpentTimesByMilestone($scope.milestone).then(function(times) {
+				$scope.times = times;
+			});
+		
+			// issue trend barchart
+			var chart = [];
+			
+			// calculate saldo on each feature issue
+			for (var i in $scope.issues) {
+				var issue = $scope.issues[i];
+				if (issue.issuetype == 'FEATURE') {
+					var f = KT.find('_id', issue.feature, $scope.milestone.specification.features);
+					
+					// sum up times for issue
+					var t = 0;
+					for (var q in issue.notes) {
+						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
+					}
+					chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
+				}
+				
+				if (issue.issuetype == 'BUG') {
+					var t = 0;
+					for (var q in issue.notes) {
+						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
+					}
+					chart.push( { label : issue.number, value : (0 - t) } );
+				}
+			}
+			$scope.trendChart[0].values = chart;
+			console.log($scope.trendChart);
+		});
+	});
+	
+	
+	$scope.getFeatureTime = function(mFactor) {
+		if (!$scope.milestone) return 0;
+		var k = 0;
+		for (var i in $scope.milestone.specification.features) {
+			var f = $scope.milestone.specification.features[i];
+			k += parseInt(f.estimatedEffort);
+		}
+		return k * mFactor;
+	};
+	
+	$scope.getTimeForTicketType = function(type) {
+		if (!$scope.issues) return 0;
+		var k = 0;
+		for (var i in $scope.issues) {
+			var issue = $scope.issues[i];
+			
+			if (type.indexOf(issue.issuetype) > -1) {
+				for (var q in issue.notes) {
+					if (issue.notes[q].timeSpent)
+						k+= parseInt(issue.notes[q].timeSpent);
+				}
+			}
+		}
+		return k;
+	};
+	
+}]);
+
+
+
 ProJack.milestones.controller('MileStonesEditController', ['$scope', '$routeParams', 'KT', 'MilestoneService', 'CustomerService', 'IssueService', 
 	function($scope, $routeParams, KT, service, customerService, issueService) {
 

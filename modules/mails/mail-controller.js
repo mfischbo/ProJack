@@ -13,10 +13,10 @@ ProJack.mails.controller("MailInboxController", ['$scope', 'KT', 'MailService', 
 		for (var i in $scope.accounts) {
 			
 			$scope.accounts[i].messages = [];
-			console.log("Setting interval for account : " + $scope.accounts[i].name);
 			window.setInterval(function() {
 				$scope.getMessages($scope.accounts[i]);
 			}, 60000);
+			
 			$scope.getMessages($scope.accounts[i]);
 		}
 	});

@@ -1,6 +1,13 @@
+/**
+ * Service that handles all affairs related to issues
+ */
 ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', function ($http, $q, KT, secService) {
 	
 	return {
+		
+		/**
+		 * Returns a new issue
+		 */
 		newIssue : function() {
 			return {
 				type		: 'issue',
@@ -16,8 +23,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
-				estimatedTime: undefined,
-				resolveUntil: undefined,
+				estimatedTime: undefined,	// estimated time in seconds this issue will take to be resolved
+				resolveUntil: undefined,	// the deadline for this issue
 				notes		: [],
 				times		: []	// array of time tracking object for all users
 			};
@@ -27,8 +34,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return {
 				_id				: KT.UUID(),
 				text 			: '',
-				timeSpent		: undefined,
-				tasktype		: 'GENERAL',
+				timeSpent		: undefined,					// time in seconds spent on this note
+				tasktype		: 'GENERAL',					// the type of work that has been done
 				dateCreated 	: new Date().getTime(),
 				dateModified	: new Date().getTime(),
 				userCreated 	: secService.getCurrentUserName(),
@@ -54,6 +61,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			};
 		},
 		
+		
+		/**
+		 * Returns the issue for the given id
+		 * @param The id of the issue to be returned
+		 */
 		getIssueById : function(id) {
 			return $http.get(ProJack.config.dbUrl + "/" + id)
 				.then(function(response) {
@@ -76,6 +88,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
+		
+		/**
+		 * Returns all issues
+		 */
 		getAllIssues : function() {
 			return $http.get(ProJack.config.dbUrl + "/_design/issues/_view/index")
 				.then(function(response) {
@@ -86,6 +102,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
+		/**
+		 * Returns all issues that are related to the given milestone
+		 * @param The milestone
+		 */
 		getIssuesByMilestone : function(milestone) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byMilestone?key="'+milestone._id+'"')
 				.then(function(response) {
@@ -96,6 +116,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
+		
+		/**
+		 * Returns all issues that are related to the given feature
+		 * @param The given feature
+		 */
 		getIssueByFeature : function(feature) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byFeature?key="'+feature._id+'"')
 				.then(function(response) {
@@ -153,6 +178,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return retval;
 		},
 	
+		
+		/**
+		 * Persists a issue in the DB
+		 * @param The issue that should be persisted
+		 */
 		createIssue : function(issue) {
 			if (typeof issue.customer == "object")
 				issue.customer = issue.customer._id;
@@ -183,6 +213,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return d.promise;
 		},
 		
+		
+		/**
+		 * Updates the given issue in the DB
+		 * @param The issue that should be updated
+		 */
 		updateIssue : function(issue) {
 			issue.dateModified = new Date().getTime();
 			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
@@ -191,6 +226,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 		
+		
+		/**
+		 * Deletes the given issue
+		 * @param The issue that should be deleted
+		 */
 		deleteIssue : function(issue) {
 			return $http({
 				method 	: 'DELETE',
@@ -199,6 +239,11 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		},
 		
 		
+		/**
+		 * Returns the next issue number
+		 * Note: This implementation does not support concurrency. When 2 users independently call
+		 * this method, it might occur that they will get the same issue number.
+		 */
 		getNextIssueNumber : function() {
 			var def = $q.defer();
 			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/search?descending=true&limit=1').success(function(data) {
@@ -212,6 +257,12 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return def.promise;
 		},
 		
+		
+		/**
+		 * Adds an attachment to the issue and updates the issue in the DB
+		 * @param The issue to attach the file
+		 * @param The file to be attached
+		 */
 		addAttachment : function(issue, file) {
 			var deferred = $q.defer();
 			var fr = new FileReader();
@@ -233,12 +284,20 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return deferred.promise;
 		},
 		
+		/**
+		 * Returns whether or not time tracking could be started for the current user on the given issue
+		 * @param The issue in question
+		 */
 		isTimeStartable : function(issue) {
 			// condition: times is empty, or no entry for the current user
 			if (!issue.times || issue.times.length == 0) return true;
 			return (KT.find('user', secService.getCurrentUserName(), issue.times) === undefined);
 		},
 		
+		/**
+		 * Returns whether or not time tracking could be paused for the current user on the given issue
+		 * @param The issue in question
+		 */
 		isTimePauseable : function(issue) {
 			// condition: times must be available and the current user has an entry with state == 'RUNNING'
 			if (!issue.times || issue.times.length == 0) return false;
@@ -246,6 +305,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return track.state == 'RUNNING';
 		},
 		
+		/**
+		 * Returns whether or not time tracking could be resumed for the current user on the given issue
+		 * @param The issue in question
+		 */
 		isTimeResumable : function(issue) {
 			// condition: times must be available for the current user and state == 'PAUSED'
 			if (!issue.times || issue.times.length == 0) return false;
@@ -255,6 +318,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		/**
 		 * Starts or resumes the time tracking on the given issue.
+		 * This method accepts issues that return true for #isTimeStartable and #isTimeResumeable
+		 * @param The issue to start time tracking on.
 		 */
 		startTimeTracking : function(issue) {
 			var def = $q.defer();
@@ -293,6 +358,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		/**
 		 * Pauses the time tracking on the given issue
+		 * @param The issue to pause tracking on
 		 */
 		pauseTimeTracking : function(issue) {
 			var track = KT.find('user', secService.getCurrentUserName(), issue.times);
@@ -308,7 +374,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		
 		/**
-		 * Returns an object containing the data for the current users time tracking session
+		 * Returns an object containing the data for the current users time tracking session.
+		 * @param The issue to return tracking data for
 		 */
 		getCurrentTimeTrackingData : function(issue) {
 			var retval = {
@@ -340,6 +407,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		/**
 		 * Removes tracking data for the current user from the specified issue
+		 * @param The issue to remove tracking data from
 		 */
 		removeTrackingData : function(issue) {
 			var user = secService.getCurrentUserName();
@@ -357,6 +425,26 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		hasActiveTracking : function(issue) {
 			var user = secService.getCurrentUserName();
 			return (KT.find('user', user, issue.times) !== undefined)
+		},
+		
+		
+		getSpentTimesByMilestone : function(milestone) {
+			var def = $q.defer();
+			var k = 'startkey=["' + milestone._id + '", "A"]&endkey=["' + milestone._id + '", "Z"]';
+			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/byTimeSpent?group=true&' + k).success(function(data) {
+				var retval = {};
+				var overall = 0;
+				for (var i in data.rows) {
+					var key = data.rows[i].key[1];
+					retval[key] = data.rows[i].value;
+					overall += data.rows[i].value;
+				}
+				retval.total = overall;
+				def.resolve(retval);
+			}).error(function() {
+				def.reject();
+			});
+			return def.promise;
 		}
 	};
 }]);

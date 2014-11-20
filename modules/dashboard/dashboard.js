@@ -89,7 +89,6 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 
 ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', function($scope, $http) {
 	
-	var colmap = { NEW: '#e51c23', ASSIGNED: '#bbbbbb', RESOLVED: '#9c27b0',  FEEDBACK: '#ff9800', CLOSED : '' };
 	var i18n   = { 
 			BUG : 'Bugs', CHANGE_REQUEST : 'Change Requests',
 			FEATURE : 'Features', SUPPORT : 'Support', 
