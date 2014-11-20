@@ -68,7 +68,18 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 					return '#BEDB39';
 				},
 				tooltipContent : function(key, x, y) {
-					return '<h5 class="popover-title"><strong>#' + x + '</strong></h5><p>'+ KT.find('number', x, $scope.issues).title +'</p><p>' + y + ' </p>'; 
+					var retval = '<h5 class="popover-title"><strong>';
+					if (x == 'Gesamt') retval += 'Gesamt';
+					else
+						retval += '#' + x;
+					retval += '</strong></h5><p>';
+					
+					if (x != 'Gesamt')
+						retval += KT.find('number', x, $scope.issues).title;
+					else 
+						retval += 'Gesamt';
+					retval +='</p><p>' + y + ' </p>'; 
+					return retval;
 				}
 			}
 	};
@@ -87,6 +98,7 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 			var chart = [];
 			
 			// calculate saldo on each feature issue
+			var sum = 0;
 			for (var i in $scope.issues) {
 				var issue = $scope.issues[i];
 				if (issue.issuetype == 'FEATURE') {
@@ -97,19 +109,23 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 					for (var q in issue.notes) {
 						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
 					}
-					chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
+					var res = (f.estimatedEffort || 0) - t;
+					sum += res;
+					chart.push( { label : issue.number, value : res});
 				}
-				
+		
+				// bug tickets always count negatively
 				if (issue.issuetype == 'BUG') {
 					var t = 0;
 					for (var q in issue.notes) {
 						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
 					}
+					sum += (0-t);
 					chart.push( { label : issue.number, value : (0 - t) } );
 				}
 			}
+			chart.push( { label : 'Gesamt', value : sum });
 			$scope.trendChart[0].values = chart;
-			console.log($scope.trendChart);
 		});
 	});
 	
