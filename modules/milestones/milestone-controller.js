@@ -68,7 +68,9 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 					return '#BEDB39';
 				},
 				tooltipContent : function(key, x, y) {
-					return '<h5 class="popover-title"><strong>#' + x + '</strong></h5><p>'+ KT.find('number', x, $scope.issues).title +'</p><p>' + y + ' </p>'; 
+					var i = KT.find('number', x, $scope.issues);
+					return '<h5 class="popover-title"><strong>#' + x + '</strong></h5><p>'
+						+ i.title +'</p><p>Geplant: '+ $filter('secsToTime')(i.estimatedTime) +'<br/>&Uuml;brig: ' + y + ' </p>'; 
 				}
 			}
 	};
@@ -97,7 +99,10 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 					for (var q in issue.notes) {
 						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
 					}
-					chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
+					if (!f)
+						chart.push( { label : issue.number, value : 0 } );
+					else
+						chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
 				}
 				
 				if (issue.issuetype == 'BUG') {
