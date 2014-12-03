@@ -126,6 +126,7 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 			var q = {
 					customer : milestone.customer.name || "",
 					version  : milestone.version || "",
+					name     : milestone.name || ""
 			};
 			return q;
 		},
@@ -145,7 +146,7 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 			for (var i in entries) {
 				var m = moment(parseInt(i)).locale('de');
 				var d = {
-						date : m.format("DD.MM.YYYY"),
+						date : m.format("dd DD.MM.YYYY"),
 						events : []
 				}
 				for (var k in entries[i]['specsdone']) {
