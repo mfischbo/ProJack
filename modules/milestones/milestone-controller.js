@@ -109,9 +109,10 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 					for (var q in issue.notes) {
 						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
 					}
-					var res = (f.estimatedEffort || 0) - t;
-					sum += res;
-					chart.push( { label : issue.number, value : res});
+					if (!f)
+						chart.push( { label : issue.number, value : 0 } );
+					else
+						chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
 				}
 		
 				// bug tickets always count negatively
