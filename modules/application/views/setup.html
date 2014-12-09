@@ -1,0 +1,41 @@
+<form name="setupForm">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h3>ProJack Setup</h3>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>Database Name</label>
+				<input type="text" data-ng-model="db.name" placeholder="myProJackDB" class="form-control">
+				
+				<label>Admin Username</label>
+				<input type="text" data-ng-model="db.username" placeholder="john.doe" class="form-control">
+				
+				<label>Admin Password</label>
+				<input type="password" data-ng-model="db.password" class="form-control">
+				
+				<div class="checkbox">
+					<label>
+					<input type="checkbox" data-ng-model="db.createDB" class="form=control"> Create Database
+					</label>
+				</div>
+				
+				<button type="button" class="btn btn-success btn-lg" data-ng-click="setup()">Setup</button>
+			</div>
+		</div>	
+
+		<div class="col-md-6">
+			<span class="text-muted" data-ng-if="status.isDBCreated == undefined">Database created</span>
+			<span class="fa fa-check" style="color:green;" data-ng-if="status.isDBCreated == true">&nbsp; Database successfully created</span>	
+			<span class="fa fa-close" style="color:red;" data-ng-if="status.isDBCreated == false">&nbsp; Error creating database</span>
+			<br/>
+			<span class="text-muted" data-ng-if="status.isDDocsCreated == undefined">Database installed</span>
+			<span class="fa fa-check" style="color:green;" data-ng-if="status.isDDocsCreated == true">&nbsp; Database successfully installed</span>	
+			<span class="fa fa-close" style="color:red;" data-ng-if="status.isDDocsCreated == false">&nbsp; Error setting up the database></span>
+		</div>
+	</div>
+</form>
