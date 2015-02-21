@@ -143,7 +143,16 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		if (m._id == ProJack.config.lowId) return 'Ohne Milestone';
 		return m.version + ' - ' + m.name;
 	};
-	
+
+   $scope.isObserving = function(issue) {
+       if (!issue.observers) return false;
+       return (issue.observers.indexOf(user) > -1);
+   };
+
+   $scope.toggleObservation = function(issue) {
+       service.toggleObservation(issue);
+   };
+
 }]);
 
 ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalInstance', 'KT', 'IssueService', 'data', function($scope, $modalInstance, KT, service, data) {

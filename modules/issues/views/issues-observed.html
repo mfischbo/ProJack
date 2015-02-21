@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-md-12 col-xs-12" style="font-size:16px;">
+        <span style="">Aktuell Beobachtet: </span>
+        <span data-ng-repeat="i in issues|orderBy:'number'" data-ng-if="isObserving(i)">
+            <a href="#/issues/{{::i._id}}/edit" title="{{i.title}}">
+                #{{::i.number}}
+            </a>&nbsp;<span data-ng-if="!$last">/&nbsp;</span>
+        </span>
+    </div>
+    <div class="col-md-12 col-xs-12">&nbsp;</div>
+</div>

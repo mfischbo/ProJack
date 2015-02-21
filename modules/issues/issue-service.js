@@ -26,7 +26,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				estimatedTime: undefined,	// estimated time in seconds this issue will take to be resolved
 				resolveUntil: undefined,	// the deadline for this issue
 				notes		: [],
-				times		: []	// array of time tracking object for all users
+				times		: [],	        // array of time tracking object for all users,
+                observers   : []            // array of usernames observing this ticket
 			};
 		},
 		
@@ -57,10 +58,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		newPause: function() {
 			return {
-				startTime : new Date().getTime(),
+				startTime : new Date().getTime()
 			};
 		},
-		
+
 		
 		/**
 		 * Returns the issue for the given id
@@ -384,8 +385,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 					startTime : 0,
 					pauseTime : 0,
 					endTime   : new Date().getTime(),
-					result    : 0,
-			}
+					result    : 0
+			};
 		
 			var user = secService.getCurrentUserName();
 			var track = undefined;
@@ -466,6 +467,26 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				def.reject();
 			});
 			return def.promise;
-		}
+		},
+
+        toggleObservation : function(issue) {
+            var user = secService.getCurrentUserName();
+            // check for old data - might not contain the observers array
+            if (!issue.observers) issue.observers = [];
+
+            // check if the user already observing the issue
+            if (issue.observers.indexOf(user) > -1) {
+                var idx = issue.observers.indexOf(user);
+                issue.observers.splice(idx, 1);
+            } else {
+                issue.observers.push(user);
+            }
+            var def = $q.defer();
+            this.updateIssue(issue).then(function(data) {
+               issue._rev = data.rev;
+               def.resolve();
+            });
+            return def.promise;
+        }
 	};
 }]);
