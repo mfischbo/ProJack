@@ -229,7 +229,9 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
 }]);
 
 
-ProJack.issues.controller('IssueModifyController', ['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', function($scope, $routeParams, KT, service, cService, mService) {
+ProJack.issues.controller('IssueModifyController', 
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
+		 function($scope, $routeParams, $location, KT, service, cService, mService) {
 	
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
 
@@ -244,6 +246,7 @@ ProJack.issues.controller('IssueModifyController', ['$scope', '$routeParams', 'K
 		service.updateIssue($scope.issue).then(function(data) {
 			$scope.issue._rev = data.rev;
 			KT.alert('Das Issue wurde erfolgreich gespeichert');
+			$location.path('#/issues');
 		});
 	};
 	
@@ -301,8 +304,8 @@ ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerServic
 
 
 ProJack.issues.controller('IssueEditController', 
-		['$scope', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
-        function($scope, $routeParams, KT, service, customerService, milestoneService, secService, $upload, $sce) {
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
+        function($scope, $routeParams, $location, KT, service, customerService, milestoneService, secService, $upload, $sce) {
 	
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
@@ -437,8 +440,8 @@ ProJack.issues.controller('IssueEditController',
 			$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
 			$scope.sanitizeHtml();
 			KT.alert("Notiz gespeichert");
-		
 			$scope.removeTrackingData = false;
+			$location.path('/issues');
 		});
 	};
 
