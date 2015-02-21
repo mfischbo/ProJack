@@ -2,6 +2,7 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
                                                    function($scope, KT, service, customerService, milestoneService, secService, $modal) {
 
 	var locKey = "__IssuesIndex_Criteria";
+	var sortKey= "__IssuesIndex_SortCriteria";
 	var user   = secService.getCurrentUserName();
 	
 	$scope.criteria = {
@@ -13,8 +14,17 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		status : ''
 	};
 	
+	$scope.predicate = '';
+	$scope.reverse   = false;
+	
 	if (localStorage.getItem(locKey)) {
 		$scope.criteria = JSON.parse(localStorage.getItem(locKey));
+	}
+	
+	if (localStorage.getItem(sortKey)) {
+		var x = JSON.parse(localStorage.getItem(sortKey));
+		$scope.predicate = x.predicate;
+		$scope.reverse   = x.reverse;
 	}
 	
 	customerService.getAllCustomers().then(function(data) {
@@ -60,6 +70,11 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 			$scope.issues = data;
 		});
 	}, true);
+	
+	$scope.$watch('predicate', function() {
+		var x = { predicate : $scope.predicate, reverse : $scope.reverse };
+		localStorage.setItem(sortKey, JSON.stringify(x));
+	});
 	
 	
 	/**
