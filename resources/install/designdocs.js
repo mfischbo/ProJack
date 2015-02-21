@@ -69,6 +69,9 @@ function getDesignDocs() {
 	                    byUserAndResolveDate: {
 	                        map: "function(doc) {\n  if (doc.type == 'issue') {\n    var d = undefined;\n    if (typeof doc.resolveUntil === 'string' && doc.resolveUntil.length > 0)\n       d = new Date(doc.resolveUntil).getTime();\n    \n    if (typeof doc.resolveUntil === 'number')    \n       d = doc.resolveUntil;\n\n    if (d == undefined)\n       d = Number.MAX_VALUE;\n\n    emit([doc.assignedTo.replace('org.couchdb.user:', ''), doc.state, d], doc);\n  }   \n}"
 	                    },
+	                    byClosingDate: {
+	                    	map: "function(doc) { if (doc.type == 'issue' && (doc.state == 'CLOSED' || doc.state == 'RESOLVED')) { var cid = doc.customer; if (typeof doc.customer === 'object') cid = doc.customer._id; emit([cid, '' + doc.dateModified + ''], doc); } }"
+	                    },
 	                    byType: {
 	                        map: "function(doc) {\n  if (doc.type == 'issue') {\n    emit([doc.state, doc.issuetype], doc);\n  }\n}",
 	                        reduce: "_count"

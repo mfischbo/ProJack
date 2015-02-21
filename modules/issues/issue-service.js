@@ -447,6 +447,25 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				def.reject();
 			});
 			return def.promise;
+		},
+		
+		
+		getChangelog : function(customerId, from, to) {
+			var fd = new Date(from).getTime();
+			var td = new Date(to).getTime();
+			
+			var def = $q.defer();
+			var k   = 'startkey=["' + customerId + '", "' + fd + '"]&endkey=["' + customerId + '", "' + td + '"]';
+			$http.get(ProJack.config.dbUrl + "/_design/issues/_view/byClosingDate?" + k).success(function(response) {
+				var retval = [];
+				for (var i in response.rows) {
+					retval.push(response.rows[i].value);
+				}
+				def.resolve(retval);
+			}).error(function() {
+				def.reject();
+			});
+			return def.promise;
 		}
 	};
 }]);

@@ -248,7 +248,40 @@ ProJack.issues.controller('IssueModifyController', ['$scope', '$routeParams', 'K
 				}
 			});
 	});
+}]);
+
+
+ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerService', 'IssueService', function($scope, CustomerService, IssueService) {
+
 	
+	if (localStorage.getItem("__Projack_Changelog_Criteria")) {
+		var x = JSON.parse(localStorage.getItem("__Projack_Changelog_Criteria"));
+		$scope.criteria = {
+				customer : x.customer,
+				from     : new Date(x.from),
+				to		 : new Date(x.to)
+		};
+	} else {
+		$scope.criteria = {
+			from : new Date(),
+			to   : new Date(),
+			customer : ''
+		};
+	}
+	
+	CustomerService.getAllCustomers().then(function(data) {
+		$scope.customers = data;
+	});
+	
+	$scope.$watch('criteria', function(val) {
+		if (!$scope.criteria.customer || !$scope.criteria.from || !$scope.criteria.to) return;
+		
+		IssueService.getChangelog($scope.criteria.customer, $scope.criteria.from, $scope.criteria.to).then(function(issues) {
+			$scope.issues = issues;
+		});
+		
+		localStorage.setItem("__Projack_Changelog_Criteria", JSON.stringify($scope.criteria));
+	}, true);
 }]);
 
 
