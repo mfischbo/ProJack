@@ -186,11 +186,11 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 			KT.alert('Notiz wurde erfolgreich hinzugefügt');
 			$modalInstance.close();
 		});
-	}
+	};
 	
 	$scope.cancel = function() {
 		$modalInstance.dismiss();
-	}
+	};
 }]);
 
 
@@ -230,7 +230,7 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
 	});
 	
 	$scope.createIssue = function() {
-		service.createIssue($scope.issue).then(function(data) {
+		service.createIssue($scope.issue).then(function() {
 			KT.alert("Das Issue wurde erfolgreich angelegt");
 			$location.path("/issues");
 		});
@@ -398,7 +398,7 @@ ProJack.issues.controller('IssueEditController',
 	$scope.focusNote = function(n) {
 		$scope.note = n;
 		$scope.note.userModified = secService.getCurrentUserName();
-	}
+	};
 	
 	$scope.deleteNote = function(n) {
 		KT.remove('_id', n._id, $scope.issue.notes);

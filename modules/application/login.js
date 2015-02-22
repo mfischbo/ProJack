@@ -1,5 +1,5 @@
 var T = angular.module("Login", ['ngRoute', 'SecurityModule']);
-T.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
+T.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider
 		.when('/', {

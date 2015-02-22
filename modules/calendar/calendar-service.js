@@ -17,7 +17,7 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 				},
 				upper : {
 					milestone : '',
-					laneColor : 'ffffff',
+					laneColor : 'ffffff'
 				}
 			}
 		},

@@ -52,7 +52,7 @@ T.controller('SetupController', ['$scope', '$http', '$q', function($scope, $http
 		var def = $q.defer();
 		$http({
 			url 	: ProJack.config.srvUrl + '/' + $scope.db.name,
-			method 	: 'PUT', 
+			method 	: 'PUT'
 		}).success(function() {
 			def.resolve({status : 'OK'});
 		}).error(function() {
