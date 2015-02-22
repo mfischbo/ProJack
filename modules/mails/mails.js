@@ -1,4 +1,12 @@
 ProJack.mails = angular.module("MailModule", ['SecurityModule']);
+ProJack.mails.config(['$routeProvider', function($routeProvider) {
+
+    $routeProvider
+        .when("/mails", {
+            controller : 'MailboxIndexController',
+            templateUrl : './modules/mails/views/index.html'
+        });
+}]);
 
 ProJack.mails.filter('senderFormat', function() {
 	return function(sender) {

@@ -1,4 +1,13 @@
 ProJack.dashboard = angular.module('DashBoardModule', ['Utils', 'SecurityModule', 'nvd3']);
+ProJack.dashboard.config(['$routeProvider', function($routeProvider) {
+
+    $routeProvider
+        .when('/', {
+            controller : 'DashBoardController',
+            templateUrl : './modules/dashboard/views/index.html'
+        });
+}]);
+
 ProJack.dashboard.controller('DashBoardController', ['$scope',
 	function($scope) {
 

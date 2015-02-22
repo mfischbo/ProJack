@@ -1,4 +1,13 @@
 ProJack.templates = angular.module("TemplateModule", ['Utils', 'angularFileUpload']);
+ProJack.templates.config(['$routeProvider', function($routeProvider) {
+
+    $routeProvider
+        .when('/admin/templates', {
+            controller : 'TemplateIndexController',
+            templateUrl : './modules/templates/views/index.html'
+        });
+}]);
+
 
 ProJack.templates.directive("templateSelector", ['TemplateService', 'KT', function(service, KT) {
 	return {

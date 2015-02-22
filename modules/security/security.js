@@ -1,4 +1,25 @@
 ProJack.security = angular.module("SecurityModule", ['Utils']);
+ProJack.security.config(['$routeProvider', function($routeProvider) {
+
+    $routeProvider
+        .when('/admin/users', {
+            controller : 'UserIndexController',
+            templateUrl : './modules/security/views/user-index.html'
+        })
+        .when('/admin/users/:id/edit', {
+            controller : 'UserEditController',
+            templateUrl : './modules/security/views/user-edit.html'
+        })
+        .when("/admin/users/create", {
+            controller : 'UserCreateController',
+            templateUrl : './modules/security/views/user-create.html'
+        })
+        .when("/admin/users/self", {
+            controller : 'UserProfileController',
+            templateUrl : './modules/security/views/user-profile.html'
+        });
+}]);
+
 
 ProJack.security.directive("userSelector", ['SecurityService', 'KT', function(service, KT) {
 
