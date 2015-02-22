@@ -35,7 +35,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return {
 				_id				: KT.UUID(),
 				text 			: '',
-				timeSpent		: undefined,					// time in seconds spent on this note
+				timeSpent		: 0,	        				// time in seconds spent on this note
 				tasktype		: 'GENERAL',					// the type of work that has been done
 				dateCreated 	: new Date().getTime(),
 				dateModified	: new Date().getTime(),
