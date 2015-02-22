@@ -321,6 +321,8 @@ ProJack.issues.controller('IssueEditController',
 	
 	// the time spent on this issue when tracking is active
 	$scope.currentSpent = 0;
+
+    $scope.user = secService.getCurrentUserName();
 	
 	// the current display mode
 	$scope.viewMode = 'DISPLAY';
@@ -526,4 +528,13 @@ ProJack.issues.controller('IssueEditController',
 		$scope.note.timeSpent = data.result;
 		$scope.removeTrackingOnUpdate = true;
 	};
+
+    $scope.isObserving = function() {
+        if (!$scope.issue.observers) return false;
+        return $scope.issue.observers.indexOf($scope.user) > -1;
+    };
+
+    $scope.toggleObservation = function() {
+      service.toggleObservation($scope.issue);
+    };
 }]);

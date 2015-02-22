@@ -28,11 +28,26 @@
 				</div>
 				<div class="pull-right">
 					<span data-ng-if="isTimePausable() || isTimeStoppable()">Aktuelle Zeit <small>(ohne Pausen)</small>: {{currentSpent | secsToTime }}&nbsp;&nbsp;</span>
-					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeStartable()" data-ng-click="startTimeTracking()" title="Timetracking starten"><span class="fa fa-play"></span></button>	
-					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeResumable()" data-ng-click="startTimeTracking()" title="Timetracking fortsetzen"><span class="fa fa-play blink"></span></button>	
-					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimePauseable()" data-ng-click="pauseTimeTracking()" title="Take a break .. have a KitKat"><span class="fa fa-pause"></span></button>	
-					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeStoppable()" data-ng-click="stopTimeTracking()" title="Timetracking stoppen"><span class="fa fa-stop"></span></button>	
-				</div>
+
+                    <button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeStartable()" data-ng-click="startTimeTracking()" title="Timetracking starten">
+                        <span class="fa fa-play"></span>
+                    </button>
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeResumable()" data-ng-click="startTimeTracking()" title="Timetracking fortsetzen">
+                        <span class="fa fa-play blink"></span>
+                    </button>
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimePauseable()" data-ng-click="pauseTimeTracking()" title="Take a break .. have a KitKat">
+                        <span class="fa fa-pause"></span>
+                    </button>
+					<button type="button" class="btn btn-primary btn-sm" data-ng-if="isTimeStoppable()" data-ng-click="stopTimeTracking()" title="Timetracking stoppen">
+                        <span class="fa fa-stop"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" data-ng-if="!isObserving()" data-ng-click="toggleObservation()" title="Ticket beobachten">
+                        <span class="fa fa-eye"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" data-ng-if="isObserving()" data-ng-click="toggleObservation()" title="Ticket nicht mehr beobachten">
+                        <span class="fa fa-eye-slash"></span>
+                    </button>
+                </div>
 				<div class="clearfix"></div>
 			</div>
 			
