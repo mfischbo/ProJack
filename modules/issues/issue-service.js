@@ -128,6 +128,21 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 					return response.data.rows[0].value;
 				});
 		},
+
+        /**
+         * Returns all issues that are visible by the current user
+         * @returns Array of issues
+         */
+        getObservedIssues : function() {
+            var user = secService.getCurrentUserName();
+            return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byObserver?key="' + user + '"')
+                .then(function(response) {
+                    var retval = [];
+                    for (var q in response.data.rows)
+                        retval.push(response.data.rows[q].value);
+                    return retval;
+                });
+        },
 		
 		/**
 		 * Returns all issues matching the given filter criteria

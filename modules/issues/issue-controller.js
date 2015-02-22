@@ -46,6 +46,11 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 				$scope.criteria.milestone = $scope.milestones[0]._id;
 		})
 	});
+
+    // load all observed issues
+    service.getObservedIssues().then(function(issues) {
+       $scope.observedIssues = issues;
+    });
 	
 	$scope.$watch('criteria.customer', function(val) {
 		if (!val || val.length == 0) return;

@@ -49,6 +49,9 @@ function getDesignDocs() {
 	                    byCustomer: {
 	                        map: "function(doc) {\n  if (doc.type == 'issue') {\n    emit(doc.customer, doc);\n  }\n}"
 	                    },
+                        byObserver: {
+                            map: "function(doc) { if (doc.type == 'issue' && doc.observers && doc.observers.length > 0) { for (var q in doc.observers) { emit(doc.observers[q], doc); } } }"
+                        },
 	                    byMilestone: {
 	                        map: "function(doc) {\n  if (doc.type == 'issue') {\n    emit(doc.milestone, doc);\n  }\n}"
 	                    },
