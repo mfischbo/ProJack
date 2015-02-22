@@ -535,7 +535,7 @@ ProJack.issues.controller('IssueEditController',
 	};
 
     $scope.isObserving = function() {
-        if (!$scope.issue.observers) return false;
+        if (!$scope.issue || !$scope.issue.observers) return false;
         return $scope.issue.observers.indexOf($scope.user) > -1;
     };
 
