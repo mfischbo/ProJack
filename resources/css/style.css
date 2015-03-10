@@ -68,6 +68,10 @@ tr.weekend {
 	background-color:#e51c23;
 }
 
+span.smaller {
+	font-weight:lighter;
+	font-size:24px;
+}
 
 .milestone-marker {
 	padding-left:8px;
@@ -83,6 +87,11 @@ div.lane {
 	min-height:23px;
 	cursor:cell;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);	
+}
+
+div.sprint-lane {
+	border-right:1px solid #ccc;
+	min-height:80vh;	
 }
 
 .text-bold {

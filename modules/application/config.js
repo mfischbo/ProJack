@@ -14,7 +14,7 @@ ProJack.config = {
 		srvUrl : "/cdb",
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/test-setup",
+		dbUrl :  "/cdb/spoffice",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		

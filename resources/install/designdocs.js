@@ -111,6 +111,18 @@ function getDesignDocs() {
 	        	}
 	        },
 	        
+	        {
+	        	name : "sprints",
+	        	doc  : {
+	        		language : "javascript",
+	        		views : {
+	        			byReleaseDate : {
+	        				map : "function(doc) {\n if (doc.type == 'sprint') {\n var e = new Date(doc.releaseAt).getTime();\n emit(e, doc);\n }\n }"
+	        			}
+	        		}
+	        	}
+	        },
+	        
 	        
 	        {
 	        	name : "templates",
