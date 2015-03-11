@@ -15,7 +15,7 @@
 	<div class="col-md-4 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
 		<h4>Unassigned</h4>	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in unassigned" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues">
 				<div class="sprint-issueHandle">
 					<span class="fa fa-bars"></span>
 				</div>
@@ -30,7 +30,7 @@
 	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onInProgressDrop($event, $data)" drop-validate="validateInProgressDrop($data)">
 		<h4>In Progress</h4>	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in inProgress" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues">
 				<div class="sprint-issueHandle">
 					<span class="fa fa-bars"></span>
 				</div>
@@ -45,7 +45,7 @@
 	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onDoneDrop($event, $data)" drop-validate="validateDoneDrop($data)">
 		<h4>Done</h4>	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in done" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
 				<div class="sprint-issueHandle">
 					<span class="fa fa-bars"></span>
 				</div>

@@ -86,8 +86,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 				KT.remove('_id', issue._id, $scope.issues);
 			});
 		} else {
-			KT.remove('_id', issue._id, $scope.inProgress);
-			KT.remove('_id', issue._id, $scope.done);
+			issue.assignedTo = '';
+			issue.state      = 'NEW';
+			iService.updateIssue(issue).then(function(data) {
+				KT.remove('_id', issue._id, $scope.inProgress);
+				KT.remove('_id', issue._id, $scope.done);			
+			});
 		}
 		$scope.unassigned.push(issue);
 	};
