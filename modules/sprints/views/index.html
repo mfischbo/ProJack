@@ -6,7 +6,8 @@
 
 <div class="row">
 	<div class="col-md-6">
-		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-bug"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"></span></button>
 	</div>
 </div>
 
@@ -19,7 +20,7 @@
 					<span class="fa fa-bars"></span>
 				</div>
 				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / {{::i.title}}
+					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
 				</div>
 			</li>	
 		</ul>
@@ -33,7 +34,7 @@
 					<span class="fa fa-bars"></span>
 				</div>
 				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / {{::i.title}}
+					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
 				</div>
 			</li>	
 		</ul>
@@ -47,7 +48,7 @@
 					<span class="fa fa-bars"></span>
 				</div>
 				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / {{::i.title}}
+					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
 				</div>
 			</li>	
 		</ul>

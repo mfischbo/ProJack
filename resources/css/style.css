@@ -20,10 +20,10 @@
     z-index:5999;
 }
 
-tr.info, tr.danger, tr.warning, tr.active, tr.success  {
+.info, .danger, .warning, .active, .success  {
 	color:#333;
 }
-tr.info a, tr.danger a, tr.warning a, tr.active a, tr.success a  {
+.info a, .danger a, .warning a, .active a, .success a  {
 	color:#333;
 }
 
