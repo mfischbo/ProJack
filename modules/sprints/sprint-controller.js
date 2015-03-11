@@ -7,17 +7,25 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 
 	// States if the issue overlay is visible
 	$scope.issueOverlayVisible = false;
+	$scope.issueCreateOverlayVisible = false;
+	$scope.tinymceOptions = ProJack.config.tinyOptions;
 	
 	// issue lanes
 	$scope.unassigned = [];
 	$scope.inProgress = [];
 	$scope.done       = [];
 	
+	// issue to be created from the overlay
+	$scope.issue 	  = iService.newIssue();
+	
 
 	// load the all future sprints and take the closest release as the current
 	service.getFutureSprints().then(function(data) {
 		$scope.sprints = data;
 		$scope.sprint = data[0];
+	
+		// update the empty issue
+		$scope.issue.resolveUntil = $scope.sprint.releaseAt;
 		
 		// load all related issues and sort them
 		iService.getIssuesBySprint($scope.sprint).then(function(data) {
@@ -36,10 +44,19 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	});
 	
 	$scope.toggleIssueOverlay = function() {
+		$scope.issueCreateOverlayVisible = false;
 		$scope.issueOverlayVisible = !$scope.issueOverlayVisible;
 	};
 	
+	$scope.toggleIssueCreateOverlay = function() {
+		$scope.issueOverlayVisible = false;
+		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
+	}
+	
 
+	/**
+	 * Methods to check whether or not the dropzone accepts the issue
+	 */
 	$scope.validateUnassignedDrop = function(issue) {
 		if (KT.indexOf('_id', issue._id, $scope.unassigned) >= 0)
 			return false;
@@ -97,6 +114,17 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	};
 	
 	
+	/*
+	 * Create new issues from the overlay
+	 */
+	$scope.createIssue = function() {
+		$scope.issue.sprint = $scope.sprint._id;
+		iService.createIssue($scope.issue).then(function(data) {
+			$scope.unassigned.push(data);
+			$scope.issue = iService.newIssue();
+			$scope.issue.resolveUntil = $scope.sprint.releaseAt;
+		});
+	};
 	
 	/*
 	 * Issue overlay controller. Must stay here for drag/drop to work properly 
@@ -137,9 +165,6 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		});
 		localStorage.setItem('__ProJack.Sprint.IssueOverlay.criteria', JSON.stringify($scope.criteria));
 	});
-	
-
-	
 }]);
 
 ProJack.sprint.controller('SprintCreateController', ['$scope', '$location', 'SprintService', 'KT', function($scope, $location, service, kt) {

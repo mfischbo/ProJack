@@ -1,4 +1,4 @@
-ProJack.sprint = angular.module('SprintModule', ['Utils']);
+ProJack.sprint = angular.module('SprintModule', ['Utils', 'ui.tinymce']);
 ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider

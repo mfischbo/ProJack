@@ -237,7 +237,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				}
 				$http.post(ProJack.config.dbUrl, issue)
 					.success(function(response) {
-						d.resolve(response.data);
+						issue._id = response.id;
+						issue._rev= response.rev;
+						d.resolve(issue);
 					}).error(function() {
 						d.reject();
 					});
