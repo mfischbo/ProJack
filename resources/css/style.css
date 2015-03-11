@@ -94,6 +94,37 @@ div.sprint-lane {
 	min-height:80vh;	
 }
 
+ul.sprint-issueList {
+	list-style-position:outside;
+	padding:0px;
+}
+
+li.sprint-issueItem {
+	list-style: none;
+	padding: 8px;
+  	border: 1px solid #bbb;
+  	margin-bottom:4px;
+}
+
+li.danger {
+	background-color:#f9bdbb;
+}
+
+li.info {
+	background-color:#e1bee7;
+}
+
+li.success {
+	background-color:#dff0d8;
+}
+
+div.sprint-issueHandle {
+	width:16px;
+	border-right:1px solid #ccc;
+	float:left;
+	cursor:pointer;
+}
+
 .text-bold {
 	font-weight:bold;
 }
