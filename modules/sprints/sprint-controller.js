@@ -31,7 +31,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		iService.getIssuesBySprint($scope.sprint).then(function(data) {
 			for (var i in data) {
 				var item = data[i];
-				if (!item.assignedTo || item.assignedTo.length == 0) {
+				if ((!item.assignedTo || item.assignedTo.length == 0) && item.state != 'CLOSED' && item.state != 'RESOLVED') {
 					$scope.unassigned.push(item);
 				}
 				if (item.assignedTo && item.assignedTo.length > 0 && item.state != 'CLOSED' && item.state != 'RESOLVED') {
