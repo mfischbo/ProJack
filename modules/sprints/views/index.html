@@ -16,13 +16,7 @@
 		<h4>Unassigned</h4>	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues">
-				<div class="sprint-issueHandle">
-					<span class="fa fa-bars"></span>
-				</div>
-				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> 
-					<span data-buglabel type="{{i.issuetype}}"></span>
-				</div>
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>
 	</div>
@@ -31,13 +25,7 @@
 		<h4>In Progress</h4>	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues">
-				<div class="sprint-issueHandle">
-					<span class="fa fa-bars"></span>
-				</div>
-				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
-					<span type="{{i.issuetype}}" data-buglabel></span> 
-				</div>
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>
 	</div>
@@ -46,13 +34,7 @@
 		<h4>Done</h4>	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
-				<div class="sprint-issueHandle">
-					<span class="fa fa-bars"></span>
-				</div>
-				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
-					<span type="{{i.issuetype}}" data-buglabel></span> 
-				</div>
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>
 	</div>
@@ -60,12 +42,15 @@
 
 <div id="sprint-issueOverlay" class="overlay-panel ng-hide" data-ng-include data-src="'./modules/issues/views/issue-overlay.html'" style="right:0px; top:83px; max-height:80vh; width:50%; overflow-y:hidden;position:fixed;" data-ng-show="issueOverlayVisible"></div>
 <div id="sprint-issueOverlay" class="overlay-panel ng-hide" style="right:0px; top:83px; max-height:80vh; width:50%; overflow-y:hidden;position:fixed;" data-ng-show="issueCreateOverlayVisible">
-	<div data-ng-include data-src="'./modules/issues/views/issue-form.html'"></div>
-	<div class="row">
-		<div class="pull-right">
-			<button type="button" class="btn btn-danger" data-ng-click="issueCreateOverlayVisible = false">Abbrechen</button>
-			<button type="button" class="btn btn-success" data-ng-click="createIssue()">Speichern</button>
+
+	<div data-ng-if="!issue || !issue._id">
+		<div data-ng-include data-src="'./modules/issues/views/issue-form.html'"></div>
+		<div class="row">
+			<div class="pull-right">
+				<button type="button" class="btn btn-danger" data-ng-click="toggleIssueCreateOverlay()">Abbrechen</button>
+				<button type="button" class="btn btn-success" data-ng-click="createIssue()">Speichern</button>
+			</div>
+			<div class="clearfix"></div>
 		</div>
-		<div class="clearfix"></div>
 	</div>
 </div>

@@ -36,10 +36,7 @@
 		<b>Typ</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<span data-ng-if="issue.issuetype == 'BUG'" class="label label-danger" >Bug</span>
-		<span data-ng-if="issue.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
-		<span data-ng-if="issue.issuetype == 'FEATURE'" class="label label-info">Feature</span>
-		<span data-ng-if="issue.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
+		<span data-buglabel type="{{issue.issuetype}}"></span>
 	</div>
 </div>
 

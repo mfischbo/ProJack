@@ -104,6 +104,7 @@ li.sprint-issueItem {
 	padding: 8px;
   	border: 1px solid #bbb;
   	margin-bottom:4px;
+  	cursor:pointer;
 }
 
 li.danger {

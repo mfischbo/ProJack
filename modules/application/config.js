@@ -43,6 +43,7 @@ ProJack.config = {
 		// default options for tinymce
 		tinyOptions : {
 			menu : {},
-			content_css : './resources/css/tinymce-style.css'
+			content_css : './resources/css/tinymce-style.css',
+			height		: '400px'
 		}
 }
