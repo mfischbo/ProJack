@@ -1,5 +1,5 @@
 ProJack.app = angular.module("ProJack", 
-		['ngRoute', 'Utils', 'SecurityModule', 'TemplateModule', 
+		['ngRoute', 'ang-drag-drop', 'Utils', 'SecurityModule', 'TemplateModule', 
 		 'DashBoardModule', 'MileStonesModule', 'CustomersModule', 
 		 'IssuesModule', 'MailModule', 'CalendarModule', 'FlashLightModule', 'SprintModule']);
 

@@ -317,6 +317,45 @@ ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerServic
 }]);
 
 
+ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', 'CustomerService', 'MilestoneService', function($scope, service, customerService, mService) {
+	
+	$scope.issues = [];
+	$scope.customers = [];
+
+	$scope.criteria = {
+			status		: 1,
+			customer	: undefined,
+			milestone	: undefined
+	};
+	
+	customerService.getAllCustomers().then(function(data) {
+		$scope.customers = data;
+	});
+
+	$scope.$watch('criteria.customer', function(val) {
+		if (!$scope.criteria.customer) return;
+		mService.getMilestonesByCustomer($scope.criteria.customer).then(function(data) {
+			$scope.milestones = data;
+		});
+	});
+	
+	$scope.$watch('criteria.milestone', function(val) {
+		if (!val) return;
+		var criteria = {
+				customer : $scope.criteria.customer._id,
+				milestone: $scope.criteria.milestone,
+				status	 : 1
+		}
+		service.getIssuesByCriteria(criteria).then(function(data) {
+			$scope.issues = data;
+		});
+	});
+	
+	$scope.onIssueDrop = function() { console.log("Bar"); }
+	
+}]);
+
+
 ProJack.issues.controller('IssueEditController', 
 		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
         function($scope, $routeParams, $location, KT, service, customerService, milestoneService, secService, $upload, $sce) {

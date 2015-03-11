@@ -5,8 +5,19 @@
 </div>
 
 <div class="row">
+	<div class="col-md-6">
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-bug"></span></button>
+	</div>
+</div>
+
+<div class="row">
 	<div class="col-md-4 sprint-lane">
 		<h4>Unassigned</h4>	
+		<ul drop-channel="issues" ui-on-drop="onIssueDrop($event, $data, foo)">
+			<li data-ng-repeat="i in unassigned">
+				{{::i.number}}
+			</li>	
+		</ul>
 	</div>
 	
 	<div class="col-md-4 sprint-lane">
@@ -16,4 +27,8 @@
 	<div class="col-md-4 sprint-lane">
 		<h4>Done</h4>	
 	</div>
+</div>
+
+<div id="sprint-issueOverlay" class="overlay-panel ng-hide" data-ng-include data-src="'./modules/issues/views/issue-overlay.html'" style="right:0px; top:83px; max-height:80vh; width:50%; overflow-y:hidden;position:fixed;" data-ng-show="issueOverlayVisible">
+
 </div>

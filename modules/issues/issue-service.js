@@ -15,6 +15,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				title		: '',			
 				description : '',
 				milestone   : '', 			// id of the milestone this issue is related to
+				sprint		: '',			// id of the sprint this issue is related to
 				feature		: '', 			// id of the feature this issue is related to
 				customer	: '', 			// id of the customer this issue is related to
 				assignedTo  : '', 			// the user the issue is assigned to
@@ -119,6 +120,20 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		
 		
 		/**
+		 * Returns all issues that are related to the given sprint
+		 * @param sprint The sprint
+		 */
+		getIssuesBySprint : function(sprint) {
+			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/bySprint?key="' + sprint._id + '"')
+				.then(function(response) {
+					var retval = [];
+					for (var i in response.data.rows)
+						retval.push(response.data.rows[i].value);
+					return retval;
+				});
+		},
+		
+		/**
 		 * Returns all issues that are related to the given feature
 		 * @param feature The given feature
 		 */
@@ -155,13 +170,13 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				
 			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search?";
 			
-			if (criteria.type !== '') url += "type=" + criteria.type;
+			if (criteria.type && criteria.type !== '') url += "type=" + criteria.type;
 			
 			if (criteria.selection == 1) url += "uid=org.couchdb.user:" + secService.getCurrentUserName();
 			if (criteria.selection == 2) url += "uid=";
 			
 			if (criteria.customer) url += "&cid=" + criteria.customer;
-			if (criteria.milestone !== '') 
+			if (criteria.milestone && criteria.milestone !== '') 
 				url += "&spec=" + criteria.milestone;
 			
 			url += "&status=" + criteria.status;
