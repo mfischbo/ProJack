@@ -20,7 +20,8 @@
 					<span class="fa fa-bars"></span>
 				</div>
 				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> [{{::i.issuetype}}] [{{::i.state}}]
+					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> 
+					<span data-buglabel type="{{i.issuetype}}"></span>
 				</div>
 			</li>	
 		</ul>
@@ -34,7 +35,8 @@
 					<span class="fa fa-bars"></span>
 				</div>
 				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>[{{::i.issuetype}}] [{{::i.state}}]
+					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
+					<span type="{{i.issuetype}}" data-buglabel></span> 
 				</div>
 			</li>	
 		</ul>
@@ -48,7 +50,8 @@
 					<span class="fa fa-bars"></span>
 				</div>
 				<div class="sprint-issueHeading">
-					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>[{{::i.issuetype}}] [{{::i.state}}]
+					<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a>
+					<span type="{{i.issuetype}}" data-buglabel></span> 
 				</div>
 			</li>	
 		</ul>
