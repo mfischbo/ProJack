@@ -248,6 +248,7 @@ ProJack.issues.controller('IssueModifyController',
 		 function($scope, $routeParams, $location, KT, service, cService, mService) {
 	
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
+	
 
 	cService.getAllCustomers().then(function(customers) {
 		$scope.customers = customers;
@@ -370,6 +371,9 @@ ProJack.issues.controller('IssueEditController',
 	
 	// the current display mode
 	$scope.viewMode = 'DISPLAY';
+	
+	// the branches
+	$scope.branches = ['release/suedpol', 'release/demo', 'master'];
 	
 	var timeIval = undefined;
 	
@@ -500,6 +504,20 @@ ProJack.issues.controller('IssueEditController',
 		});
 	};
 
+	
+	$scope.toggleBranch = function(branch) {
+		// support legacy issues not having a fixedIn property
+		if (!$scope.issue.fixedIn)
+			$scope.issue.fixedIn = [];
+		
+		var idx = $scope.issue.fixedIn.indexOf(branch);
+		if (idx > -1) {
+			$scope.issue.fixedIn.splice(idx,1);
+		} else {
+			$scope.issue.fixedIn.push(branch);
+		}
+		console.log($scope.issue.fixedIn);
+	};
 	
 	/**
 	 * Returns whether or not the user is able to start time tracking on this issue

@@ -12,6 +12,25 @@
 	<label>Zugewiesen an</label>
 	<div data-user-selector data-select-as="issue.assignedTo"></div>
 </div>
+<div class="form-group" data-ng-if="issue.state == 'RESOLVED' || issue.state == 'CLOSED'">
+	<label>Solution</label>
+	<select data-ng-model="issue.solution" class="form-control">
+		<option value=""></option>
+		<option value="FIXED">Fixed</option>
+		<option value="NOT_REPRODUCIBLE">Not Reproducible</option>
+		<option value="NOT_FIXABLE">Not fixable</option>
+		<option value="DUPLICATE">Duplicate</option>
+	</select>
+</div>
+<div class="form-group" data-ng-if="issue.state == 'RESOLVED' || issue.state == 'CLOSED'">
+	<label>Committed in</label>
+	<div data-ng-repeat="b in branches">
+		<label class="checkbox-inline">
+			<input type="checkbox" data-ng-checked="issue.fixedIn.indexOf(b) > -1" data-ng-click="toggleBranch(b)"> {{b}}
+		</label>
+	</div>
+</div>
+
 <div data-ng-if="note">
 	<div class="form-group">
 		<label>Notiz</label>
