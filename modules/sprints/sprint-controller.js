@@ -1,5 +1,5 @@
-ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService',
-                                                    function($scope, KT, service, iService, cService, mService, secService) {
+ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$modal',
+                                                    function($scope, KT, service, iService, cService, mService, secService, $modal) {
 
 	var locKey = '__ProJack.sprints.current.id';
 	
@@ -137,11 +137,21 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	$scope.onDoneDrop = function($event, issue) {
 		issue.state = 'RESOLVED';
 		issue.assignedTo = '';
-		iService.updateIssue(issue).then(function() {
+		var instance = $modal.open({
+			controller:		'IssueResolveModalController',
+			templateUrl:	'./modules/issues/views/resolve-modal.html',
+			size:			'lg',
+			resolve: {
+				data : function() {
+					return { issue : issue }
+				}
+			}
+		});
+		instance.result.then(function() {
 			KT.remove('_id', issue._id, $scope.unassigned);
 			KT.remove('_id', issue._id, $scope.inProgress);
 			$scope.done.push(issue);
-		})
+		});
 	};
 	
 	

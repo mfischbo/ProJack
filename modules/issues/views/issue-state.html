@@ -45,18 +45,24 @@
 		<textarea rows="4" data-ng-model="note.text" class="form-control" data-ui-tinymce="$parent.tinyOptions"></textarea>
 	</div>
 	
-	<div class="form-group">
-		<label>Tasktype</label>
-		<select data-ng-model="note.tasktype" class="form-control">
-			<option value="GENERAL">Generell</option>
-			<option value="BACKEND">Backend</option>
-			<option value="FRONTEND">Frontend</option>
-		</select>
-	</div>
-	
-	<div class="form-group">	
-		<label>Zeitaufwand</label>
-		<input type="text" data-ng-model="note.timeSpent" class="form-control" placeholder="HH:mm" data-duration-format>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>Tasktype</label>
+				<select data-ng-model="note.tasktype" class="form-control">
+					<option value="GENERAL">Generell</option>
+					<option value="BACKEND">Backend</option>
+					<option value="FRONTEND">Frontend</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="col-md-6">
+			<div class="form-group">	
+				<label>Zeitaufwand</label>
+				<input type="text" data-ng-model="note.timeSpent" class="form-control" placeholder="HH:mm" data-duration-format>
+			</div>
+		</div>
 	</div>
 </div>
 

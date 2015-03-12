@@ -1,0 +1,17 @@
+<form name="issueForm">
+	<div class="modal-header">
+		<h4>Resolve Issue #{{::issue.number}}</h4>
+	</div>
+	
+	<div class="modal-body">
+		<div data-ng-include data-src="'./modules/issues/views/issue-state.html'"></div>
+	</div>
+	
+	<div class="modal-footer">
+		<div clas="pull-right">
+			<button class="btn btn-danger" data-ng-click="dismiss()">Abbrechen</button>
+			<button class="btn btn-success" data-ng-click="save()">Speichern</button>
+		</div>	
+		<div class="clearfix"></div>
+	</div>
+</form>

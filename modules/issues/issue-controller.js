@@ -198,6 +198,55 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 	};
 }]);
 
+ProJack.issues.controller('IssueResolveModalController', ['$scope', '$modalInstance', 'IssueService', 'CustomerService', 'GitlabService', 'data', 
+                                                          function($scope, $modalInstance, service, cService, glService, data) {
+
+	$scope.issue = data.issue;
+	$scope.branches = [];
+	$scope.tinyOptions = ProJack.config.tinyOptions;
+	$scope.tinyOptions.height = '200px';
+	
+	cService.getCustomerById($scope.issue.customer).then(function(customer) {
+		if (customer.gitlabProject) {
+			glService.getBranchesByProjectId(customer.gitlabProject).then(function(branches) {
+				for (var q in branches) 
+					$scope.branches.push(branches[q].name);
+			});
+		}
+	});
+
+	$scope.addNote = function() {
+		$scope.note = service.newNote();
+	};
+	
+	$scope.toggleBranch = function(branch) {
+		// support legacy issues not having a fixedIn property
+		if (!$scope.issue.fixedIn)
+			$scope.issue.fixedIn = [];
+		
+		var idx = $scope.issue.fixedIn.indexOf(branch);
+		if (idx > -1) {
+			$scope.issue.fixedIn.splice(idx,1);
+		} else {
+			$scope.issue.fixedIn.push(branch);
+		}
+	};
+	
+	
+	$scope.save = function() {
+		if ($scope.note) 
+			$scope.issue.notes.push($scope.note);
+		
+		service.updateIssue($scope.issue).then(function() {
+			$modalInstance.close();
+		});
+	};
+	
+	$scope.dismiss = function() {
+		$modalInstance.dismiss();
+	};
+}]);
+
 
 ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
                                                     function($scope, $location, $routeParams, KT, service, customerService, milestoneService) {
