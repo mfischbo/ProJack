@@ -43,9 +43,27 @@
 	</div>
 	
 	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onInProgressDrop($event, $data)" drop-validate="validateInProgressDrop($data)">
-		<h4>In Progress</h4>	
+		<div class="pull-left">
+			<h4>In Progress</h4>	
+		</div>
+		<div class="pull-right btn-group" dropdown>
+			<button type="button" class="btn btn-sm"><span class="fa fa-eye">
+				<span data-ng-if="progressVisible == 'ALL'">All Issues</span>
+				<span data-ng-if="progressVisible == 'OWN'">My Issues</span>
+			</span>
+			</button>
+			<button type="button" class="btn btn-sm dropdown-toggle" dropdown-toggle>
+				<span class="caret"></span>
+				<span class="sr-only">Split</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'OWN'">My Issues</a></li>
+				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'ALL'">All Issues</a></li>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues" data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>

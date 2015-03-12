@@ -12,9 +12,11 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	$scope.issueCreateOverlayVisible = false;
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
 	
-
 	// issue to be created from the overlay
 	$scope.issue 	  = iService.newIssue();
+
+	$scope.progressVisible = 'ALL';		// or OWN to display only issues assigned to current user
+	$scope.currentUserName = secService.getCurrentUserName();
 	
 
 	// load the all future sprints and take the closest release as the current
