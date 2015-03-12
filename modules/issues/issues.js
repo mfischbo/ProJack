@@ -29,3 +29,14 @@ ProJack.issues.config(['$routeProvider', function($routeProvider) {
             templateUrl : './modules/issues/views/changelog.html'
         });
 }]);
+
+ProJack.issues.directive('buglabel', function() {
+	
+	return {
+		restrict:		'A',
+		scope	: {
+			'type'		: '@type'
+		},
+		templateUrl		: './modules/issues/views/typelabel.html'
+	};
+});

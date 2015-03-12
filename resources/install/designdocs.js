@@ -75,6 +75,9 @@ function getDesignDocs() {
 	                    byClosingDate: {
 	                    	map: "function(doc) { if (doc.type == 'issue' && (doc.state == 'CLOSED' || doc.state == 'RESOLVED')) { var cid = doc.customer; if (typeof doc.customer === 'object') cid = doc.customer._id; emit([cid, '' + doc.dateModified + ''], doc); } }"
 	                    },
+	                    bySprint : {
+	                    	map: "function(doc) { if (doc.type == 'issue' && doc.sprint && doc.sprint.length > 0) { emit(doc.sprint, doc); } }"
+	                    },
 	                    byType: {
 	                        map: "function(doc) {\n  if (doc.type == 'issue') {\n    emit([doc.state, doc.issuetype], doc);\n  }\n}",
 	                        reduce: "_count"
@@ -108,6 +111,18 @@ function getDesignDocs() {
 	                        map: "function(doc) {\n  if (doc.type == 'milestone' && doc.status == 'CERTIFIED')\n    emit(doc.dateAccounted, doc);\n}"
 	                    }
 	                }
+	        	}
+	        },
+	        
+	        {
+	        	name : "sprints",
+	        	doc  : {
+	        		language : "javascript",
+	        		views : {
+	        			byReleaseDate : {
+	        				map : "function(doc) {\n if (doc.type == 'sprint') {\n var e = new Date(doc.releaseAt).getTime();\n emit(e, doc);\n }\n }"
+	        			}
+	        		}
 	        	}
 	        },
 	        

@@ -1,0 +1,50 @@
+<div>
+	<div class="row">
+		<div class="col-md-6">
+			<label>Kunde</label>
+			<select data-ng-model="criteria.customer" data-ng-options="c as c.name for c in customers" class="form-control"></select>
+		</div>
+		<div class="col-md-6">
+			<label>Milestone</label>
+			<select data-ng-model="criteria.milestone" data-ng-options="m._id as m.name for m in milestones" class="form-control"></select>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th>ID</th>
+					<th>Type</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ui-draggable="true" drag="i" drag-channel="issues"
+					data-ng-repeat="i in issues" 
+					data-ng-class="{'info' : i.state == 'ASSIGNED', 'danger' : i.state == 'NEW', 'warning' : i.state == 'FEEDBACK', 'success' : i.state == 'RESOLVED', 'active' : i.state == 'CLOSED'}"
+					data-ng-if="!i.sprint || i.sprint.length == 0">
+					<td><span class="fa fa-bars" style="cursor:pointer;"></span>
+					<td>{{::i.number}}</td>
+					<td>
+						<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
+						<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
+						<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
+						<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>
+					</td>
+					<td>{{::i.title}}</td>
+					<td>{{::i.type}}</td>
+					<td>
+					
+					</td>
+				</tr>
+			</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>

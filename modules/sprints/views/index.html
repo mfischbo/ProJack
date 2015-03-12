@@ -1,0 +1,101 @@
+<div class="row">
+	<div class="col-md-6 col-xs-12">
+		<h3>Sprint Overview <span class="smaller">&quot;{{sprint.name}}&quot;</span></h3>
+
+	</div>
+	<div class="col-md-6">
+		<div class="btn-group pull-right" dropdown style="margin-top:22px;">
+			<button type="button" class="btn">{{sprint.name}}</button>	
+			<button type="button" class="btn dropdown-toggle" dropdown-toggle>
+				<span class="caret"></span>	
+				<span class="sr-only">Split</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li data-ng-repeat="s in sprints">
+					<a href="javascript:void('');" data-ng-click="switchSprint(s)">{{s.startsAt|date:'dd.MM.yyyy'}} - {{s.releaseAt|date:'dd.MM.yyyy'}} / {{::s.name}}</a>
+				</li>
+			</ul>	
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<a href="#/sprints/create" class="btn btn-primary btn-sm">Neuer Sprint</a>
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"> Issues</span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"> Issue</span></button>
+	</div>
+	<div class="col-md-6">
+		<div class="pull-right">
+			{{sprint.name}} (&nbsp;<i>{{sprint.version}}</i>&nbsp;) beginnt am {{sprint.startsAt|date:'dd.MM.yyyy'}} und endet am {{sprint.releaseAt|date:'dd.MM.yyyy'}}
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
+		<h4>Unassigned</h4>	
+		
+		<div class="text-muted text-center" data-ng-if="unassigned.length == 0">No Items available</div>
+	
+		<ul class="sprint-issueList">
+			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues">
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+			</li>	
+		</ul>
+	</div>
+	
+	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onInProgressDrop($event, $data)" drop-validate="validateInProgressDrop($data)">
+		<div class="pull-left">
+			<h4>In Progress</h4>	
+		</div>
+		<div class="pull-right btn-group" dropdown>
+			<button type="button" class="btn btn-sm"><span class="fa fa-eye">
+				<span data-ng-if="progressVisible == 'ALL'">All Issues</span>
+				<span data-ng-if="progressVisible == 'OWN'">My Issues</span>
+			</span>
+			</button>
+			<button type="button" class="btn btn-sm dropdown-toggle" dropdown-toggle>
+				<span class="caret"></span>
+				<span class="sr-only">Split</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'OWN'">My Issues</a></li>
+				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'ALL'">All Issues</a></li>
+			</ul>
+		</div>
+		<div class="clearfix"></div>
+		<ul class="sprint-issueList">
+			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues" data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+			</li>	
+		</ul>
+	</div>
+	
+	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onDoneDrop($event, $data)" drop-validate="validateDoneDrop($data)">
+		<h4>Done</h4>	
+	
+		<div class="text-muted text-center" data-ng-if="done.length == 0">No Items available</div>
+		
+		<ul class="sprint-issueList">
+			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+			</li>	
+		</ul>
+	</div>
+</div>
+
+<div id="sprint-issueOverlay" class="overlay-panel ng-hide" data-ng-include data-src="'./modules/issues/views/issue-overlay.html'" style="right:0px; top:83px; max-height:80vh; width:50%; overflow-y:hidden;position:fixed;" data-ng-show="issueOverlayVisible"></div>
+<div id="sprint-issueOverlay" class="overlay-panel ng-hide" style="right:0px; top:83px; max-height:80vh; width:50%; overflow-y:hidden;position:fixed;" data-ng-show="issueCreateOverlayVisible">
+
+	<div data-ng-if="!issue || !issue._id">
+		<div data-ng-include data-src="'./modules/issues/views/issue-form.html'"></div>
+		<div class="row">
+			<div class="pull-right">
+				<button type="button" class="btn btn-danger" data-ng-click="toggleIssueCreateOverlay()">Abbrechen</button>
+				<button type="button" class="btn btn-success" data-ng-click="createIssue()">Speichern</button>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
