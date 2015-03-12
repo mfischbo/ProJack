@@ -102,9 +102,9 @@ ul.sprint-issueList {
 li.sprint-issueItem {
 	list-style: none;
 	padding: 8px;
-  	border: 1px solid #bbb;
   	margin-bottom:4px;
   	cursor:pointer;
+  	box-shadow:rgba(0, 0, 0, 0.298039) 1px 1px 2px 0px;
 }
 
 li.danger {
@@ -120,8 +120,7 @@ li.success {
 }
 
 div.sprint-issueHandle {
-	width:16px;
-	border-right:1px solid #ccc;
+	width:24px;
 	float:left;
 	cursor:pointer;
 }

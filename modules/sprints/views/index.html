@@ -22,8 +22,8 @@
 <div class="row">
 	<div class="col-md-6">
 		<a href="#/sprints/create" class="btn btn-primary btn-sm">Neuer Sprint</a>
-		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"></span></button>
-		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"> Issues</span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"> Issue</span></button>
 	</div>
 	<div class="col-md-6">
 		<div class="pull-right">
@@ -35,6 +35,9 @@
 <div class="row">
 	<div class="col-md-4 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
 		<h4>Unassigned</h4>	
+		
+		<div class="text-muted text-center" data-ng-if="unassigned.length == 0">No Items available</div>
+	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
@@ -71,6 +74,9 @@
 	
 	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onDoneDrop($event, $data)" drop-validate="validateDoneDrop($data)">
 		<h4>Done</h4>	
+	
+		<div class="text-muted text-center" data-ng-if="done.length == 0">No Items available</div>
+		
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
