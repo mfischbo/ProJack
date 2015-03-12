@@ -358,8 +358,8 @@ ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', '
 
 
 ProJack.issues.controller('IssueEditController', 
-		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$upload', '$sce',
-        function($scope, $routeParams, $location, KT, service, customerService, milestoneService, secService, $upload, $sce) {
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', 'GitlabService', '$upload', '$sce',
+        function($scope, $routeParams, $location, KT, service, customerService, milestoneService, secService, glService, $upload, $sce) {
 	
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
@@ -372,8 +372,7 @@ ProJack.issues.controller('IssueEditController',
 	// the current display mode
 	$scope.viewMode = 'DISPLAY';
 	
-	// the branches
-	$scope.branches = ['release/suedpol', 'release/demo', 'master'];
+	$scope.branches = [];
 	
 	var timeIval = undefined;
 	
@@ -395,6 +394,16 @@ ProJack.issues.controller('IssueEditController',
 		// load the customer if the issue has one
 		customerService.getCustomerById($scope.issue.customer).then(function(data) {
 			$scope.customer = data;
+
+			// the branches
+			if ($scope.customer.gitlabProject) {
+				glService.getBranchesByProjectId($scope.customer.gitlabProject).then(function(data) {
+					$scope.branches = [];
+					for (var i in data) {
+						$scope.branches.push(data[i].name);
+					}
+				});
+			}
 		});
 
 		// load the milestone if the issue has one

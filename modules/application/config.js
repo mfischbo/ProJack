@@ -12,6 +12,10 @@ ProJack.config = {
 
 		// server url for couchdb
 		srvUrl : "/cdb",
+	
+		// url for the gitlab service
+		gitlabUrl : "http://devops.copilot-office.de:7000/api/v3",
+		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
 		// server url and db for couch
 		dbUrl :  "/cdb/spoffice",
@@ -37,7 +41,8 @@ ProJack.config = {
 		
 		// enable / disable reminder polling
 		reminderPollingEnabled : true,
-		
+	
+		// timeout for ES queries on key up
 		searchDelayTimeout : 350,
 		
 		// default options for tinymce

@@ -1,4 +1,4 @@
-ProJack.customers = angular.module("CustomersModule", ['Utils']);
+ProJack.customers = angular.module("CustomersModule", ['Utils', 'GitlabModule']);
 ProJack.customers.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider

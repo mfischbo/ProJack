@@ -52,10 +52,14 @@ ProJack.customers.controller('CustomersCreateController', ['$scope', 'CustomerSe
 	};
 }]);
 
-ProJack.customers.controller('CustomersEditController', ['$scope', '$routeParams', 'CustomerService', 'KT', 
-                                                         function($scope, $routeParams, service, KT) {
+ProJack.customers.controller('CustomersEditController', ['$scope', '$routeParams', 'CustomerService', 'KT', 'GitlabService',
+                                                         function($scope, $routeParams, service, KT, glService) {
 
 	$scope.contact = undefined;
+	
+	glService.getAllProjects().then(function(data) {
+		$scope.projects = data;
+	});
 	
 	service.getCustomerById($routeParams.id).then(function(data) {
 		$scope.customer = data;

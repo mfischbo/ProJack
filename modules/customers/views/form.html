@@ -14,25 +14,39 @@
 		<input type="text" data-ng-model="customer.address.street" class="form-control" placeholder="Musterstr. 1">
 	</div>	
 	
-	<div class="form-group">
-		<div>
-			<label>PLZ</label>
-			<input type="text" data-ng-model="customer.address.zipcode" class="form-control" placeholder="12345">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<div>
+					<label>PLZ</label>
+					<input type="text" data-ng-model="customer.address.zipcode" class="form-control" placeholder="12345">
+				</div>
+			</div>
+		</div>	
+		
+		<div class="col-md-4">
+			<div class="form-group">
+				<div>
+					<label>Ort</label>
+					<input type="text" data-ng-model="customer.address.city" class="form-control" placeholder="Musterstadt">
+				</div>
+			</div>
 		</div>
-	</div>
-	<div class="form-group">
-		<div>
-			<label>Ort</label>
-			<input type="text" data-ng-model="customer.address.city" class="form-control" placeholder="Musterstadt">
+		
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>Land</label>
+				<select data-ng-model="customer.address.country" class="form-control">
+					<option value="DE">Deutschland</option>
+					<option value="AT">&Ouml;sterreich</option>
+					<option value="CH">Schweiz</option>
+				</select>
+			</div>
 		</div>
 	</div>
 	
 	<div class="form-group">
-		<label>Land</label>
-		<select data-ng-model="customer.address.country" class="form-control">
-			<option value="DE">Deutschland</option>
-			<option value="AT">&Ouml;sterreich</option>
-			<option value="CH">Schweiz</option>
-		</select>
+		<label>Gitlab Project</label>
+		<select data-ng-model="customer.gitlabProject" data-ng-options="p.id as p.name for p in projects" class="form-control"></select>
 	</div>
 </form>

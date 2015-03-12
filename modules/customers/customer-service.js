@@ -55,6 +55,7 @@ ProJack.customers.service("CustomerService", ['$http', 'KT', function($http, KT)
 					city : "",
 					country : "DE"
 				},
+				gitlabProject : undefined,
 				contacts : []
 			};
 		},
