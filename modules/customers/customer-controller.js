@@ -47,6 +47,7 @@ ProJack.customers.controller('CustomersCreateController', ['$scope', 'CustomerSe
 	
 	$scope.saveCustomer = function() {
 		service.createCustomer($scope.customer).then(function() {
+			KT.alert('Der Kunde wurde erfolgreich angelegt');
 			$location.path("/customers");
 		});
 	};
@@ -94,6 +95,8 @@ ProJack.customers.controller('CustomersEditController', ['$scope', '$routeParams
 	
 	
 	$scope.saveCustomer = function() {
-		service.updateCustomer($scope.customer);
+		service.updateCustomer($scope.customer).then(function() {
+			KT.alert('Daten wurden erfolgreich gespeichert');
+		});
 	};
 }]);
