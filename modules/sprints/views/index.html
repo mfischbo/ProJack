@@ -34,12 +34,20 @@
 
 <div class="row">
 	<div class="col-md-4 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
-		<h4>Unassigned</h4>	
+		
+		<div class="pull-left">
+			<h4>Unassigned</h4>	
+		</div>
+		<div class="pull-right">
+			<div data-ng-model="selectedMilestone" data-milestone-picker data-show-empty="true" data-show-all="true"></div>
+		</div>
+		<div class="clearfix"></div>		
 		
 		<div class="text-muted text-center" data-ng-if="unassigned.length == 0">No Items available</div>
 	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues" 
+				data-ng-if="!selectedMilestone || selectedMilestone.id == 'ffffffffffffffffffffffffffffffff' || (selectedMilestone && i.milestone == selectedMilestone.id)">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>

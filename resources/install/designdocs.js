@@ -98,7 +98,8 @@ function getDesignDocs() {
 	        	doc  : {
 	        		language: "javascript",
 	                lists: {
-	                    inDevelopmentFilter: "function(head, req) { var retval = { rows : [] }; var row = undefined; while (row = getRow()) { if (row.value.type == 'milestone') { if (row.value.status !== 'CERTIFIED') { retval.rows.push(row.value); } } } send(toJSON(retval)); }"
+	                    inDevelopmentFilter: "function(head, req) { var retval = { rows : [] }; var row = undefined; while (row = getRow()) { if (row.value.type == 'milestone') { if (row.value.status !== 'CERTIFIED') { retval.rows.push(row.value); } } } send(toJSON(retval)); }",
+	                    slim               : "function (head, req) { var retval = { rows : [] };while (row = getRow()) {if (row.value.type == 'milestone') {var q = {};q.id = row.value._id;q.rev = row.value._rev;q.name = row.value.name;if (row.value.customer && row.value.customer.name)q.customer = row.value.customer.name;retval.rows.push(q);}}send(toJSON(retval));}"
 	                },
 	                views: {
 	                    index: {
