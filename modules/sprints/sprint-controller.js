@@ -145,6 +145,11 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		$scope.unassigned.push(issue);
 	};
 	
+	
+	/**
+	 * Handler to be called when dropping item on the inProgress lane
+	 * Issue will be stated to ASSIGNED for the current user, saved and removed from all other lanes
+	 */
 	$scope.onInProgressDrop = function($event, issue) {
 		// update the issue ... set to assigned and assign the current user
 		issue.state = 'ASSIGNED';
@@ -157,6 +162,11 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		});
 	};
 	
+	/**
+	 * Handler to be called when dropping item on the QA lane
+	 * Issue will be stated as RESOLVED and modal will open to leave notes.
+	 * Issue will be saved on modal success.
+	 */
 	$scope.onQADrop = function($event, issue) {
 		issue.state = 'RESOLVED';
 		issue.assignedTo = '';
@@ -177,7 +187,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			$scope.qa.push(issue);
 		});
 	};
+
 	
+	/**
+	 * Handler to be called when issue is dropped on done lane.
+	 * Issue will be stated to CLOSED and saved
+	 */
 	$scope.onDoneDrop = function($event, issue) {
 		issue.state = 'CLOSED';
 		iService.updateIssue(issue).then(function() {
@@ -187,7 +202,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	};
 	
 	
-	/*
+	/**
 	 * Create new issues from the overlay
 	 */
 	$scope.createIssue = function() {
@@ -199,7 +214,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		});
 	};
 	
-	/*
+	/**
 	 * Issue overlay controller. Must stay here for drag/drop to work properly 
 	 */
 	$scope.issues = [];
@@ -242,13 +257,17 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	});
 }]);
 
-ProJack.sprint.controller('SprintCreateController', ['$scope', '$location', 'SprintService', 'KT', function($scope, $location, service, kt) {
+
+/**
+ * Controller for creating a new sprint 
+ */
+ProJack.sprint.controller('SprintCreateController', ['$scope', '$location', 'SprintService', 'KT', function($scope, $location, service, KT) {
 
 	$scope.sprint = service.newSprint();
 	
 	$scope.saveSprint = function() {
 		service.saveSprint($scope.sprint).then(function() {
-			kt.alert("Der Sprint wurde angelegt");
+			KT.alert("Der Sprint wurde angelegt");
 			$location.path('/sprints');
 		});
 	};

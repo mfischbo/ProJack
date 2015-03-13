@@ -1,3 +1,6 @@
+/**
+ * Service class that handles all back-end communication for sprints
+ */
 ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', function($http, $q, secService) {
 	return {
 		newSprint : function() {

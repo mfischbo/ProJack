@@ -1,3 +1,6 @@
+/**
+ * The sprint module provides a SCRUM style approach for a development cycle
+ */
 ProJack.sprint = angular.module('SprintModule', ['Utils', 'ui.tinymce']);
 ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 	
