@@ -536,7 +536,7 @@ ProJack.issues.controller('IssueEditController',
 		$scope.viewMode = 'DISPLAY';
 	};
 	
-	$scope.updateIssue = function() {
+	$scope.updateIssue = function(redirect) {
 		if ($scope.note) {
 			KT.remove('_id', $scope.note._id, $scope.issue.notes);
 			$scope.issue.notes.push($scope.note);
@@ -558,7 +558,8 @@ ProJack.issues.controller('IssueEditController',
 			$scope.sanitizeHtml();
 			KT.alert("Notiz gespeichert");
 			$scope.removeTrackingData = false;
-			$location.path('/issues');
+			if (redirect) 
+				$location.path('/issues');
 		});
 	};
 

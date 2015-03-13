@@ -92,7 +92,8 @@
 		<div class="text-muted text-center" data-ng-if="inProgress.length == 0">No Items available</div>
 	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues" data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
+			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues" 
+			    data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>
