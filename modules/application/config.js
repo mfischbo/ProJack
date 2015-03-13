@@ -49,6 +49,7 @@ ProJack.config = {
 		tinyOptions : {
 			menu : {},
 			content_css : './resources/css/tinymce-style.css',
-			height		: '300px'
+			height		: '300px',
+			toolbar     : 'undo redo styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist' 
 		}
 }
