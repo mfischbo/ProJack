@@ -29,8 +29,9 @@
 
 
 #alert-panel .alert {
-    padding:5px;
+    padding:1px;
     text-align:center;
+    height:22px;
 }
 
 a[data-target] {

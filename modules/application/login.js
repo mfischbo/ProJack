@@ -22,10 +22,7 @@ T.controller("LoginController", ['$scope', 'SecurityService', function($scope, s
 	$scope.login = function() {
 		securityService.login($scope.username, $scope.password).then(function(data) {
 			if (data.ok) {
-				securityService.getCurrentSession().then(function(data) {
-					localStorage.setItem(ProJack.config.sessionKey, JSON.stringify(data.userCtx));
-					window.location.href = ProJack.config.appUrl;
-				});
+				window.location.href = ProJack.config.appUrl;
 			}
 		});
 	};
