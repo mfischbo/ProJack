@@ -1,9 +1,22 @@
 ProJack.milestones.controller('MileStonesController', ['$scope', 'MilestoneService', 'KT',
 	function($scope, service, KT) {
 	
+	$scope.milestones = [];
+	$scope.archived = [];
+	
+	var archiveInitialized = false;
+	
 	service.getAllMilestones().then(function(data) {
 		$scope.milestones = data;
 	});
+	
+	$scope.initArchive = function() {
+		if (archiveInitialized) return;
+		service.getArchivedMilestones().then(function(data) {
+			$scope.archived = data;
+			archivedInitialized = true;
+		});
+	};
 	
 	$scope.deleteMilestone = function(milestone) {
 		KT.confirm("Soll der Milestone wirklich entfernt werden?", function() {

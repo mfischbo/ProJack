@@ -71,7 +71,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 		},
 	
 		/**
-		 * Returns a promise returning all milestones on success
+		 * Returns a promise returning all milestones that are not CERTIFIED on success
 		 */
 		getAllMilestones : function() {
 			var p = $http.get(ProJack.config.dbUrl + "/_design/milestones/_view/index")
@@ -83,6 +83,19 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 					return retval;
 				});
 			return p;
+		},
+		
+		/**
+		 * Returns a promise returning all milestones that are CERTIFIED
+		 */
+		getArchivedMilestones : function() {
+			return $http.get(ProJack.config.dbUrl + '/_design/milestones/_view/archive')
+				.then(function(response) {
+					var retval = [];
+					for (var i in response.data.rows)
+						retval.push(response.data.rows[i].value);
+					return retval;
+				});
 		},
 	
 		/**

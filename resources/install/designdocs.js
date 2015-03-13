@@ -105,6 +105,9 @@ function getDesignDocs() {
 	                    index: {
 	                        map: "function(doc) {\n  if (doc.type == 'milestone' || doc._type == 'milestone') {\n    emit(doc._id, doc);\n  }\n}"
 	                    },
+	                    archive : {
+	                    	map: "function(doc) { if (doc.type == 'milestone' || doc._type == 'milestone') { if (doc.status == 'CERTIFIED') emit(doc._id, doc); }}"
+	                    },
 	                    byCustomer: {
 	                        map: "function(doc) {\n  if (doc.type == 'milestone' || doc._type == 'milestone') {\n    emit(doc.customer._id, doc);\n  }\n}"
 	                    },
