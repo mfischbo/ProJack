@@ -116,6 +116,13 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		return false;
 	};
 	
+	$scope.removeFromSprint = function(issue) {
+		issue.sprint = '';
+		iService.updateIssue(issue).then(function() {
+			KT.remove('_id', issue._id, $scope.unassigned);
+		});
+	};
+	
 	/**
 	 * Handler to be called, when dragging from the issue overlay to the unassigned lane
 	 */

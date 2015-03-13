@@ -1,9 +1,10 @@
-<div class="sprint-issueHandle pull-left">
-	<span class="fa fa-bars"></span>
+<div>
+	<div class="pull-left" data-buglabel type="{{i.issuetype}}"></div>
+	<div class="pull-right">
+		<span class="fa fa-recycle" data-ng-click="removeFromSprint(i)" title="Move ticket to backlog" data-ng-if="i.state == 'NEW'"></span>	
+	</div>
+	<div class="clearfix"></div>
 </div>
-<div class="sprint-issueHeading pull-left">
+<div class="sprint-issueHeading">
 	<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> 
 </div>
-
-<div class="pull-right" data-buglabel type="{{i.issuetype}}"></div>
-<div class="clearfix"></div>
