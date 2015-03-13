@@ -68,18 +68,8 @@ ProJack.security.controller("UserProfileController", ['$scope', 'KT', 'SecurityS
 	};
 	
 	$scope.createAccount = function() {
-		if (!$scope.user.mailAccounts) 
-			$scope.user.mailAccounts = [];
-	
-		// AES encrypt all account passwords with the master password
-		console.log("encrypting : " + $scope.account.password + " with masterpassword " + $scope.m.mp);
-		$scope.account.password = Aes.Ctr.encrypt($scope.account.password, $scope.m.mp, 256);
-		
-		$scope.user.mailAccounts.push($scope.account);
 		$scope.account = undefined;
 		$scope.mode = 'list';
-		
-		console.log($scope.user);
 	};
 	
 	$scope.focusAccount = function(account) {
