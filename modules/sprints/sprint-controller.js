@@ -49,6 +49,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		$scope.inProgress = [];
 		$scope.qa		  = [];
 		$scope.done       = [];
+		$scope.issueCnt   = 0;
 	
 		// load all related issues and sort them
 		iService.getIssuesBySprint($scope.sprint).then(function(data) {
@@ -60,9 +61,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 				if (item.assignedTo && item.assignedTo.length > 0 && item.state != 'CLOSED' && item.state != 'RESOLVED') {
 					$scope.inProgress.push(item);
 				}
-				if (item.state == 'CLOSED' || item.state == 'RESOLVED')
+				if (item.state == 'RESOLVED')
+					$scope.qa.push(item);
+				if (item.state == 'CLOSED')
 					$scope.done.push(item);
 			}
+			$scope.issueCnt = data.length;
 		});
 	};
 	
@@ -162,6 +166,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		instance.result.then(function() {
 			KT.remove('_id', issue._id, $scope.unassigned);
 			KT.remove('_id', issue._id, $scope.inProgress);
+			KT.remove('_id', issue._id, $scope.done);
 			$scope.qa.push(issue);
 		});
 	};

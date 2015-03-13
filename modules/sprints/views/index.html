@@ -20,15 +20,29 @@
 </div>
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-3">
 		<a href="#/sprints/create" class="btn btn-primary btn-sm">Neuer Sprint</a>
 		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"> Issues</span></button>
 		<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"> Issue</span></button>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-5">
+		<progress>
+			<bar value="(unassigned.length * 100) / issueCnt" type="danger"><span>{{unassigned.length}}</span></bar>
+			<bar value="(inProgress.length * 100) / issueCnt" type="info"><span>{{inProgress.length}}</span></bar>
+			<bar value="(qa.length * 100) / issueCnt" type="success"><span>{{qa.length}}</span></bar>
+			<bar value="(done.length * 100) / issueCnt" type="done"><span>{{done.length}}</span></bar>
+		</progress>
+	</div>
+	<div class="col-md-4">
 		<div class="pull-right">
 			{{sprint.name}} (&nbsp;<i>{{sprint.version}}</i>&nbsp;) beginnt am {{sprint.startsAt|date:'dd.MM.yyyy'}} und endet am {{sprint.releaseAt|date:'dd.MM.yyyy'}}
 		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<hr/>
 	</div>
 </div>
 
@@ -57,6 +71,7 @@
 		<div class="pull-left">
 			<h4>In Progress</h4>	
 		</div>
+
 		<div class="pull-right btn-group" dropdown style="margin-top:8px;">
 			<button type="button" class="btn btn-sm"><span class="fa fa-eye">
 				<span data-ng-if="progressVisible == 'ALL'">All Issues</span>
@@ -73,6 +88,9 @@
 			</ul>
 		</div>
 		<div class="clearfix"></div>
+		
+		<div class="text-muted text-center" data-ng-if="inProgress.length == 0">No Items available</div>
+	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues" data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
