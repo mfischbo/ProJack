@@ -191,6 +191,8 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		if (!$scope.criteria.customer) return;
 		mService.getMilestonesByCustomer($scope.criteria.customer).then(function(data) {
 			$scope.milestones = data;
+			$scope.milestones.push({name : 'Alle Versionen', _id : ''});
+			$scope.milestones.push({name : 'Ohne Milestone', _id : ProJack.config.lowId});
 		});
 		localStorage.setItem('__ProJack.Sprint.IssueOverlay.criteria', JSON.stringify($scope.criteria));
 	});

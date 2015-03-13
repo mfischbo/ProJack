@@ -39,8 +39,8 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 			if (!$scope.milestones)
 				$scope.milestones = [];
 			
-			$scope.milestones.push({version : 'Alle Versionen', _id : ''});
-			$scope.milestones.push({version : 'Ohne Milestone', _id : ProJack.config.lowId});
+			$scope.milestones.push({version: 'Alle Versionen', _id : ''});
+			$scope.milestones.push({version: 'Ohne Milestone', _id : ProJack.config.lowId});
 			$scope.milestones = $scope.milestones.concat(stones);
 			if ($scope.criteria.milestone == '')
 				$scope.criteria.milestone = $scope.milestones[0]._id;

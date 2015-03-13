@@ -1,0 +1,21 @@
+add the following functions:
+
+_design/sprints/_view/byReleaseDate
+function(doc) {
+  if (doc.type == 'sprint') {
+	var e = new Date(doc.releaseAt).getTime();
+  	emit(e, doc);
+  }
+}
+
+_design/sprints/_view/byStartDate
+function(doc) {
+  if (doc.type == 'sprint') {
+        var s = new Date(doc.startsAt).getTime();
+	var e = new Date(doc.releaseAt).getTime();
+  	emit([s, e], doc);
+  }
+}
+
+_design/milestones/_list/slim
+function (head, req) { var retval = { rows : [] };while (row = getRow()) {if (row.value.type == 'milestone') {var q = {};q.id = row.value._id;q.rev = row.value._rev;q.name = row.value.name;if (row.value.customer && row.value.customer.name)q.customer = row.value.customer.name;retval.rows.push(q);}}send(toJSON(retval));}
