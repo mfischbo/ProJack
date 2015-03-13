@@ -17,3 +17,14 @@ File: /etc/couchdb/default.ini (or similar)
 public_fields=_id, name
 users_db_public = true
 
+
+
+In order to run the search functionality, one needs to install elasticsearch
+
+1) Enable dynamic scripting. Edit elasticsearch.yml file and add the following line
+script.groovy.sandbox.enable: true
+
+2) Install the couch-river plugin from:
+https://github.com/elastic/elasticsearch-river-couchdb
+
+3) Restart the service and build the index from the projack settings menue
