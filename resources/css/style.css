@@ -119,6 +119,10 @@ li.success {
 	background-color:#dff0d8;
 }
 
+li.active {
+	background-color:#f5f5f5;
+}
+
 div.sprint-issueHandle {
 	width:24px;
 	float:left;

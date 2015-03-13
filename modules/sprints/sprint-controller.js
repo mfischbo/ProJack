@@ -47,6 +47,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		// clear all issue lanes
 		$scope.unassigned = [];
 		$scope.inProgress = [];
+		$scope.qa		  = [];
 		$scope.done       = [];
 	
 		// load all related issues and sort them
@@ -95,13 +96,21 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		if (KT.indexOf('_id', issue._id, $scope.inProgress) >= 0) 
 			return false;
 		return true;
-	}
-	$scope.validateDoneDrop = function(issue) {
-		var q = KT.indexOf('_id', issue._id, $scope.done);
-		if (KT.indexOf('_id', issue._id, $scope.done) >= 0) 
+	};
+	
+	$scope.validateQADrop = function(issue) {
+		// disallow droping to itself
+		if (KT.indexOf('_id', issue._id, $scope.qa) >= 0)
 			return false;
 		return true;
-	}
+	};
+	
+	$scope.validateDoneDrop = function(issue) {
+		// only allow dropping from QA lane
+		if (KT.indexOf('_id', issue._id, $scope.qa) >= 0)
+			return true;
+		return false;
+	};
 	
 	/**
 	 * Handler to be called, when dragging from the issue overlay to the unassigned lane
@@ -118,7 +127,8 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			issue.state      = 'NEW';
 			iService.updateIssue(issue).then(function(data) {
 				KT.remove('_id', issue._id, $scope.inProgress);
-				KT.remove('_id', issue._id, $scope.done);			
+				KT.remove('_id', issue._id, $scope.done);		
+				KT.remove('_id', issue._id, $scope.qa);
 			});
 		}
 		$scope.unassigned.push(issue);
@@ -131,11 +141,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		iService.updateIssue(issue).then(function() {
 			KT.remove('_id', issue._id, $scope.unassigned);
 			KT.remove('_id', issue._id, $scope.done);
+			KT.remove('_id', issue._id, $scope.qa);
 			$scope.inProgress.push(issue);
 		});
 	};
 	
-	$scope.onDoneDrop = function($event, issue) {
+	$scope.onQADrop = function($event, issue) {
 		issue.state = 'RESOLVED';
 		issue.assignedTo = '';
 		var instance = $modal.open({
@@ -151,6 +162,14 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		instance.result.then(function() {
 			KT.remove('_id', issue._id, $scope.unassigned);
 			KT.remove('_id', issue._id, $scope.inProgress);
+			$scope.qa.push(issue);
+		});
+	};
+	
+	$scope.onDoneDrop = function($event, issue) {
+		issue.state = 'CLOSED';
+		iService.updateIssue(issue).then(function() {
+			KT.remove('_id', issue._id, $scope.qa);
 			$scope.done.push(issue);
 		});
 	};

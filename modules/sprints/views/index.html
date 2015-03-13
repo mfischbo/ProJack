@@ -33,7 +33,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-4 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
+	<div class="col-md-3 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
 		
 		<div class="pull-left">
 			<h4>Unassigned</h4>	
@@ -53,7 +53,7 @@
 		</ul>
 	</div>
 	
-	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onInProgressDrop($event, $data)" drop-validate="validateInProgressDrop($data)">
+	<div class="col-md-3 sprint-lane" drop-channel="issues" ui-on-drop="onInProgressDrop($event, $data)" drop-validate="validateInProgressDrop($data)">
 		<div class="pull-left">
 			<h4>In Progress</h4>	
 		</div>
@@ -80,13 +80,24 @@
 		</ul>
 	</div>
 	
-	<div class="col-md-4 sprint-lane" drop-channel="issues" ui-on-drop="onDoneDrop($event, $data)" drop-validate="validateDoneDrop($data)">
+	<div class="col-md-3 sprint-lane" drop-channel="issues" ui-on-drop="onQADrop($event, $data)" drop-validate="validateQADrop($data)">
+		<h4>QA</h4>
+		<div class="text-muted text-center" data-ng-if="qa.length == 0">No Items available</div>
+		
+		<ul class="sprint-issueList">
+			<li data-ng-repeat="i in qa | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+			</li>	
+		</ul>
+	</div>
+	
+	<div class="col-md-3 sprint-lane" drop-channel="issues" ui-on-drop="onDoneDrop($event, $data)" drop-validate="validateDoneDrop($data)">
 		<h4>Done</h4>	
 	
 		<div class="text-muted text-center" data-ng-if="done.length == 0">No Items available</div>
 		
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem active" ui-draggable="true" drag="i" drag-channel="issues">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>
