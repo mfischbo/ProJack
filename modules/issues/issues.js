@@ -30,8 +30,10 @@ ProJack.issues.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
+/**
+ * Directive for providing the issue state as label
+ */
 ProJack.issues.directive('buglabel', function() {
-	
 	return {
 		restrict:		'A',
 		scope	: {
@@ -40,3 +42,99 @@ ProJack.issues.directive('buglabel', function() {
 		templateUrl		: './modules/issues/views/typelabel.html'
 	};
 });
+
+
+ProJack.issues.directive('trackingControls', ['$compile', '$modal', 'IssueService', 'SecurityService', function($compile, $modal, service, secService) {
+
+	var linkFn = function(scope, elem, attrs) {
+	
+		scope.user = secService.getCurrentUserName();
+		
+		scope.isTimeStartable = function() {
+			return service.isTimeStartable(scope.issue);
+		};
+		
+		scope.isTimeResumeable = function() {
+			return service.isTimeResumable(scope.issue);
+		};
+		
+		scope.isTimePauseable = function() {
+			return service.isTimePauseable(scope.issue);
+		};
+		
+		scope.isTimeStoppable = function() {
+			return service.isTimePauseable(scope.issue);
+		};
+	
+		scope.startTimeTracking = function() {
+			service.startTimeTracking(scope.issue);
+			scope.$emit('trackingStarted', scope.issue);
+		};
+		
+		scope.pauseTimeTracking = function() {
+			service.pauseTimeTracking(scope.issue);
+		};
+		
+		scope.stopTimeTracking = function() {
+			if (scope.modalOnStop == 'true') {
+				$modal.open({
+					controller		: 'IssueTimeTrackModalController',
+					templateUrl 	: './modules/issues/views/timetrack-modal.html',
+					size			: 'lg',
+					resolve : {
+						data : function() {
+							return { user : scope.user, issue : scope.issue };
+						}
+					}
+				});
+			} else {
+				scope.$emit('trackingStopped', service.getCurrentTimeTrackingData(scope.issue));
+			}
+		};
+		
+		instrumentControls(scope, elem);
+	};
+	
+	var instrumentControls = function(scope, elem) {
+		var children = elem.children('[data-control-type]');
+		for (var i=0; i < children.length; i++) {
+			
+			var item = $(children[i]);
+			var v = item.attr('data-control-type');
+			
+			if (v == 'play') {
+				item.attr('data-ng-if', 'isTimeStartable()');
+				item.attr('data-ng-click', 'startTimeTracking()');
+			}
+			
+			if (v == 'resume') {
+				item.attr('data-ng-if', 'isTimeResumeable()');
+				item.attr('data-ng-click', 'startTimeTracking()');
+			}
+			
+			if (v == 'pause') {
+				item.attr('data-ng-if', 'isTimePauseable()');
+				item.attr('data-ng-click', 'pauseTimeTracking()');
+			}
+			
+			if (v == 'stop') {
+				item.attr('data-ng-if', 'isTimeStoppable()');
+				item.attr('data-ng-click', 'stopTimeTracking()');
+			}
+		};
+		$compile(elem.html())(scope, function(cloned) {
+			for (var i=0; i < children.length; i++)
+				$(children[i]).remove();
+			elem.append(cloned);
+		});
+	}
+	
+	return {
+		restrict:		'A',
+		scope	: {
+			'issue'			: '=ngModel',
+			'modalOnStop' 	: '@'
+		},
+		link : linkFn
+	};
+}]);

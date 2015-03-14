@@ -86,6 +86,15 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		$scope.issueOverlayVisible = false;
 		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
 	};
+
+	var checkTracking = function(issue) {
+		// disallow to move issues that are currently time tracked
+		if (iService.hasActiveTracking(issue)) {
+			KT.alert('Timetracking muss gestoppt sein um das Ticket zu bewegen', 'warning');
+			return false;
+		}
+		return true;
+	}
 	
 	/**
 	 * Methods to check whether or not the dropzone accepts the issue
@@ -93,11 +102,15 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	$scope.validateUnassignedDrop = function(issue) {
 		if (KT.indexOf('_id', issue._id, $scope.unassigned) >= 0)
 			return false;
+		if (!checkTracking(issue))
+			return false;
 		return true;
 	};
 
 	$scope.validateInProgressDrop = function(issue) {
 		if (KT.indexOf('_id', issue._id, $scope.inProgress) >= 0) 
+			return false;
+		if (!checkTracking(issue))
 			return false;
 		return true;
 	};
@@ -106,6 +119,8 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		// disallow droping to itself
 		if (KT.indexOf('_id', issue._id, $scope.qa) >= 0)
 			return false;
+		if (!checkTracking(issue))
+			return false;
 		return true;
 	};
 	
@@ -113,6 +128,8 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		// only allow dropping from QA lane
 		if (KT.indexOf('_id', issue._id, $scope.qa) >= 0)
 			return true;
+		if (!checkTracking(issue))
+			return false;
 		return false;
 	};
 	

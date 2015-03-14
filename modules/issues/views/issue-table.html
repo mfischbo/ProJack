@@ -39,10 +39,12 @@
                 <span class="fa fa-eye" title="Ticket beobachten" data-ng-if="!isObserving(i)"></span>
                 <span class="fa fa-eye-slash" title="Nicht mehr beobachten" data-ng-if="isObserving(i)"></span>
             </a>
-			<a href="javascript:void('');" title="Timetracking starten" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeStartable(i)"><span class="fa fa-play"></span></a>
-			<a href="javascript:void('');" title="Timetracking fortsetzen" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeResumable(i)"><span class="fa fa-play blink"></span></a>
-			<a href="javascript:void('');" title="Take a break... have a KitKat!" data-ng-click="pauseTimeTracking(i)" data-ng-if="isTimePauseable(i)"><span class="fa fa-pause"></span></a>
-			<a href="javascript:void('');" title="Timetracking stoppen" data-ng-click="stopTimeTracking(i)" data-ng-if="isTimeStoppable(i)"><span class="fa fa-stop"></span></a>	
+            <span data-tracking-controls data-ng-model="i" data-modal-on-stop="true" data-ng-if="i.state == 'ASSIGNED'">
+	            <a href data-control-type="play"><span class="fa fa-play"></span></a>
+				<a href data-control-type="resume"><span class="fa fa-play blink"></span></a>
+				<a href data-control-type="pause"><span class="fa fa-pause"></span></a>
+				<a href data-control-type="stop"><span class="fa fa-stop"></span></a>
+            </>
 		</td>
 	</tr>
 </tbody>
