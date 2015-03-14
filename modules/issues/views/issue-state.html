@@ -32,12 +32,12 @@
 			<label>Committed in</label>
 			<div data-ng-repeat="b in branches track by $index">
 				<label class="checkbox-inline">
-					<input type="checkbox" data-ng-checked="issue.fixedIn.indexOf(b) > -1" data-ng-click="toggleBranch(b)"> {{b}}
+					<input type="checkbox" data-ng-checked="issue.fixedIn.indexOf(b) > -1" data-ng-click="toggleBranch(b)"> {{::b}}
 				</label>
 			</div>
 			<div>
 				Also fixed in these deleted branches:<br/>
-				<span data-ng-repeat="f in i.fixedIn" data-ng-if="branches.indexOf(f) == -1">{{f}}</span>
+				<span data-ng-repeat="f in i.fixedIn" data-ng-if="branches.indexOf(f) == -1">{{::f}}</span>
 			</div>
 		</div>
 	</div>

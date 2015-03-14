@@ -11,7 +11,7 @@
 		<div class="row" data-ng-repeat="a in assignments">
 		
 			<div class="col-md-12 col-xs-12">
-				<h5 class="pull-right">{{a.date | date: 'EEE dd.MM.yyyy'}}</h5>
+				<h5 class="pull-right">{{::a.date | date: 'EEE dd.MM.yyyy'}}</h5>
 			</div>
 			
 			<div data-ng-if="a.lower.milestone._id == a.upper.milestone._id">

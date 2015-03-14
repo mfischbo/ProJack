@@ -19,8 +19,6 @@
 					<th>ID</th>
 					<th>Type</th>
 					<th>Name</th>
-					<th>Description</th>
-					<th>&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,16 +29,9 @@
 					<td><span class="fa fa-bars" style="cursor:pointer;"></span>
 					<td>{{::i.number}}</td>
 					<td>
-						<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
-						<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
-						<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
-						<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>
+						<div data-buglabel data-type="{{::i.issuetype}}"></div>
 					</td>
 					<td>{{::i.title}}</td>
-					<td>{{::i.type}}</td>
-					<td>
-					
-					</td>
 				</tr>
 			</tbody>
 			</table>

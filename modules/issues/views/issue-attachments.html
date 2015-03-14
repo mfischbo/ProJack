@@ -5,9 +5,9 @@
 <hr/>
 <div data-ng-repeat="a in issue.attachments">
 	<a href="javascript:void('');" data-ng-click="downloadAttachment(a)">
-		{{a.filename}} 
+		{{::a.filename}} 
 	</a>
 	<small>
-		{{a.type}} {{(a.length/1024).toFixed(2)}} kB
+		{{::a.type}} {{(::a.length/1024).toFixed(2)}} kB
 	</small>
 </div>
