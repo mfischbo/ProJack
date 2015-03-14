@@ -22,5 +22,5 @@ ProJack.templates.controller("TemplateIndexController", ['$scope', '$upload', 'T
 			KT.remove("_id", t._id, $scope.templates);
 			KT.alert("Template wurde erfolgreich entfernt");
 		});
-	}
+	};
 }]);

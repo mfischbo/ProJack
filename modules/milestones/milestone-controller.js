@@ -172,7 +172,26 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 	
 }]);
 
+ProJack.milestones.controller('MileStonesPrintController', ['$scope', '$routeParams', '$sce', 'MilestoneService', 'TemplateService', function($scope, $routeParams, $sce, service, tService) {
 
+	$scope.milestone = undefined;
+	$scope.template  = undefined;
+	$scope.tUrl      = $sce.trustAsResourceUrl('');
+	
+	service.getMilestoneById($routeParams.id).then(function(data) {
+		$scope.milestone = data;
+		
+		tService.getTemplateById($routeParams.tid).then(function(tmpl) {
+			$scope.template = tmpl;
+			for (var q in $scope.template._attachments) {
+				var url = ProJack.config.dbUrl + '/' + $scope.template._id + '/' + q;
+				$scope.tUrl = $sce.trustAsResourceUrl(url);
+				break;
+			}
+		});
+	});
+	
+}]);
 
 ProJack.milestones.controller('MileStonesEditController', ['$scope', '$routeParams', 'KT', 'MilestoneService', 'CustomerService', 'IssueService', 
 	function($scope, $routeParams, KT, service, customerService, issueService) {

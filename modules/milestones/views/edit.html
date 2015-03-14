@@ -106,11 +106,16 @@
 			<div class="panel-body">
 				<div class="form-group">
 					<label>Template</label>
-					<div data-template-selector data-select-as="template._id"></div>
+					<div data-template-selector data-select-as="template"></div>
 				</div>
 			</div>
 			
 			<div class="panel-footer">
+				<div class="pull-left">
+					<a href="./print-page.html#/milestone/{{::milestone._id}}/{{template._id}}" class="btn btn-primary" target="_blank" data-ng-disabled="!template._id">
+						<span class="fa fa-print">Drucken</span>
+					</a>
+				</div>
 				<div class="pull-right">
 					<button class="btn btn-primary" data-ng-click="printMilestone('PDF')" data-ng-disabled="!template._id || template._id.length == 0">PDF Erstellen</button>
 					<button class="btn btn-primary" data-ng-click="printMilestone('ODT')" data-ng-disabled="!template._id || template._id.length == 0">ODT Erstellen</button>
