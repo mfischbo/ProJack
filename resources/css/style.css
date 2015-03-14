@@ -112,7 +112,7 @@ li.sprint-issueItem {
 	list-style: none;
 	padding: 8px;
   	margin-bottom:4px;
-  	cursor:pointer;
+  	cursor:move;
   	box-shadow:rgba(0, 0, 0, 0.298039) 1px 1px 2px 0px;
 }
 

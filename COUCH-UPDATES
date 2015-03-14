@@ -26,5 +26,12 @@ function(doc) {
     }
 }
 
+_design/issues/_view/bySprint
+function(doc) {
+  if (doc.type == 'issue' && doc.sprint && doc.sprint.length > 0) {
+    emit(doc.sprint, doc);
+  }
+}
+
 _design/milestones/_list/slim
 function (head, req) { var retval = { rows : [] };while (row = getRow()) {if (row.value.type == 'milestone') {var q = {};q.id = row.value._id;q.rev = row.value._rev;q.name = row.value.name;if (row.value.customer && row.value.customer.name)q.customer = row.value.customer.name;retval.rows.push(q);}}send(toJSON(retval));}

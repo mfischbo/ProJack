@@ -1,7 +1,9 @@
 <div>
 	<div class="pull-left" data-buglabel type="{{i.issuetype}}"></div>
 	<div class="pull-right">
-		<span class="fa fa-recycle" data-ng-click="removeFromSprint(i)" title="Move ticket to backlog" data-ng-if="i.state == 'NEW'"></span>
+		<a href data-ng-click="removeFromSprint(i);" title="Move to backlog "data-ng-if="i.state == 'NEW'">
+			<span class="fa fa-recycle" title="Move to backlog" ></span>
+		</a>
 		
 		<div data-tracking-controls data-ng-model="i" data-ng-if="i.state == 'ASSIGNED'" data-modal-on-stop="true">
 			<a href data-control-type="play"><span class="fa fa-play"></span></a>
