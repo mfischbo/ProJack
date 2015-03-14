@@ -24,7 +24,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ui-draggable="true" drag="i" drag-channel="issues"
+				<tr data-ui-draggable="true" data-drag="i" data-drag-channel="issues"
 					data-ng-repeat="i in issues" 
 					data-ng-class="{'info' : i.state == 'ASSIGNED', 'danger' : i.state == 'NEW', 'warning' : i.state == 'FEEDBACK', 'success' : i.state == 'RESOLVED', 'active' : i.state == 'CLOSED'}"
 					data-ng-if="!i.sprint || i.sprint.length == 0">
