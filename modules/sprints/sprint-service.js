@@ -32,7 +32,7 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', funct
 		 * Returns all sprints that have a future release date
 		 */
 		getSprintsStartingAt: function(date) {
-			return $http.get(ProJack.config.dbUrl + "/_design/sprints/_view/byReleaseDate?starKey=" + date.getTime())
+			return $http.get(ProJack.config.dbUrl + "/_design/sprints/_view/byReleaseDate?startKey=" + date.getTime())
 				.then(function(response) {
 					var retval = [];
 					for (var i in response.data.rows)

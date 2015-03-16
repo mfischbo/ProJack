@@ -18,12 +18,12 @@ ProJack.config = {
 		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/spoffice",
+		dbUrl :  "/cdb/projack-stage",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		
 		// server url for elasticsearch
-		esEndpoint  : '/es',
+		esEndpoint  	: '/es',
 		esIndex		: 'pj',
 		esUrl 		: '/es/pj',
 		
