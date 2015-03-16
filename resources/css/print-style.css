@@ -1,0 +1,21 @@
+@media print {
+	body {
+		padding:none;
+		font-family: Times New Roman, serif;
+		color:blue;
+	}
+	
+	p {
+		margin:none;
+		line-height:1.2;
+		font-family: Times New Roman, serif;
+	}
+	
+	.page {
+		box-shadow:none;
+	}
+
+	.content-region {
+		page-break-after: always;
+	}
+}

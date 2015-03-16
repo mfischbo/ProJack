@@ -56,21 +56,11 @@
 									<input type="text" data-ng-model="query"  class="form-control" placeholder="Finde..." data-ng-change="checkVisible()">
 								</div>
 							</form>	
-							<div id="flashlight-panel" class="overlay-panel ng-hide" style="right:-225px;" data-ng-show="panelVisible">
+							<div id="flashlight-panel" class="overlay-panel ng-hide" style="right:-157px;" data-ng-show="panelVisible">
 								<div data-ng-include data-src="'./modules/flashlight/views/search-results.html'"></div>
 							</div>
 						</li>	
 						
-						<li data-ng-controller="MailInboxController" data-ng-class="{active : panelVisible}">
-							<a href="javascript:void('');" data-ng-click="toggleVisible()" style="font-size:20px;">
-								<span class="fa fa-envelope"></span>
-								<span data-ng-class="{'badge' : true, 'badge-danger' : messageCount > 0}" style="position:relative;margin-left:-7px;">{{messageCount}}</span>
-							</a>
-							<div id="mail-inbox-panel" class="overlay-panel ng-hide" style="right:-157px;" data-ng-show="panelVisible">
-								<div data-ng-include data-src="'./modules/mails/views/inbox-panel.html'"></div>
-							</div>	
-						</li>
-                        
                        	<li data-ng-controller="ReminderController" data-ng-class="{active : panelVisible}">
                        		<a href="javascript:void('')" data-ng-click="toggleVisible()" style="font-size:20px;">
                        			<span class="fa fa-bell"></span> 
@@ -92,10 +82,6 @@
                         	<ul class="dropdown-menu" role="menu">
                         		<li>
                         			<a href="#">
-                        				<span class="fa fa-toggle-on fa-fw text-success" style="font-size:18px;"></span>&nbsp;&nbsp;
-                        				Mail Notifications 
-                        			</a>
-                        				<a href="#">
                         					<span class="fa fa-toggle-on fa-fw text-success" style="font-size:18px;"></span>&nbsp;&nbsp;
                         				Reminders	
                         			</a>
@@ -143,12 +129,6 @@
     <script src="./bower_components/nvd3/nv.d3.min.js"></script>
     <script src="./bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
 
-    <!-- Encryption -->
-    <script src="./bower_components/aes/aes.js"></script>
-    <script src="./bower_components/aes/aes-ctr.js"></script>
-
-
-	<!--Ant:JS:Replace-->
 	<!-- configuration and utility deps -->
 	<script src="./modules/application/config.js"></script>
 	<script src="./modules/application/utils.js"></script>
@@ -181,11 +161,6 @@
 	<script src="./modules/issues/issue-service.js"></script>
 	<script src="./modules/issues/issue-controller.js"></script>
 	
-	<!-- Mail Module -->	
-	<script src="./modules/mails/mails.js"></script>
-	<script src="./modules/mails/mail-service.js"></script>
-	<script src="./modules/mails/mail-controller.js"></script>
-	
 	<!-- Calendar Module -->
 	<script src="./modules/calendar/calendar.js"></script>
 	<script src="./modules/calendar/calendar-service.js"></script>
@@ -213,7 +188,7 @@
 
 	<script type="text/javascript">
 		angular.element(document).ready(function() {
-			angular.bootstrap(document, ['ProJack', 'ReminderModule', 'FlashLightModule', 'MailModule']);
+			angular.bootstrap(document, ['ProJack', 'ReminderModule', 'FlashLightModule']);
 		});
 	</script>
 </body>

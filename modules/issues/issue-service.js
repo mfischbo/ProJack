@@ -22,7 +22,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				reportedBy  : secService.getCurrentUserName(),
 				state		: 'NEW', 		// NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
 				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT
-				solution	: '',			// The solution for this ticket: FIXED, NOT_REPRODUCIBLE, NOT_FIXABLE, DUPLICATE
+				solution	: '',			// The solution for this ticket: FIXED, NOT_REPRODUCIBLE, NOT_FIXABLE, DUPLICATE, WONT_FIX
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),
 				estimatedTime: undefined,	// estimated time in seconds this issue will take to be resolved

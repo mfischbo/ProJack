@@ -59,24 +59,4 @@ ProJack.app.controller('ApplicationSettingsController', ['$scope', '$http', 'KT'
 				KT.alert("Elasticsearch index wurde erfolgreich angelegt");
 			});
 	};
-	
-	
-	$scope.repairIssues = function() {
-		
-		var d = { docs : [] };
-		issueService.getAllIssues().then(function(issues) {
-			for (var q in issues) {
-				var i = issues[q];
-
-				// do repairment
-				if (typeof i.resolveUntil === 'string' || i.resolveUntil == 0)
-					i.resolveUntil = undefined;
-				
-				if (i.resolveUnitl)
-					i.resolveUnitl = undefined;
-				d.docs.push(i);
-			}
-			$http.post(ProJack.config.dbUrl + '/_bulk_docs', d);
-		});
-	};
 }]);

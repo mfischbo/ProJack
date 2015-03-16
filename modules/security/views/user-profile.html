@@ -6,46 +6,17 @@
 
 
 <div class="row">
-	<div class="col-md-6 col-xs-12">
+	<div class="col-md-12 col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">Basisdaten {{::user.profile.firstName}} {{::user.profile.lastName}}</h3>
 			</div>
 			
-			<div class="panel-body">
-				<div class="form-group">
-					<label>Vorname</label>
-					<input type="text" data-ng-model="user.profile.firstName" class="form-control">
-				</div>
-				
-				<div class="form-group">	
-					<label>Nachname</label>
-					<input type="text" data-ng-model="user.profile.lastName" class="form-control">
-				</div>
-				
-				<div class="form-group">	
-					<label>E-Mail</label>
-					<input type="email" data-ng-model="user.profile.email" class="form-control">
-				</div>
-			</div>
+			<div class="panel-body" data-ng-include data-src="'./modules/security/views/user-form.html'"></div>
 			
 			<div class="panel-footer">
 				<button data-ng-click="saveUser()" class="btn btn-success pull-right">Speichern</button>
 				<div class="clearfix"></div>
-			</div>
-		</div>
-	</div>
-		
-	<div class="col-md-6 col-xs-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Mailaccounts</h3>
-			</div>
-			
-			<div class="panel-body">
-				<div data-ng-include data-src="'./modules/security/views/user-mailaccount-list.html'" data-ng-if="mode == 'list'"></div>
-				
-				<div data-ng-include data-src="'./modules/security/views/user-mailaccount-form.html'" data-ng-if="mode == 'create'"></div>
 			</div>
 		</div>
 	</div>

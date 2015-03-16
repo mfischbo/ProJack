@@ -18,10 +18,10 @@
 	<tr data-ng-repeat="i in issues | orderBy:$parent.predicate:$parent.reverse track by $index"
 		data-ng-class="{'info' : i.state == 'ASSIGNED', 'danger' : i.state == 'NEW', 'warning' : i.state == 'FEEDBACK', 'success' : i.state == 'RESOLVED', 'active' : i.state == 'CLOSED'}">
 		
-		<td>#{{i.number}}</td>
-		<td>{{i.dateModified|date:'dd.MM.yyyy HH:mm'}}</td>
+		<td>#{{::i.number}}</td>
+		<td>{{::i.dateModified|date:'dd.MM.yyyy HH:mm'}}</td>
 		<td>
-			<span data-buglabel data-type="{{i.issuetype}}"></span>
+			<span data-buglabel data-type="{{::i.issuetype}}"></span>
 		</td>
 		<td>
 			<span data-ng-if="i.state == 'NEW'">Neu</span>	
@@ -30,19 +30,21 @@
 			<span data-ng-if="i.state == 'RESOLVED'">Resolved</span>	
 			<span data-ng-if="i.state == 'CLOSED'">Geschlossen</span>
 		</td>
-		<td>{{i.assignedTo.split(":").pop()}}</td>
-		<td>{{i.resolveUntil|date:'dd.MM.yyyy'}}</td>
-		<td><a href="#/issues/{{i._id}}/edit">{{i.title}}</a></td>
+		<td>{{::i.assignedTo.split(":").pop()}}</td>
+		<td>{{::i.resolveUntil|date:'dd.MM.yyyy'}}</td>
+		<td><a href="#/issues/{{::i._id}}/edit">{{i.title}}</a></td>
 		<td class="tools">
-			<a href="#/issues/{{i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
+			<a href="#/issues/{{::i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 			<a href="javascript:void('');" data-ng-click="toggleObservation(i)">
                 <span class="fa fa-eye" title="Ticket beobachten" data-ng-if="!isObserving(i)"></span>
                 <span class="fa fa-eye-slash" title="Nicht mehr beobachten" data-ng-if="isObserving(i)"></span>
             </a>
-			<a href="javascript:void('');" title="Timetracking starten" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeStartable(i)"><span class="fa fa-play"></span></a>
-			<a href="javascript:void('');" title="Timetracking fortsetzen" data-ng-click="startTimeTracking(i)" data-ng-if="isTimeResumable(i)"><span class="fa fa-play blink"></span></a>
-			<a href="javascript:void('');" title="Take a break... have a KitKat!" data-ng-click="pauseTimeTracking(i)" data-ng-if="isTimePauseable(i)"><span class="fa fa-pause"></span></a>
-			<a href="javascript:void('');" title="Timetracking stoppen" data-ng-click="stopTimeTracking(i)" data-ng-if="isTimeStoppable(i)"><span class="fa fa-stop"></span></a>	
+            <span data-tracking-controls data-ng-model="i" data-modal-on-stop="true" data-ng-if="i.state == 'ASSIGNED'">
+	            <a href data-control-type="play"><span class="fa fa-play"></span></a>
+				<a href data-control-type="resume"><span class="fa fa-play blink"></span></a>
+				<a href data-control-type="pause"><span class="fa fa-pause"></span></a>
+				<a href data-control-type="stop"><span class="fa fa-stop"></span></a>
+            </>
 		</td>
 	</tr>
 </tbody>

@@ -10,8 +10,8 @@
 		</div>
 		<div class="row" data-ng-repeat="i in issues">
 			<div class="col-md-8">
-				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>
-				<small class="pull-right">Erledigen bis : {{i.resolveUntil | date : 'dd.MM.yyyy'}}</small>
+				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{::i.number}} - {{::i.title}}</a></h6>
+				<small class="pull-right">Erledigen bis : {{::i.resolveUntil | date : 'dd.MM.yyyy'}}</small>
 			</div>
 			<div class="col-md-4">
 				<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
@@ -32,7 +32,7 @@
 		</div>
 		<div class="row" data-ng-repeat="i in currentTracked">
 			<div class="col-md-8">
-				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>
+				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{::i.number}} - {{::i.title}}</a></h6>
 			</div>
 			<div class="col-md-4">
 				<span class="text-bold pull-right" data-ng-if="i.times.state == 'RUNNING'">Läuft</span>
@@ -48,7 +48,7 @@
 		</div>
 		<div class="row" data-ng-repeat="i in assigned">
 				<div class="col-md-8">
-				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{i.number}} - {{i.title}}</a></h6>
+				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{::i.number}} - {{::i.title}}</a></h6>
 			</div>
 			<div class="col-md-4">
 				<div class="pull-right">

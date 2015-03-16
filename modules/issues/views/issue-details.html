@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<div class="pull-right">
-			<a href="#/issues/{{issue._id}}/modify"><span class="fa fa-pencil"> Bearbeiten</span></a>
+			<a href="#/issues/{{::issue._id}}/modify"><span class="fa fa-pencil"> Bearbeiten</span></a>
 		</div>
 	</div>
 </div>
@@ -11,14 +11,14 @@
 		<b>Kunde</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<a href="#/customers/{{customer._id}}/edit" title="{{customer.description}}">{{customer.name}}</a>
+		<a href="#/customers/{{::customer._id}}/edit" title="{{::customer.description}}">{{customer.name}}</a>
 	</div>
 	
 	<div class="col-md-3 col-xs-6">
 		<b>Version</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<a href="#/milestones/{{milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
+		<a href="#/milestones/{{::milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
 		<span data-ng-if="milestone.status == 'NEW'" class="text-danger" style="cursor:help" title="Das Pflichtenheft aus dem dieses Ticket stammt wurde noch nicht freigegeben">&nbsp;&nbsp;<small>Keine Freigabe!</small></span>
 		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success" style="cursor:help" title="Das Pflichtenheft aus dem dieses Ticket stammt wurde freigegeben">&nbsp;&nbsp;<small>Freigegeben</small></span>
 	</div>
@@ -29,14 +29,14 @@
 		<b>Feature</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{feature.title}} 
+		{{::feature.title}} 
 	</div>
 	
 	<div class="col-md-3 col-xs-6">
 		<b>Typ</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<span data-buglabel type="{{issue.issuetype}}"></span>
+		<span data-buglabel type="{{::issue.issuetype}}"></span>
 	</div>
 </div>
 
@@ -45,7 +45,7 @@
 		<b>Eingereicht von</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{issue.reportedBy}}
+		{{::issue.reportedBy}}
 	</div>
 	<div class="col-md-3 col-xs-6">
 		<b>Zugewiesen an</b>	
@@ -71,7 +71,7 @@
 		<b>Zu erledigen bis</b>
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{issue.resolveUntil|date:'dd.MM.yyyy'}}
+		{{::issue.resolveUntil|date:'dd.MM.yyyy'}}
 	</div>
 </div>
 
@@ -86,7 +86,7 @@
 		<b>Zusammenfassung</b>	
 	</div>
 	<div class="col-md-9 col-xs-6">
-		{{issue.title}}
+		{{::issue.title}}
 	</div>
 </div>
 

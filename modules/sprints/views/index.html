@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-6 col-xs-12">
-		<h3>Sprint Overview <span class="smaller">&quot;{{sprint.name}}&quot;</span></h3>
+		<h3>{{::sprint.name}}</h3>
 
 	</div>
 	<div class="col-md-6">
@@ -12,7 +12,7 @@
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				<li data-ng-repeat="s in sprints">
-					<a href="javascript:void('');" data-ng-click="switchSprint(s)">{{s.startsAt|date:'dd.MM.yyyy'}} - {{s.releaseAt|date:'dd.MM.yyyy'}} / {{::s.name}}</a>
+					<a href="javascript:void('');" data-ng-click="switchSprint(s)">{{::s.startsAt|date:'dd.MM.yyyy'}} - {{::s.releaseAt|date:'dd.MM.yyyy'}} / {{::s.name}}</a>
 				</li>
 			</ul>	
 		</div>
@@ -35,7 +35,7 @@
 	</div>
 	<div class="col-md-4">
 		<div class="pull-right">
-			{{sprint.name}} (&nbsp;<i>{{sprint.version}}</i>&nbsp;) beginnt am {{sprint.startsAt|date:'dd.MM.yyyy'}} und endet am {{sprint.releaseAt|date:'dd.MM.yyyy'}}
+			{{::sprint.name}} (&nbsp;<i>{{::sprint.version}}</i>&nbsp;) beginnt am {{::sprint.startsAt|date:'dd.MM.yyyy'}} und endet am {{::sprint.releaseAt|date:'dd.MM.yyyy'}}
 		</div>
 	</div>
 </div>
@@ -47,7 +47,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-3 sprint-lane"  drop-channel="issues" ui-on-drop="onUnassignedDrop($event, $data)" drop-validate="validateUnassignedDrop($data)">
+	<div class="col-md-3 sprint-lane"  data-drop-channel="issues" data-ui-on-drop="onUnassignedDrop($event, $data)" data-drop-validate="validateUnassignedDrop($data)">
 		
 		<div class="pull-left">
 			<h4>Unassigned</h4>	
@@ -60,14 +60,14 @@
 		<div class="text-muted text-center" data-ng-if="unassigned.length == 0">No Items available</div>
 	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" ui-draggable="true" drag="i" drag-channel="issues" 
+			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
 				data-ng-if="!selectedMilestone || selectedMilestone.id == 'ffffffffffffffffffffffffffffffff' || (selectedMilestone && i.milestone == selectedMilestone.id)">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>
 	</div>
 	
-	<div class="col-md-3 sprint-lane" drop-channel="issues" ui-on-drop="onInProgressDrop($event, $data)" drop-validate="validateInProgressDrop($data)">
+	<div class="col-md-3 sprint-lane" data-drop-channel="issues" data-ui-on-drop="onInProgressDrop($event, $data)" data-drop-validate="validateInProgressDrop($data)">
 		<div class="pull-left">
 			<h4>In Progress</h4>	
 		</div>
@@ -83,8 +83,8 @@
 				<span class="sr-only">Split</span>
 			</button>
 			<ul class="dropdown-menu" role="menu">
-				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'OWN'">My Issues</a></li>
 				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'ALL'">All Issues</a></li>
+				<li><a href="javascript:void('');" data-ng-click="progressVisible = 'OWN'">My Issues</a></li>
 			</ul>
 		</div>
 		<div class="clearfix"></div>
@@ -92,7 +92,7 @@
 		<div class="text-muted text-center" data-ng-if="inProgress.length == 0">No Items available</div>
 	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" ui-draggable="true" drag="i" drag-channel="issues" 
+			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
 			    data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
@@ -110,13 +110,13 @@
 		</ul>
 	</div>
 	
-	<div class="col-md-3 sprint-lane" drop-channel="issues" ui-on-drop="onDoneDrop($event, $data)" drop-validate="validateDoneDrop($data)">
+	<div class="col-md-3 sprint-lane" data-drop-channel="issues" data-ui-on-drop="onDoneDrop($event, $data)" data-drop-validate="validateDoneDrop($data)">
 		<h4>Done</h4>	
 	
 		<div class="text-muted text-center" data-ng-if="done.length == 0">No Items available</div>
 		
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem active" ui-draggable="true" drag="i" drag-channel="issues">
+			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem active" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
 			</li>	
 		</ul>

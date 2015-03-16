@@ -1,13 +1,13 @@
 <div class="row">
 	<div class="col-md-12 col-xs-12" data-ng-repeat="n in issue.notes | orderBy:'dateCreated' track by $index">
-		<b data-ng-if="n.userModified">{{n.userModified}}</b>
-		<small>am {{n.dateCreated|date:'dd.MM.yyyy HH:mm'}}</small>
+		<b data-ng-if="n.userModified">{{::n.userModified}}</b>
+		<small>am {{::n.dateCreated|date:'dd.MM.yyyy HH:mm'}}</small>
 		
 		<div class="pull-right">
 			<span data-ng-if="n.tasktype == 'GENERAL'">Generell - </span>
 			<span data-ng-if="n.tasktype == 'FRONTEND'">Frontend - </span>
 			<span data-ng-if="n.tasktype == 'BACKEND'">Backend - </span>
-			<span data-ng-if="n.timeSpent.hours != 0 && timeSpentMinutes != 0"><b>Time Spent</b> {{n.timeSpent | secsToTime}}</span>
+			<span data-ng-if="n.timeSpent.hours != 0 && timeSpentMinutes != 0"><b>Time Spent</b> {{::n.timeSpent | secsToTime}}</span>
 		
 			<span style="padding-left:24px;">			
 				<button type="button" class="btn btn-primary btn-xs" data-ng-click="focusNote(n)"><span class="fa fa-pencil"></span></button>

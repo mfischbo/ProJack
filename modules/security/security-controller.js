@@ -1,3 +1,6 @@
+/**
+ * Controller to list all users
+ */
 ProJack.security.controller("UserIndexController", ['$scope', 'SecurityService', function($scope, service) {
 	
 	service.getAllUserNames().then(function(data) {
@@ -5,17 +8,28 @@ ProJack.security.controller("UserIndexController", ['$scope', 'SecurityService',
 	});
 }]);
 
-ProJack.security.controller("UserEditController", ['$scope', '$routeParams', 'SecurityService', function($scope, $params, service) {
+
+/**
+ * Controller to edit a certain user
+ */
+ProJack.security.controller("UserEditController", ['$scope', '$routeParams', 'SecurityService', 'KT', function($scope, $params, service, KT) {
 	
 	service.getUserById($params.id).then(function(data) {
 		$scope.user = data;
 	});
 	
 	$scope.updateUser = function() {
-		service.updateUser($scope.user);
+		service.updateUser($scope.user).then(function(user) {
+			KT.alert('Der Benutzer wurde erfolgreich aktualisiert');
+			$scope.user = user;
+		});
 	};
 }]);
 
+
+/**
+ * Controller to create a new user
+ */
 ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT', 'SecurityService', function($scope, $location, KT, service) {
 	
 	$scope.user = service.newUser();
@@ -48,56 +62,18 @@ ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT'
 
 ProJack.security.controller("UserProfileController", ['$scope', 'KT', 'SecurityService', function($scope, KT, service) {
 
-	$scope.mode = 'list';
-	$scope.m = { mp :  ''};
+	$scope.mode    = 'list';
 	
 	service.getCurrentUser().then(function(user) {
 		$scope.user = user;
 	});
-
 	
 	$scope.saveUser = function() {
 		service.updateUser($scope.user).then(function(data) {
 			KT.alert('Alle Daten wurden aktualisiert!');
 		});
 	};
-	
-	$scope.addMailAccount = function() {
-		$scope.account = {};
-		$scope.mode    = 'create';
-	};
-	
-	$scope.createAccount = function() {
-		if (!$scope.user.mailAccounts) 
-			$scope.user.mailAccounts = [];
-	
-		// AES encrypt all account passwords with the master password
-		console.log("encrypting : " + $scope.account.password + " with masterpassword " + $scope.m.mp);
-		$scope.account.password = Aes.Ctr.encrypt($scope.account.password, $scope.m.mp, 256);
-		
-		$scope.user.mailAccounts.push($scope.account);
-		$scope.account = undefined;
-		$scope.mode = 'list';
-		
-		console.log($scope.user);
-	};
-	
-	$scope.focusAccount = function(account) {
-		$scope.account = account;
-		$scope.mode = 'create';
-	};
-	
-	
 
-	$scope.removeAccount = function(account) {
-		for (var i in $scope.user.mailAccounts) {
-			var a = $scope.user.mailAccounts[i];
-			if (a.host == account.host && a.login == account.login)
-				return $scope.user.mailAccounts.splice(i,1);
-		}
-	};
-	
-	
 	$scope.cancelCreate = function() {
 		$scope.account = undefined;
 		$scope.mode    = 'list';

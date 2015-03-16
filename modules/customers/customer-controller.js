@@ -1,3 +1,6 @@
+/**
+ * Controller for the customers index page
+ */
 ProJack.customers.controller("CustomersIndexController", ['$scope', 'CustomerService', 'KT',
     function($scope, service, KT) {
 	
@@ -6,14 +9,19 @@ ProJack.customers.controller("CustomersIndexController", ['$scope', 'CustomerSer
 	});
 	
 	$scope.deleteCustomer = function(customer) {
-		service.deleteCustomer(customer).then(function(promise) {
-			if (promise.status.indexOf("2") == 0) {
+		KT.confirm("Soll der Kunde wirklich entfernt werden?", function() {
+			service.deleteCustomer(customer).then(function(promise) {
 				KT.remove("_id", customer._id, $scope.customers);
-			}
+				KT.alert('Der Kunde wurde entfernt');
+			});		
 		});
 	};
 }]);
 
+
+/**
+ * Controller for the customers create page
+ */
 ProJack.customers.controller('CustomersCreateController', ['$scope', 'CustomerService', 'KT', '$location', 
                                                            function($scope, service, KT, $location) {
 	
@@ -53,6 +61,10 @@ ProJack.customers.controller('CustomersCreateController', ['$scope', 'CustomerSe
 	};
 }]);
 
+
+/**
+ * Controller to edit a given customer
+ */
 ProJack.customers.controller('CustomersEditController', ['$scope', '$routeParams', 'CustomerService', 'KT', 'GitlabService',
                                                          function($scope, $routeParams, service, KT, glService) {
 
@@ -95,7 +107,8 @@ ProJack.customers.controller('CustomersEditController', ['$scope', '$routeParams
 	
 	
 	$scope.saveCustomer = function() {
-		service.updateCustomer($scope.customer).then(function() {
+		service.updateCustomer($scope.customer).then(function(customer) {
+			$scope.customer = customer;
 			KT.alert('Daten wurden erfolgreich gespeichert');
 		});
 	};

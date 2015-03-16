@@ -24,8 +24,9 @@
 						<td colspan="2" style="text-align:center;"><i>Bisher sind keine Templates vorhanden</i></td>
 					</tr>
 					<tr data-ng-repeat="t in templates">
-						<td>{{t.name}}</td>
+						<td>{{::t.name}}</td>
 						<td class="tools">
+							<a href="{{t.href}}"><span class="fa fa-download"></span></a>
 							<a href="javascript:void('');" data-ng-click="removeTemplate(t)" title="Entfernen"><span class="fa fa-trash-o"></span></a>
 						</td>
 					</tr>

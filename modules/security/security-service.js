@@ -71,11 +71,15 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			});
 			return def.promise;
 		},
-		
+	
+		/**
+		 * Updates the given user and returns the persisted instance 
+		 */
 		updateUser : function(user) {
 			return $http.put(ProJack.config.srvUrl + "/_users/" + user._id, user)
 				.then(function(response) {
-					return response.data;
+					user._rev = response.data.rev;
+					return user;
 				});
 		},
 	
@@ -113,13 +117,25 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			return u.name;
 		},
 	
+		/**
+		 * Logs in a user for the given username and password
+		 */
 		login : function(username, password) {
+			var _self = this;
 			return $http.post(ProJack.config.srvUrl + "/_session", {name : username, password : password })
 				.then(function(response) {
-					return response.data;
+					if (response.data.ok) {
+						_self.getCurrentSession().then(function(session) {
+							localStorage.setItem(ProJack.config.sessionKey, JSON.stringify(session.userCtx));
+						});
+						return response.data;
+					}
 				});
 		},
-		
+	
+		/**
+		 * Deletes the current users session
+		 */
 		logout : function() {
 			return $http({
 				method : 'DELETE',

@@ -1,6 +1,6 @@
 <form name="notesForm">
 	<div class="modal-header">
-		<h4 class="modal-title">Zeit Erfassung Ticket #{{issue.number}} {{issue.title}}</h4>
+		<h4 class="modal-title">Zeit Erfassung Ticket #{{::issue.number}} {{::issue.title}}</h4>
 	</div>
 	
 	<div class="modal-body">
@@ -11,16 +11,16 @@
 		</div>
 		<div class="row">
 			<div class="col-md-3">Gestartet um</div>	
-			<div class="col-md-3">{{startTime|date:'dd.MM.yyyy HH:mm'}}</div>
+			<div class="col-md-3">{{::startTime|date:'dd.MM.yyyy HH:mm'}}</div>
 			<div class="col-md-3">Beedet um</div>
-			<div class="col-md-3">{{endTime|date:'dd.MM.yyyy HH:mm'}}</div>
+			<div class="col-md-3">{{::endTime|date:'dd.MM.yyyy HH:mm'}}</div>
 		</div>
 	
 		<div class="row">
 			<div class="col-md-3">Pausen</div>	
-			<div class="col-md-3">{{pauseTime | secsToTime}}</div>
+			<div class="col-md-3">{{::pauseTime | secsToTime}}</div>
 			<div class="col-md-3"><strong>Gesamtzeit</strong></div>
-			<div class="col-md-3"><strong>{{result | secsToTime}}</strong></div>
+			<div class="col-md-3"><strong>{{::result | secsToTime}}</strong></div>
 		</div>
 		
 		<div class="row">
@@ -32,7 +32,7 @@
 				<h4>Notiz hinzufügen</h4>
 				<div class="form-group">
 					<label>Notiz</label>
-					<textarea data-ng-model="note.text" rows="4" class="form-control" data-ui-tinymce required></textarea>
+					<textarea data-ng-model="note.text" rows="4" class="form-control" data-ui-tinymce="tinyOptions" required></textarea>
 				</div>
 				
 				<div class="form-group">

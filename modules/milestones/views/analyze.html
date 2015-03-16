@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<h3>Analyse {{milestone.name}}</h3>
+		<h3>Analyse {{::milestone.name}}</h3>
 	</div>
 </div>
 
@@ -17,7 +17,7 @@
 						Entwicklung (geplant)
 					</div>
 					<div class="col-md-4">
-						{{milestone.estimatedDevelopmentTime}} h
+						{{::milestone.estimatedDevelopmentTime}} h
 					</div>
 				</div>
 				<div class="row">
@@ -25,7 +25,7 @@
 						Entwicklung (laut Features)
 					</div>
 					<div class="col-md-4">
-						{{getFeatureTime(1) | secsToTime }}
+						{{::getFeatureTime(1) | secsToTime }}
 					</div>
 				</div>
 				<div class="row">
@@ -33,7 +33,7 @@
 						Projektzeit (mit overhead)
 					</div>
 					<div class="col-md-4">
-						{{getFeatureTime(milestone.factor) | secsToTime }} (x{{milestone.factor | number : 1}})
+						{{::getFeatureTime(milestone.factor) | secsToTime }} (x{{milestone.factor | number : 1}})
 					</div>
 				</div>
 				<div class="row">
@@ -41,7 +41,7 @@
 						Entwicklung auf Feature Tickets
 					</div>
 					<div class="col-md-4">
-						{{getTimeForTicketType(['FEATURE']) | secsToTime}}
+						{{::getTimeForTicketType(['FEATURE']) | secsToTime}}
 					</div>
 				</div>
 				<div class="row">
@@ -49,7 +49,7 @@
 						Entwicklung auf Bug Tickets
 					</div>
 					<div class="col-md-4">
-						{{getTimeForTicketType(['BUG']) | secsToTime }}
+						{{::getTimeForTicketType(['BUG']) | secsToTime }}
 					</div>
 				</div>
 				<div class="row">
@@ -57,7 +57,7 @@
 						<strong>Saldo</strong>
 					</div>
 					<div class="col-md-4">
-						<strong>{{getTimeForTicketType(['BUG', 'FEATURE']) - getFeatureTime(milestone.factor) | secsToTime }}</strong>
+						<strong>{{::getTimeForTicketType(['BUG', 'FEATURE']) - getFeatureTime(milestone.factor) | secsToTime }}</strong>
 					</div>
 				</div>
 			</div>
@@ -72,7 +72,7 @@
 			</div>
 			
 			<div class="panel-body">
-				<nvd3 options="chartOpts" data="trendChart"></nvd3>
+				<div data-nvd3 options="chartOpts" data="trendChart"></div>
 			</div>
 		</div>
 	</div>

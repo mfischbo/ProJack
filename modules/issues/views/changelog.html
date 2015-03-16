@@ -31,6 +31,7 @@
 					<tr>
 						<th>ID</th>
 						<th>Status</th>
+						<th>Solution</th>
 						<th>Zuletzt bearbeitet am</th>
 						<th>Typ</th>
 						<th>Zusammenfassung</th>
@@ -39,12 +40,13 @@
 				<tbody>
 					<tr data-ng-repeat="i in issues|orderBy:'dateModified'">
 						<td>#{{::i.number}}</td>
-						<td>{{i.state}}</td>
-						<td>{{i.dateModified | date:'dd.MM.yyyy HH:mm'}}</td>
+						<td>{{::i.state}}</td>
+						<td>{{::i.solution}}</td>
+						<td>{{::i.dateModified | date:'dd.MM.yyyy HH:mm'}}</td>
 						<td>
-							<span data-buglabel type="{{i.issuetype}}"></span>
+							<span data-buglabel data-type="{{::i.issuetype}}"></span>
 						</td>	
-						<td><a href="#/issues/{{::i._id}}/edit">{{i.title}}</a></td>
+						<td><a href="#/issues/{{::i._id}}/edit">{{::i.title}}</a></td>
 					</tr>
 				</tbody>
 				</table>

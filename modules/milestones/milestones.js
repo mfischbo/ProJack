@@ -14,6 +14,10 @@ ProJack.milestones.config(['$routeProvider', function($routeProvider) {
             controller : 'MileStonesEditController',
             templateUrl : './modules/milestones/views/edit.html'
         })
+        .when('/milestones/:id/printview/:tid', {
+        	controller	:	'MileStonesPrintController',
+        	templateUrl	:	'./modules/milestones/views/printview.html'
+        })
         .when('/milestones/:id/analyze', {
             controller : 'MileStonesAnalyzeController',
             templateUrl : './modules/milestones/views/analyze.html'

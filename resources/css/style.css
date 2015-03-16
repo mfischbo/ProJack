@@ -1,3 +1,11 @@
+h1, h2, h3, h4, h5 {
+	font-weight:lighter;
+}
+
+hr {
+	border-top-color:#ddd;
+}
+
 .tools {
     text-align:right;
     white-space:nowrap;
@@ -29,8 +37,9 @@
 
 
 #alert-panel .alert {
-    padding:5px;
+    padding:1px;
     text-align:center;
+    height:22px;
 }
 
 a[data-target] {
@@ -90,7 +99,7 @@ div.lane {
 }
 
 div.sprint-lane {
-	border-right:1px solid #ccc;
+	border-right:1px solid #ddd;
 	min-height:80vh;	
 }
 
@@ -103,7 +112,7 @@ li.sprint-issueItem {
 	list-style: none;
 	padding: 8px;
   	margin-bottom:4px;
-  	cursor:pointer;
+  	cursor:move;
   	box-shadow:rgba(0, 0, 0, 0.298039) 1px 1px 2px 0px;
 }
 

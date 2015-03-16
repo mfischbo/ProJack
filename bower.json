@@ -11,7 +11,6 @@
     "angular-bootstrap": ">=0.12.1",
     "ng-file-upload": ">=1.4.0",
     "angular-nvd3": "0.1.0",
-    "aes": ">=0.0.1",
     "fontawesome": ">=4.3.0",
     "moment": "2.9.0"
   },
