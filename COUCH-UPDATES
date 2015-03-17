@@ -1,37 +1,7 @@
 add the following functions:
 
-_design/sprints/_view/byReleaseDate
-function(doc) {
-  if (doc.type == 'sprint') {
-	var e = new Date(doc.releaseAt).getTime();
-  	emit(e, doc);
-  }
+/_design/sprints/filterfunction:
+
+function(doc, req) { 
+	return (doc.type == 'issue' && doc.sprint && doc.sprint == req.query.sprint)
 }
-
-_design/sprints/_view/byStartDate
-function(doc) {
-  if (doc.type == 'sprint') {
-        var s = new Date(doc.startsAt).getTime();
-	var e = new Date(doc.releaseAt).getTime();
-  	emit([s, e], doc);
-  }
-}
-
-
-_design/milestones/_view/archive
-function(doc) {  
-    if (doc.type == 'milestone' || doc._type == 'milestone') {
-      if (doc.status == 'CERTIFIED') 
-          emit(doc._id, doc);
-    }
-}
-
-_design/issues/_view/bySprint
-function(doc) {
-  if (doc.type == 'issue' && doc.sprint && doc.sprint.length > 0) {
-    emit(doc.sprint, doc);
-  }
-}
-
-_design/milestones/_list/slim
-function (head, req) { var retval = { rows : [] };while (row = getRow()) {if (row.value.type == 'milestone') {var q = {};q.id = row.value._id;q.rev = row.value._rev;q.name = row.value.name;if (row.value.customer && row.value.customer.name)q.customer = row.value.customer.name;retval.rows.push(q);}}send(toJSON(retval));}
