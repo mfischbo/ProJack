@@ -95,7 +95,7 @@
 	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
-			    data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
+			    data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && (i.assignedTo == currentUserName || i.assignedTo == 'org.couchdb.user:' + currentUserName))">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"
 					data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
 				</div>

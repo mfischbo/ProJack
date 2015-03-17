@@ -126,7 +126,10 @@ function getDesignDocs() {
 	        			byReleaseDate : {
 	        				map : "function(doc) {\n if (doc.type == 'sprint') {\n var e = new Date(doc.releaseAt).getTime();\n emit(e, doc);\n }\n }"
 	        			}
-	        		}
+	        		},
+	       		   filters : {
+	       			   sprint : "function(doc, req) { return (doc.type == 'issue' && doc.sprint && doc.sprint == req.query.sprint)}" 
+	        	   }
 	        	}
 	        },
 	        

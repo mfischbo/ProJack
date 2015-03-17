@@ -49,6 +49,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		$scope.inProgress = [];
 		$scope.qa		  = [];
 		$scope.done       = [];
+		$scope.lanes = [ $scope.unassigned, $scope.inProgress, $scope.qa, $scope.done ];
 		$scope.issueCnt   = 0;
 	
 		// load all related issues and sort them
@@ -66,7 +67,83 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			}
 			$scope.issueCnt = data.length;
 		});
+		
+		// poll the changes API
+		$scope.runPoll();
 	};
+	
+	$scope.runPoll = function() {
+		service.pollChanges($scope.sprint).then(function(data) {
+			$scope.updateSprintView(data);
+		});
+	};
+	
+	$scope.updateSprintView = function(revs) {
+		if (!revs.newDoc || !revs.oldDoc)
+			return $scope.runPoll();
+		
+		var nRev = revs.newDoc;
+		var oRev = revs.oldDoc;
+		
+		// check if we already have the current revision. If so, ignore the change,
+		// since the UI is already up to date
+		for (var x in $scope.lanes) {
+			var aIssue = KT.find('_id', nRev._id, $scope.lanes[x]);
+			if (aIssue && aIssue._rev == nRev._rev) {
+				console.debug('Aborting view update. Newest revision already present');
+				return $scope.runPoll();
+			}
+		}
+			
+		// no sprint set on oRev but on nRev -> move to assigned lane
+		if ((!oRev.sprint || oRev.sprint.length == 0) && nRev.sprint.length > 0) {
+			$scope.onUnassignedDrop($event, nRev, true);
+			return $scope.runPoll();
+		}
+			
+		// no sprint set on nRev but on oRev -> move to backlog
+		if ((!nRev.sprint || nRev.sprint.length == 0) && oRev.sprint.length > 0) {
+			for (var q in $scope.lanes)
+				KT.remove('_id', nRev._id, $scope.lanes[q]);
+			return $scope.runPoll();
+		}
+		
+		// no changes in states. Just update the issue
+		if (nRev.state == oRev.state) {
+			for (var q in $scope.lanes) {
+				if (KT.indexOf('_id', oRev._id, $scope.lanes[q]) > -1) {
+					KT.remove('_id', oRev._id, $scope.lanes[q]);
+					$scope.lanes[q].push(nRev);
+					return $scope.runPoll();
+				}
+			}
+		}
+		
+		// state changed to: NEW
+		if (nRev.state == 'NEW') {
+			$scope.onUnassignedDrop(null, nRev, true);
+			return $scope.runPoll();
+		}
+			
+		// state changed to: ASSIGNED || FEEDBACK
+		if (nRev.state == 'ASSIGNED' || nRev.state == 'FEEDBACK') {
+			$scope.onInProgressDrop(null, nRev, true);
+			return $scope.runPoll();
+		}
+		
+		// state changed to: RESOLVED
+		if (nRev.state == 'RESOLVED') {
+			$scope.onQADrop(null, nRev, true);
+			return $scope.runPoll();
+		}
+		
+		// state changed to: CLOSED
+		if (nRev.state == 'CLOSED') {
+			$scope.onDoneDrop(null, nRev, true);
+			return $scope.runPoll();
+		}
+	};
+	
 	
 	$scope.switchSprint = function(sprint) {
 		$scope.sprint = sprint;
@@ -141,7 +218,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	/**
 	 * Handler to be called, when dragging from the issue overlay to the unassigned lane
 	 */
-	$scope.onUnassignedDrop = function($event, issue) { 
+	$scope.onUnassignedDrop = function($event, issue, fromFeed) {
+		if (fromFeed) {
+			$scope.unassigned.push(issue);
+			$scope.removeExcept(issue, $scope.unassigned);
+			return;
+		}
 		if (!issue.sprint || issue.sprint.length == 0) {
 			// assign the issue to the current sprint
 			issue.sprint = $scope.sprint._id;
@@ -153,9 +235,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			issue.assignedTo = '';
 			issue.state      = 'NEW';
 			iService.updateIssue(issue).then(function(data) {
-				KT.remove('_id', issue._id, $scope.inProgress);
-				KT.remove('_id', issue._id, $scope.done);		
-				KT.remove('_id', issue._id, $scope.qa);
+				$scope.removeExcept(issue, $scope.unassigned);
 			});
 		}
 		$scope.unassigned.push(issue);
@@ -166,14 +246,18 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	 * Handler to be called when dropping item on the inProgress lane
 	 * Issue will be stated to ASSIGNED for the current user, saved and removed from all other lanes
 	 */
-	$scope.onInProgressDrop = function($event, issue) {
+	$scope.onInProgressDrop = function($event, issue, fromFeed) {
+		if (fromFeed) {
+			$scope.inProgress.push(issue);
+			$scope.removeExcept(issue, $scope.inProgress);
+			return;
+		}
+		
 		// update the issue ... set to assigned and assign the current user
 		issue.state = 'ASSIGNED';
 		issue.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
 		iService.updateIssue(issue).then(function() {
-			KT.remove('_id', issue._id, $scope.unassigned);
-			KT.remove('_id', issue._id, $scope.done);
-			KT.remove('_id', issue._id, $scope.qa);
+			$scope.removeExcept(issue, $scope.inProgress);
 			$scope.inProgress.push(issue);
 		});
 	};
@@ -183,7 +267,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	 * Issue will be stated as RESOLVED and modal will open to leave notes.
 	 * Issue will be saved on modal success.
 	 */
-	$scope.onQADrop = function($event, issue) {
+	$scope.onQADrop = function($event, issue, fromFeed) {
+		if (fromFeed) {
+			$scope.qa.push(issue);
+			$scope.removeExcept(issue, $scope.qa);
+			return;
+		}
 		issue.state = 'RESOLVED';
 		issue.assignedTo = '';
 		var instance = $modal.open({
@@ -197,9 +286,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			}
 		});
 		instance.result.then(function() {
-			KT.remove('_id', issue._id, $scope.unassigned);
-			KT.remove('_id', issue._id, $scope.inProgress);
-			KT.remove('_id', issue._id, $scope.done);
+			$scope.removeExcept(issue, $scope.qa);
 			$scope.qa.push(issue);
 		});
 	};
@@ -209,14 +296,27 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	 * Handler to be called when issue is dropped on done lane.
 	 * Issue will be stated to CLOSED and saved
 	 */
-	$scope.onDoneDrop = function($event, issue) {
+	$scope.onDoneDrop = function($event, issue, fromFeed) {
+		if (fromFeed) {
+			$scope.done.push(issue);
+			$scope.removeExcept(issue, $scope.done);
+			return;
+		}
 		issue.state = 'CLOSED';
 		iService.updateIssue(issue).then(function() {
 			KT.remove('_id', issue._id, $scope.qa);
 			$scope.done.push(issue);
 		});
 	};
+
 	
+	$scope.removeExcept = function(issue, lane) {
+		for (var q in $scope.lanes) {
+			if ($scope.lanes[q] != lane) {
+				KT.remove('_id', issue._id, $scope.lanes[q]);
+			}
+		}
+	}
 	
 	/**
 	 * Create new issues from the overlay

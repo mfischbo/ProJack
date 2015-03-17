@@ -71,27 +71,65 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param id The id of the issue to be returned
 		 */
 		getIssueById : function(id) {
+			var _self = this;
 			return $http.get(ProJack.config.dbUrl + "/" + id)
 				.then(function(response) {
 					var issue = response.data;
 					
-					if (issue.resolveUntil && issue.resolveUntil.length > 0)
-						issue.resolveUnitl = new Date(issue.resolveUntil);
-					
-					if (issue._attachments) {
-						issue.attachments = [];
-						for (var i in issue._attachments) {
-							issue.attachments.push({
-								filename : i,
-								type : issue._attachments[i].content_type, 
-								length : issue._attachments[i].length
-							});
-						}
-					}
+					issue = _self.sanitizeIssue(issue);
 					return response.data;
 				});
 		},
+	
+		/**
+		 * Returns the issue for the given id and revision if available
+		 * @param id The id of the issue to be returned
+		 * @param rev The revision of the issue to be returned
+		 */
+		getIssueByIdAndRevision : function(id, rev) {
+			var _self = this;
+			return $http.get(ProJack.config.dbUrl + '/' + id + '?rev=' + rev).then(function(response) {
+				return _self.sanitizeIssue(response.data); 
+			});
+		},
+	
+		/**
+		 * Returns an array containing all revision id's for the given issue
+		 * @param issue The issue to retrieve revisions for
+		 */
+		getIssueRevisions : function(issue) {
+			return $http.get(ProJack.config.dbUrl + '/' + issue._id + '?revs=true').then(function(response) {
+				var retval = [];
+				var c = 0;
+				for (var i = response.data._revisions.start; i > 0; i--) {
+					retval.push(i + '-' + response.data._revisions.ids[c]);
+					c++; // hoehoe
+				}
+				return retval;
+			});
+		},
 		
+	
+		/**
+		 * Helper function to maintain backwards compatibility.
+		 * Should be called each time when an issue is loaded by id
+		 */
+		sanitizeIssue: function(issue) {
+			if (issue.resolveUntil && issue.resolveUntil.length > 0)
+				issue.resolveUntil = new Date(issue.resolveUntil);
+
+			if (issue._attachments) {
+				issue.attachments = [];
+				for (var i in issue._attachments) {
+					issue.attachments.push({
+						filename : i,
+						type     : issue._attachments[i].content_type,
+						length	 : issue._attachments[i].length
+					});
+				}
+			}
+			return issue;
+		},
 		
 		/**
 		 * Returns all issues

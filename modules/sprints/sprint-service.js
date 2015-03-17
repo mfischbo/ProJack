@@ -1,7 +1,7 @@
 /**
  * Service class that handles all back-end communication for sprints
  */
-ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', function($http, $q, secService) {
+ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', 'IssueService', function($http, $q, secService, iService) {
 	return {
 		newSprint : function() {
 			return {
@@ -69,6 +69,32 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', funct
 						def.resolve(sprint);
 					}).error(function() { def.reject(); });
 			}
+			return def.promise;
+		},
+		
+		pollChanges : function(sprint) {
+			var def = $q.defer();
+			$http.get(ProJack.config.dbUrl + "/_changes?view=bySprint&since=now&feed=longpoll&include_docs=true&filter=sprints/sprint&sprint=" + sprint._id)
+				.success(function(data) {
+					if (data.results.length == 0) {
+						def.resolve({});
+						return;
+					}
+					var retval = {
+							newDoc : data.results[0].doc
+					}
+					
+					// find the previous revision of the issue
+					iService.getIssueRevisions(retval.newDoc).then(function(data) {
+						var rev = data[1];
+						iService.getIssueByIdAndRevision(retval.newDoc._id, rev).then(function(doc) {
+							retval.oldDoc = doc;
+							def.resolve(retval);
+						});
+					});
+				}).error(function() {
+					def.reject();
+				});
 			return def.promise;
 		}
 	};
