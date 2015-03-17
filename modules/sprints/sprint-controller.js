@@ -55,12 +55,10 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		iService.getIssuesBySprint($scope.sprint).then(function(data) {
 			for (var i in data) {
 				var item = data[i];
-				if ((!item.assignedTo || item.assignedTo.length == 0) && item.state != 'CLOSED' && item.state != 'RESOLVED') {
+				if (item.state == 'NEW') 
 					$scope.unassigned.push(item);
-				}
-				if (item.assignedTo && item.assignedTo.length > 0 && item.state != 'CLOSED' && item.state != 'RESOLVED') {
+				if (item.state == 'ASSIGNED' || item.state == 'FEEDBACK') 
 					$scope.inProgress.push(item);
-				}
 				if (item.state == 'RESOLVED')
 					$scope.qa.push(item);
 				if (item.state == 'CLOSED')
@@ -147,6 +145,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		if (!issue.sprint || issue.sprint.length == 0) {
 			// assign the issue to the current sprint
 			issue.sprint = $scope.sprint._id;
+			issue.state  = 'NEW';
 			iService.updateIssue(issue).then(function(data) {
 				KT.remove('_id', issue._id, $scope.issues);
 			});
@@ -170,7 +169,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	$scope.onInProgressDrop = function($event, issue) {
 		// update the issue ... set to assigned and assign the current user
 		issue.state = 'ASSIGNED';
-		issue.assignedTo = secService.getCurrentUserName();
+		issue.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
 		iService.updateIssue(issue).then(function() {
 			KT.remove('_id', issue._id, $scope.unassigned);
 			KT.remove('_id', issue._id, $scope.done);

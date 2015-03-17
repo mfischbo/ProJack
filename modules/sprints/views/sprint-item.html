@@ -1,19 +1,25 @@
 <div>
-	<div class="pull-left" data-buglabel type="{{::i.issuetype}}"></div>
-	<div class="pull-right">
-		<a href data-ng-click="removeFromSprint(i);" title="Move to backlog "data-ng-if="i.state == 'NEW'">
-			<span class="fa fa-recycle" title="Move to backlog" ></span>
-		</a>
-		
-		<div data-tracking-controls data-ng-model="i" data-ng-if="i.state == 'ASSIGNED'" data-modal-on-stop="true">
-			<a href data-control-type="play"><span class="fa fa-play"></span></a>
-			<a href data-control-type="resume"><span class="fa fa-play blink"></span></a>
-			<a href data-control-type="pause"><span class="fa fa-pause"></span></a>
-			<a href data-control-type="stop"><span class="fa fa-stop"></span></a>
+	<div>
+		<div class="pull-left" data-buglabel type="{{::i.issuetype}}"></div>
+		<div class="pull-right">
+			<a href data-ng-click="removeFromSprint(i);" title="Move to backlog "data-ng-if="i.state == 'NEW'">
+				<span class="fa fa-recycle" title="Move to backlog" ></span>
+			</a>
+			
+			<div data-tracking-controls data-ng-model="i" data-ng-if="i.state == 'ASSIGNED'" data-modal-on-stop="true">
+				<a href data-control-type="play"><span class="fa fa-play"></span></a>
+				<a href data-control-type="resume"><span class="fa fa-play blink"></span></a>
+				<a href data-control-type="pause"><span class="fa fa-pause"></span></a>
+				<a href data-control-type="stop"><span class="fa fa-stop"></span></a>
+			</div>
 		</div>
+		<div class="clearfix"></div>
 	</div>
-	<div class="clearfix"></div>
 </div>
 <div class="sprint-issueHeading">
 	<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> 
 </div>
+<div class="pull-right" data-ng-if="i.assignedTo && i.assignedTo.length > 0">
+	Assigned to : {{i.assignedTo | userName}}
+</div>
+<div class="clearfix"></div>

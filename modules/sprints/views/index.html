@@ -60,9 +60,11 @@
 		<div class="text-muted text-center" data-ng-if="unassigned.length == 0">No Items available</div>
 	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem danger" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
+			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
 				data-ng-if="!selectedMilestone || selectedMilestone.id == 'ffffffffffffffffffffffffffffffff' || (selectedMilestone && i.milestone == selectedMilestone.id)">
-				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"
+				 	 data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+				</div>
 			</li>	
 		</ul>
 	</div>
@@ -92,9 +94,11 @@
 		<div class="text-muted text-center" data-ng-if="inProgress.length == 0">No Items available</div>
 	
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem info" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
+			<li data-ng-repeat="i in inProgress | orderBy : 'number'" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
 			    data-ng-if="progressVisible == 'ALL' || (progressVisible == 'OWN' && i.assignedTo == currentUserName)">
-				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"
+					data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+				</div>
 			</li>	
 		</ul>
 	</div>
@@ -104,8 +108,10 @@
 		<div class="text-muted text-center" data-ng-if="qa.length == 0">No Items available</div>
 		
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in qa | orderBy : 'number'" class="sprint-issueItem success" ui-draggable="true" drag="i" drag-channel="issues">
-				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+			<li data-ng-repeat="i in qa | orderBy : 'number'" class="sprint-issueItem" ui-draggable="true" drag="i" drag-channel="issues">
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" 
+					data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+				</div>
 			</li>	
 		</ul>
 	</div>
@@ -116,8 +122,10 @@
 		<div class="text-muted text-center" data-ng-if="done.length == 0">No Items available</div>
 		
 		<ul class="sprint-issueList">
-			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem active" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
-				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"></div>
+			<li data-ng-repeat="i in done | orderBy : 'number'" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
+				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" 
+				     data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+				</div>
 			</li>	
 		</ul>
 	</div>

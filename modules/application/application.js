@@ -35,6 +35,17 @@ ProJack.app.filter('secsToTime', function() {
 	}
 });
 
+ProJack.app.filter('userName', function() {
+	return function(username) {
+		
+		var retval = username;
+		if (retval.indexOf('org.couchdb.user:') == 0) {
+			return retval.replace('org.couchdb.user:', '');
+		}
+		return retval;
+	};
+});
+
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
