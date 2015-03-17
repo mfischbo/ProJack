@@ -207,7 +207,10 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			return false;
 		return false;
 	};
-	
+
+	/**
+	 * Removes the given issue from the sprint
+	 */
 	$scope.removeFromSprint = function(issue) {
 		issue.sprint = '';
 		iService.updateIssue(issue).then(function() {
@@ -310,13 +313,16 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	};
 
 	
+	/**
+	 * Removes an issue from all lanes except the specified one
+	 */
 	$scope.removeExcept = function(issue, lane) {
 		for (var q in $scope.lanes) {
 			if ($scope.lanes[q] != lane) {
 				KT.remove('_id', issue._id, $scope.lanes[q]);
 			}
 		}
-	}
+	};
 	
 	/**
 	 * Create new issues from the overlay
@@ -370,6 +376,19 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			$scope.issues = data;
 		});
 		localStorage.setItem('__ProJack.Sprint.IssueOverlay.criteria', JSON.stringify($scope.criteria));
+	});
+	
+	$scope.$watch('issueOverlayVisible', function(nval, oval) {
+		if (nval) {
+			var criteria = {
+					customer : $scope.criteria.customer._id,
+					mileston : $scope.criteria.milestone,
+					status   : 1
+			};
+			iService.getIssuesByCriteria(criteria).then(function(data) {
+				$scope.issues = data;
+			});
+		}
 	});
 }]);
 
