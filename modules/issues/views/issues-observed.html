@@ -3,7 +3,8 @@
         <span style="">Aktuell Beobachtet: </span>
         <span data-ng-repeat="i in observedIssues | orderBy:'number'">
             <a href="#/issues/{{::i._id}}/edit" title="{{::i.title}}">
-                #{{::i.number}}
+                <s data-ng-if="i.state == 'CLOSED'">#{{::i.number}}</s>
+                <span data-ng-if="i.state != 'CLOSED'">#{{::i.number}}</span>
             </a>&nbsp;<span data-ng-if="!$last">/&nbsp;</span>
         </span>
     </div>
