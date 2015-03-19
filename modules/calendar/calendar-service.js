@@ -172,7 +172,6 @@ ProJack.calendar.service("CalendarService", ['$http', '$q', 'KT', 'MilestoneServ
 			
 			retval.month = m.format("MMMM");
 			retval.year  = m.format("YYYY");
-			console.log(retval);
 			return retval;
 		},
 		

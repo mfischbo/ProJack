@@ -339,9 +339,6 @@ ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', '
 			$scope.issues = data;
 		});
 	});
-	
-	$scope.onIssueDrop = function() { console.log("Bar"); }
-	
 }]);
 
 
@@ -514,7 +511,6 @@ ProJack.issues.controller('IssueEditController',
 		} else {
 			$scope.issue.fixedIn.push(branch);
 		}
-		console.log($scope.issue.fixedIn);
 	};
 
 	$scope.$on('trackingStopped', function(event, data) {

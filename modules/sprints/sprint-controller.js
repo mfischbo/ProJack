@@ -90,7 +90,6 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		for (var x in $scope.lanes) {
 			var aIssue = KT.find('_id', nRev._id, $scope.lanes[x]);
 			if (aIssue && aIssue._rev == nRev._rev) {
-				console.debug('Aborting view update. Newest revision already present');
 				return $scope.runPoll();
 			}
 		}
