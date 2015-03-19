@@ -21,7 +21,7 @@
 		<td>#{{i.number}}</td>
 		<td>{{i.dateModified|date:'dd.MM.yyyy HH:mm'}}</td>
 		<td>
-			<span data-buglabel data-type="{{::i.issuetype}}"></span>
+			<span data-buglabel data-type="{{i.issuetype}}"></span>
 		</td>
 		<td>
 			<span data-ng-if="i.state == 'NEW'">Neu</span>	

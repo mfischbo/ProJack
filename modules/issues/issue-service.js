@@ -204,24 +204,25 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param criteria The criteria to filter the issues
 		 */
 		getIssuesByCriteria : function(criteria) {
-			var status = criteria.status;
-			if (criteria.status == "")
-				status = "99";
-				
-			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search?";
+			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search";
+			var params = {};
 			
-			if (criteria.type && criteria.type !== '') url += "type=" + criteria.type;
+			if (criteria.type && criteria.type !== '') 
+				params.type = criteria.type;
 			
-			if (criteria.selection == 1) url += "uid=org.couchdb.user:" + secService.getCurrentUserName();
-			if (criteria.selection == 2) url += "uid=";
+			if (criteria.selection == 1)
+				params.uid = 'org.couchdb.user:' + secService.getCurrentUserName();
+			if (criteria.selection == 2)
+				params.uid = '';
 			
-			if (criteria.customer) url += "&cid=" + criteria.customer;
+			if (criteria.customer) 
+				params.cid = criteria.customer;
+			
 			if (criteria.milestone && criteria.milestone !== '') 
-				url += "&spec=" + criteria.milestone;
+				params.spec = criteria.milestone;
 			
-			url += "&status=" + criteria.status;
-			
-			return $http.get(url).then(function(response) {
+			params.status = criteria.status;
+			return $http.get(url, { params : params }).then(function(response) {
 				return response.data.rows;
 			});
 		},
