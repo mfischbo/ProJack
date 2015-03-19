@@ -59,6 +59,9 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 	
 	// the times spent on all issues related to the milestone
 	$scope.times = undefined;
+
+	// the total amount of time left
+	$scope.sum   = 0;
 	
 	$scope.trendChart = [ { key : 'Chart', values : [] }];
 	$scope.chartOpts = {
@@ -105,41 +108,41 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 			$scope.issues = issues;
 			iService.getSpentTimesByMilestone($scope.milestone).then(function(times) {
 				$scope.times = times;
-			});
 		
-			// issue trend barchart
-			var chart = [];
+				// issue trend barchart
+				var chart = [];
+				
+				// calculate saldo on each feature issue
+				$scope.sum = $scope.getFeatureTime($scope.milestone.factor) - $scope.times.total;
+				for (var i in $scope.issues) {
+					var issue = $scope.issues[i];
+					if (issue.issuetype == 'FEATURE') {
+						var f = KT.find('_id', issue.feature, $scope.milestone.specification.features);
+						
+						// sum up times for issue
+						var t = 0;
+						for (var q in issue.notes) {
+							if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
+						}
+						if (!f)
+							chart.push( { label : issue.number, value : 0 } );
+						else
+							chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
+					}
 			
-			// calculate saldo on each feature issue
-			var sum = 0;
-			for (var i in $scope.issues) {
-				var issue = $scope.issues[i];
-				if (issue.issuetype == 'FEATURE') {
-					var f = KT.find('_id', issue.feature, $scope.milestone.specification.features);
-					
-					// sum up times for issue
-					var t = 0;
-					for (var q in issue.notes) {
-						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
+					// bug tickets always count negatively
+					if (issue.issuetype == 'BUG') {
+						var t = 0;
+						for (var q in issue.notes) {
+							if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
+						}
+						//sum += (0-t);
+						chart.push( { label : issue.number, value : (0 - t) } );
 					}
-					if (!f)
-						chart.push( { label : issue.number, value : 0 } );
-					else
-						chart.push( { label : issue.number, value : (f.estimatedEffort || 0) - t});
 				}
-		
-				// bug tickets always count negatively
-				if (issue.issuetype == 'BUG') {
-					var t = 0;
-					for (var q in issue.notes) {
-						if (issue.notes[q].timeSpent) t += issue.notes[q].timeSpent;
-					}
-					sum += (0-t);
-					chart.push( { label : issue.number, value : (0 - t) } );
-				}
-			}
-			chart.push( { label : 'Gesamt', value : sum });
-			$scope.trendChart[0].values = chart;
+				chart.push( { label : 'Gesamt', value : $scope.sum });
+				$scope.trendChart[0].values = chart;
+			});
 		});
 	});
 	

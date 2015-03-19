@@ -504,20 +504,16 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			return (KT.find('user', user, issue.times) !== undefined)
 		},
 		
-		
+	
+		/**
+		 * Returns the total time of the milestone according to all issues timetracking data 
+		 * @param milestone The milestone to return the overall time
+		 */
 		getSpentTimesByMilestone : function(milestone) {
 			var def = $q.defer();
-			var k = 'startkey=["' + milestone._id + '", "A"]&endkey=["' + milestone._id + '", "Z"]';
-			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/byTimeSpent?group=true&' + k).success(function(data) {
-				var retval = {};
-				var overall = 0;
-				for (var i in data.rows) {
-					var key = data.rows[i].key[1];
-					retval[key] = data.rows[i].value;
-					overall += data.rows[i].value;
-				}
-				retval.total = overall;
-				def.resolve(retval);
+			var k = 'startkey=["' + milestone._id + '"]';
+			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/byTimeSpent?group=true&group_level=1&limit=1&' + k).success(function(data) {
+				def.resolve({ total : data.rows[0].value });
 			}).error(function() {
 				def.reject();
 			});
