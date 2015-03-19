@@ -39,8 +39,31 @@ ProJack.issues.directive('buglabel', function() {
 		scope	: {
 			'type'		: '@type'
 		},
-		templateUrl		: './modules/issues/views/typelabel.html'
+		templateUrl		: './modules/issues/views/directives/typelabel.html'
 	};
+});
+
+/**
+ * Directive to display the solution for an issue
+ */
+ProJack.issues.directive('solutionlabel', function() {
+	return {
+		restrict:		'A',
+		scope	: {
+			'solution'	: '@solution'
+		},
+		templateUrl 	: './modules/issues/views/directives/solutionlabel.html'
+	}
+});
+
+ProJack.issues.directive('statelabel', function() {
+	return {
+		restrict:		'A',
+		scope : {
+			'state'		: '@state'
+		},
+		templateUrl		: './modules/issues/views/directives/statelabel.html'
+	}
 });
 
 

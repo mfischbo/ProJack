@@ -61,11 +61,7 @@
 		<b>Status</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<span data-ng-if="issue.state == 'NEW'">Neu</span>	
-		<span data-ng-if="issue.state == 'FEEDBACK'">Feedback</span>	
-		<span data-ng-if="issue.state == 'ASSIGNED'">Zugewiesen</span>	
-		<span data-ng-if="issue.state == 'RESOLVED'">Resolved</span>	
-		<span data-ng-if="issue.state == 'CLOSED'">Geschlossen</span>
+		<span data-statelabel data-state="{{issue.state}}"></span>
 	</div>
 	<div class="col-md-3 col-xs-6">
 		<b>Zu erledigen bis</b>

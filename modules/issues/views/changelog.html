@@ -40,8 +40,12 @@
 				<tbody>
 					<tr data-ng-repeat="i in issues|orderBy:'dateModified'">
 						<td>#{{::i.number}}</td>
-						<td>{{::i.state}}</td>
-						<td>{{::i.solution}}</td>
+						<td>
+							<span data-statelabel data-state="{{i.state}}"></span>
+						</td>
+						<td>
+							<span data-solutionlabel data-solution="{{i.solution}}"></span>
+						</td>
 						<td>{{::i.dateModified | date:'dd.MM.yyyy HH:mm'}}</td>
 						<td>
 							<span data-buglabel data-type="{{::i.issuetype}}"></span>

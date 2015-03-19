@@ -24,11 +24,7 @@
 			<span data-buglabel data-type="{{i.issuetype}}"></span>
 		</td>
 		<td>
-			<span data-ng-if="i.state == 'NEW'">Neu</span>	
-			<span data-ng-if="i.state == 'FEEDBACK'">Feedback</span>	
-			<span data-ng-if="i.state == 'ASSIGNED'">Zugewiesen</span>	
-			<span data-ng-if="i.state == 'RESOLVED'">Resolved</span>	
-			<span data-ng-if="i.state == 'CLOSED'">Geschlossen</span>
+			<span data-statelabel data-state="{{i.state}}"></span>
 		</td>
 		<td>{{i.assignedTo.split(":").pop()}}</td>
 		<td>{{i.resolveUntil|date:'dd.MM.yyyy'}}</td>
