@@ -116,6 +116,7 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 				y : function(d) {
 					return d[1];
 				},
+				stacked : true,
 				color: function(d) {
 					if (d.key == 'RESOLVED') return 'rgb(127, 242, 79)';
 					if (d.key == 'ASSIGNED') return 'rgb(208, 87, 229)';
@@ -158,7 +159,9 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 				var b = ['BUG', 'CHANGE_REQUEST', 'FEATURE', 'SUPPORT'];
 				t = data[x].key[0];
 				var series = { 'key' : t, values : [] };
-		
+				if (t == 'CLOSED' || t == 'RESOLVED')
+					series.disabled = true;
+				
 				for (var y in data) {
 					if (data[y].key[0] == t) {
 						series.values.push( [ data[y].key[1], data[y].value ]);
