@@ -72,6 +72,15 @@
 </div>
 
 <div class="row">
+	<div class="col-md-3 col-xs-6">
+		<b>Angelegt am</b>
+	</div>
+	<div class="col-md-3 col-xs-6">
+		{{::issue.dateCreated | date:'dd.MM.yyyy'}}
+	</div>
+</div>
+
+<div class="row">
 	<div class="col-md-12 col-xs-12">
 		<br/>
 	</div>
@@ -81,13 +90,13 @@
 	<div class="col-md-3 col-xs-6">
 		<b>Zusammenfassung</b>	
 	</div>
-	<div class="col-md-9 col-xs-6">
+	<div class="col-md-9 col-xs-6 issue-summary">
 		{{::issue.title}}
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-md-12 col-xs-12">
+	<div class="col-md-12 col-xs-12 issue-description">
 		<br/>
 		<div data-ng-bind-html="html.description" style="font-family:Monospace; font-size:12px;"></div>
 	</div>
