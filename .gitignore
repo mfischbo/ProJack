@@ -1,7 +1,6 @@
 .project
 .settings/
 /tool.html
-/dist/
 
 /.idea/.name
 /.idea/encodings.xml
@@ -13,3 +12,5 @@
 /.idea/workspace.xml
 /.idea/
 /node_modules/
+/bower_components/
+/dist/

@@ -8,11 +8,12 @@
 	</script>
 	<link rel="shortcut icon" href="./resources/images/logo-small.png">
 	
-
+	<!-- build:css ./resources/css/projack.css -->
 	<link href="./resources/css/bootstrap-paper.min.css" rel="stylesheet">
-    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
+    <link href="bower_components/fontawesome/css/font-awesome.css" rel="stylesheet">
+    <link href="bower_components/nvd3/nv.d3.css" rel="stylesheet">
     <link href="./resources/css/style.css" rel="stylesheet">
+    <!-- endbuild -->
 	
 </head>
 <body style="padding-top:70px;">
@@ -110,6 +111,7 @@
 
 
 	<!-- 3rd party libs -->
+	<!-- build:js vendor.js -->
     <script src="./bower_components/jquery/dist/jquery.min.js"></script>
     <script src="./bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="./bower_components/moment/min/moment-with-locales.min.js"></script>
@@ -128,9 +130,12 @@
     <script src="./bower_components/d3/d3.min.js"></script>
     <script src="./bower_components/nvd3/nv.d3.min.js"></script>
     <script src="./bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
+    <!-- endbuild -->
 
 	<!-- configuration and utility deps -->
-	<script src="./modules/application/config.js"></script>
+	<script src="./config.js"></script>
+	
+	<!-- build:js projack.min.js -->
 	<script src="./modules/application/utils.js"></script>
 
 	<!-- Gitlab Service Module -->
@@ -184,7 +189,7 @@
 	
 	<!-- Settings ... belongs to the core application -->
 	<script src="./modules/application/application-settings.js"></script>
-	<!--/Ant:JS:Replace-->
+	<!-- endbuild -->
 
 	<script type="text/javascript">
 		angular.element(document).ready(function() {
