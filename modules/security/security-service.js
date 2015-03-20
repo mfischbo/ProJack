@@ -121,16 +121,20 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 		 * Logs in a user for the given username and password
 		 */
 		login : function(username, password) {
+			var q = $q.defer();
 			var _self = this;
-			return $http.post(ProJack.config.srvUrl + "/_session", {name : username, password : password })
+			$http.post(ProJack.config.srvUrl + "/_session", {name : username, password : password })
 				.then(function(response) {
 					if (response.data.ok) {
 						_self.getCurrentSession().then(function(session) {
 							localStorage.setItem(ProJack.config.sessionKey, JSON.stringify(session.userCtx));
+							q.resolve(response.data);
 						});
-						return response.data;
+					} else {
+						q.reject();
 					}
 				});
+			return q.promise;
 		},
 	
 		/**
