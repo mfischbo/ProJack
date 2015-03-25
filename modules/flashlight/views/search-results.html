@@ -11,15 +11,15 @@
 	<div data-ng-repeat="i in results.issues track by $index">
 		<div class="row">
 			<div class="col-md-2">
-				<div data-buglabel type="{{::i.issuetype}}"></div>
+				<div data-buglabel type="{{i.issuetype}}"></div>
 			</div>	
 			
 			<div class="col-md-1">
-				#{{::i.number}}
+				#{{i.number}}
 			</div>
 		  
 		  	<div class="col-md-6">
-			   <a href="#/issues/{{::i._id}}/edit" data-ng-click="clearSearch()">{{::i.title}}</a> 
+			   <a href="#/issues/{{i._id}}/edit" data-ng-click="clearSearch()">{{i.title}}</a> 
 		  	</div>
 	
 			<div class="col-md-3">
@@ -40,7 +40,7 @@
 	<div class="clearfix"></div>
 	
 	<div data-ng-repeat="m in results.milestones track by $index">
-		{{::m.customer.name}} - <a href="#/milestones/{{::m._id}}/edit" data-ng-click="clearSearch()">{{::m.name}}</a> {{::m.version}}
+		{{m.customer.name}} - <a href="#/milestones/{{m._id}}/edit" data-ng-click="clearSearch()">{{m.name}}</a> {{m.version}}
 	</div>
 	<hr/>
 </div>
@@ -50,9 +50,9 @@
 	<div class="clearfix"></div>
 	
 	<div data-ng-repeat="c in results.customers track by $index">
-		<h6><a href="#/customers/{{::c._id}}/edit" data-ng-click="clearSearch()">{{::c.name}}</a></h6>
+		<h6><a href="#/customers/{{c._id}}/edit" data-ng-click="clearSearch()">{{c.name}}</a></h6>
 		<div data-ng-repeat="co in c.contacts">
-			{{::co.firstName}} {{::co.lastName}} - <a href="mailto:{{::co.email}}" data-ng-click="clearSearch()">{{::co.email}}</a> {{::co.phone}}
+			{{co.firstName}} {{co.lastName}} - <a href="mailto:{{co.email}}" data-ng-click="clearSearch()">{{co.email}}</a> {{::co.phone}}
 		</div>
 	</div>
 </div>
