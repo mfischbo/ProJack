@@ -29,7 +29,7 @@
 	
 	<div class="form-group">
 		<div class="row">
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-2 col-xs-6">
 				<label>Typ</label>
 				<select data-ng-model="issue.issuetype" class="form-control">
 					<option value="BUG">Bug</option>
@@ -39,17 +39,26 @@
 				</select>
 			</div>	
 			
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-2 col-xs-6">
+				<label>Priority</label>
+				<select data-ng-model="issue.priority" class="form-control">
+					<option value="LOW">Low</option>
+					<option value="NORMAL">Normal</option>
+					<option value="HIGH">High</option>
+				</select>
+			</div>
+			
+			<div class="col-md-2 col-xs-6">
 				<label>Zugewiesen an</label>
 				<div data-user-selector data-select-as="issue.assignedTo"></div>			
 			</div>
 			
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-2 col-xs-6">
 				<label>Geschätzter Aufwand</label>	
 				<input type="text" data-ng-model="issue.estimatedTime" class="form-control" placeholder="HH:mm" data-duration-format>
 			</div>
 	
-			<div class="col-md-3 col-xs-12">
+			<div class="col-md-4 col-xs-12">
 				<label>Zu erledigen bis</label>
 				<input type="date"  data-ng-model="issue.resolveUntil" class="form-control" data-date-format>
 			</div>

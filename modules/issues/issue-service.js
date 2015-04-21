@@ -21,7 +21,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				assignedTo  : '', 			// the user the issue is assigned to
 				reportedBy  : secService.getCurrentUserName(),
 				state		: 'NEW', 		// NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
-				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT
+				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT,
+				priority	: 'NORMAL',		// LOW, NORMAL, HIGH
 				solution	: '',			// The solution for this ticket: FIXED, NOT_REPRODUCIBLE, NOT_FIXABLE, DUPLICATE, WONT_FIX
 				dateCreated : new Date().getTime(),
 				dateModified: new Date().getTime(),

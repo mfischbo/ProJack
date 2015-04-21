@@ -3,6 +3,7 @@
 	<tr>
 		<th><a href="" data-ng-click="$parent.predicate = 'number'; 		$parent.reverse=!reverse">#</a></th>
 		<th><a href="" data-ng-click="$parent.predicate = 'dateModified'; 	$parent.reverse=!reverse">Bearbeitet am</a></th>
+		<th><a href="" data-ng-click="$parent.predicate = 'priority';		$parent.reverse=!reverse">Priorit&auml;t</a>
 		<th><a href="" data-ng-click="$parent.predicate = 'issuetype'; 		$parent.reverse=!reverse">Type</a></th>
 		<th><a href="" data-ng-click="$parent.predicate = 'state'; 			$parent.reverse=!reverse">Status</a></th>
 		<th><a href="" data-ng-click="$parent.predicate = 'assignedTo'; 	$parent.reverse=!reverse">Zugewiesen an</a></th>
@@ -20,6 +21,7 @@
 		
 		<td>#{{i.number}}</td>
 		<td>{{i.dateModified|date:'dd.MM.yyyy HH:mm'}}</td>
+		<td>{{i.priority}}</td>
 		<td>
 			<span data-buglabel data-type="{{i.issuetype}}"></span>
 		</td>
