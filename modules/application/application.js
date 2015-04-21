@@ -5,8 +5,8 @@ ProJack.app = angular.module("ProJack",
 
 ProJack.app.filter('numberFixedLen', function () {
     return function(a,b){
-        return(1e4+a+"").slice(-b)
-    }
+        return(1e4+a+"").slice(-b);
+    };
 });
 
 ProJack.app.filter('secsToTime', function() {
@@ -28,11 +28,15 @@ ProJack.app.filter('secsToTime', function() {
 		var mins  = Math.floor((secs % 3600) / 60);
 		if (hours < 10) hours = "0" + hours;
 		if (mins  < 10) mins  = "0" + mins;
+		
+		if (isNaN(hours) || isNaN(mins)) {
+			return '--:--';
+		}
 		var retval = hours + ":" + mins;
 		if (isNeg)
 			retval = '-' + retval;
 		return retval;
-	}
+	};
 });
 
 ProJack.app.filter('userName', function() {
