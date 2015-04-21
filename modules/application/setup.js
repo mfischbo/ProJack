@@ -24,7 +24,7 @@ T.controller('SetupController', ['$scope', '$http', '$q', function($scope, $http
 	$scope.status = {
 			isDBCreated : undefined,
 			isDDocsCreated : undefined 
-	}
+	};
 
 	$scope.setup = function() {
 		

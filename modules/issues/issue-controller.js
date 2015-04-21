@@ -44,7 +44,7 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 			$scope.milestones = $scope.milestones.concat(stones);
 			if ($scope.criteria.milestone == '')
 				$scope.criteria.milestone = $scope.milestones[0]._id;
-		})
+		});
 	});
 
     // load all observed issues
@@ -334,7 +334,7 @@ ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', '
 				customer : $scope.criteria.customer._id,
 				milestone: $scope.criteria.milestone,
 				status	 : 1
-		}
+		};
 		service.getIssuesByCriteria(criteria).then(function(data) {
 			$scope.issues = data;
 		});
@@ -429,7 +429,7 @@ ProJack.issues.controller('IssueEditController',
 			$scope.html.notes[n._id] = $sce.trustAsHtml(n.text);
 		}
 		$scope.html.description = $sce.trustAsHtml($scope.issue.description.replace(/\n/g, '<br/>'));
-	}
+	};
 	
 	$scope.addNote = function() {
 		$scope.note = service.newNote();

@@ -53,7 +53,7 @@ ProJack.issues.directive('solutionlabel', function() {
 			'solution'	: '@solution'
 		},
 		templateUrl 	: './modules/issues/views/directives/solutionlabel.html'
-	}
+	};
 });
 
 ProJack.issues.directive('statelabel', function() {
@@ -63,7 +63,7 @@ ProJack.issues.directive('statelabel', function() {
 			'state'		: '@state'
 		},
 		templateUrl		: './modules/issues/views/directives/statelabel.html'
-	}
+	};
 });
 
 
@@ -150,7 +150,7 @@ ProJack.issues.directive('trackingControls', ['$compile', '$modal', 'IssueServic
 				$(children[i]).remove();
 			elem.append(cloned);
 		});
-	}
+	};
 	
 	return {
 		restrict:		'A',

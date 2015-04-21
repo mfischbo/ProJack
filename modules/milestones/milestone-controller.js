@@ -72,7 +72,7 @@ ProJack.milestones.controller('MileStonesAnalyzeController', ['$scope', '$routeP
 					return d.label;
 				},
 				y : function(d) {
-					return d.value
+					return d.value;
 				},
 				yAxis : {
 					tickFormat : function(p) {
@@ -264,7 +264,7 @@ ProJack.milestones.controller('MileStonesEditController', ['$scope', '$routePara
 	
 	$scope.recalcEstimation = function() {
 		$scope.focusedFeature.estimatedEffort = $scope.focusedFeature.estimatedBE + $scope.focusedFeature.estimatedUI;
-	}
+	};
 	
 	$scope.downloadAttachment = function(a) {
 		window.open(ProJack.config.dbUrl + "/" + $scope.milestone._id + "/" + a.name, '_blank');

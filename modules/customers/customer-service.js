@@ -9,7 +9,7 @@ ProJack.customers.service("CustomerService", ['$http', 'KT', function($http, KT)
 		 */
 		getAllCustomers : function() {
 			var p = $http.get(ProJack.config.dbUrl + "/_design/customers/_view/index").then(function(response) {
-				var retval = [];
+				var retval = new Array();
 				for (var i in response.data.rows) {
 					retval.push(response.data.rows[i].value);
 				}

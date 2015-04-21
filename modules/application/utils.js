@@ -122,11 +122,11 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 
 	x.enableSpinner = function() {
 		$("#spinner").show();
-	}
+	};
 
 	x.disableSpinner = function() {
 		$("#spinner").hide();
-	}
+	};
 
 
 	x.confirm = function(txt, callback) {
@@ -136,7 +136,7 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 			controller : 'ConfirmationInstanceController',
 			resolve    : {
 				text : function() {
-					return txt
+					return txt;
 				}
 			}
 		});
@@ -153,7 +153,7 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 		var p = $("#alert-panel");
 		var t = $("#alert-panel .alert");
 		if (status == 'success')
-			t = t.addClass("alert-success")
+			t = t.addClass("alert-success");
 		if (status == 'error')
 			t = t.addClass("alert-danger");
 		if (status == 'warning')
@@ -190,7 +190,7 @@ ProJack.utils.directive('dateFormat', function() {
 			});
 			
 		}
-	}
+	};
 });
 
 
@@ -215,7 +215,6 @@ ProJack.utils.directive('durationFormat', function() {
 					return val;
 				}
 				
-				var v = parseInt(val);
 				var h = Math.floor(val / 3600);
 				var m = Math.round((val % 3600) / 60);
 				if (h < 10) h = '0' + h;
@@ -232,7 +231,7 @@ ProJack.utils.directive('durationFormat', function() {
 				return r;
 			});
 		}
-	}
+	};
 });
 
 

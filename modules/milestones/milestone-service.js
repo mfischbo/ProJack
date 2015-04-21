@@ -76,7 +76,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 		getAllMilestones : function() {
 			var p = $http.get(ProJack.config.dbUrl + "/_design/milestones/_view/index")
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows) {
 						retval.push(response.data.rows[i].value);
 					}
@@ -91,7 +91,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 		getArchivedMilestones : function() {
 			return $http.get(ProJack.config.dbUrl + '/_design/milestones/_view/archive')
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows)
 						retval.push(response.data.rows[i].value);
 					return retval;
@@ -104,7 +104,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 		getMilestonesByCustomer : function(customer) {
 			var p = $http.get(ProJack.config.dbUrl + '/_design/milestones/_view/byCustomer?key="'+customer._id+'"')
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows) {
 						retval.push(response.data.rows[i].value);
 					}
@@ -181,7 +181,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 						features[milestone.specification.features[k]._id] = milestone.specification.features[k];
 
 					// collect issues into an array
-					var issues = [];
+					var issues = new Array();
 					for (var k in milestone.specification.features) {
 						var f = milestone.specification.features[k];
 						
@@ -319,7 +319,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 							template : attachment.data,
 							model    : JSON.stringify(milestone),
 							filename : milestone.name + ".pdf"
-					}
+					};
 					$http.post(ProJack.config.serviceUrl + "/reports?type=" + type, post).success(function(data) {
 						var meta = { ext : '.pdf', mimetype : 'application/pdf'};
 			
@@ -397,7 +397,7 @@ ProJack.milestones.service("MilestoneService", ['$http', '$filter', '$q', 'KT', 
 			var retval = 0;
 			for (var i in milestone.specification.features) {
 				var feature = milestone.specification.features[i];
-				var base;
+				var base = 0;
 				
 				if (backend)
 					base = feature.estimatedBE;

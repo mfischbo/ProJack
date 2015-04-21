@@ -100,7 +100,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 */
 		getIssueRevisions : function(issue) {
 			return $http.get(ProJack.config.dbUrl + '/' + issue._id + '?revs=true').then(function(response) {
-				var retval = [];
+				var retval = new Array();
 				var c = 0;
 				for (var i = response.data._revisions.start; i > 0; i--) {
 					retval.push(i + '-' + response.data._revisions.ids[c]);
@@ -138,7 +138,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		getAllIssues : function() {
 			return $http.get(ProJack.config.dbUrl + "/_design/issues/_view/index")
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows)
 						retval.push(response.data.rows[i].value);
 					return retval;
@@ -152,7 +152,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		getIssuesByMilestone : function(milestone) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byMilestone?key="'+milestone._id+'"')
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows) 
 						retval.push(response.data.rows[i].value);
 					return retval;
@@ -167,7 +167,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		getIssuesBySprint : function(sprint) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/bySprint?key="' + sprint._id + '"')
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows)
 						retval.push(response.data.rows[i].value);
 					return retval;
@@ -193,7 +193,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
             var user = secService.getCurrentUserName();
             return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byObserver?key="' + user + '"')
                 .then(function(response) {
-                    var retval = [];
+                    var retval = new Array();
                     for (var q in response.data.rows)
                         retval.push(response.data.rows[q].value);
                     return retval;
@@ -503,7 +503,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 */
 		hasActiveTracking : function(issue) {
 			var user = secService.getCurrentUserName();
-			return (KT.find('user', user, issue.times) !== undefined)
+			return (KT.find('user', user, issue.times) !== undefined);
 		},
 		
 	
@@ -530,7 +530,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			var def = $q.defer();
 			var k   = 'startkey=["' + customerId + '", "' + fd + '"]&endkey=["' + customerId + '", "' + td + '"]';
 			$http.get(ProJack.config.dbUrl + "/_design/issues/_view/byClosingDate?" + k).success(function(response) {
-				var retval = [];
+				var retval = new Array();
 				for (var i in response.rows) {
 					retval.push(response.rows[i].value);
 				}

@@ -62,7 +62,6 @@ ProJack.dashboard.controller('ExpressTicketsController', ['$scope', '$http', 'Se
 		
 		// fetch all milestones
 		$http.get(ProJack.config.dbUrl + '/_design/milestones/_list/inDevelopmentFilter/index').success(function(ms) {
-			var milestones = ms.rows;
 			
 			// fetch all non resolved assigned
 			var key = '?startkey=["'+$scope.user+'", "ASSIGNED", 1]&endkey=["'+$scope.user+'", "ASSIGNED", '+Number.MAX_SAFE_INTEGER+']&limit=5';
@@ -147,9 +146,8 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 	
 	$scope.initialize = function() {
 		$http.get(ProJack.config.dbUrl + "/_design/issues/_view/byType?group=true").success(function(data) {
-			var data = data.rows; 	// the data 
+			data = data.rows; 	// the data 
 			var t = "";				// the key for the issuetype
-			var mMax = 0;
 			
 			var finDat = [];
 			for (var x=0; x < data.length; x++) {
@@ -168,7 +166,6 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 						b.splice(b.indexOf(data[y].key[1]), 1);
 					}
 				}
-				// TODO: entries from b need to be in the same order
 				for (var q in b) {
 					series.values.push([ b[q], 0 ]);
 				}
