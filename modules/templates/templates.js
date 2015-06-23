@@ -1,4 +1,4 @@
-ProJack.templates = angular.module("TemplateModule", ['Utils', 'angularFileUpload']);
+ProJack.templates = angular.module("TemplateModule", ['Utils', 'ngFileUpload']);
 ProJack.templates.config(['$routeProvider', function($routeProvider) {
 
     $routeProvider
