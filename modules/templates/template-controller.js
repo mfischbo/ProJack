@@ -1,4 +1,4 @@
-ProJack.templates.controller("TemplateIndexController", ['$scope', '$upload', 'TemplateService', 'KT', function($scope, $upload, service, KT) {
+ProJack.templates.controller("TemplateIndexController", ['$scope', 'TemplateService', 'KT', function($scope, service, KT) {
 
 	$scope.template = service.newTemplate();
 	

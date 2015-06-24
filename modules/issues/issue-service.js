@@ -14,7 +14,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				number		: 0,			// the issues ticket number to be displayed
 				title		: '',			
 				description : '',
-				milestone   : '', 			// id of the milestone this issue is related to
 				sprint		: '',			// id of the sprint this issue is related to
 				feature		: '', 			// id of the feature this issue is related to
 				customer	: '', 			// id of the customer this issue is related to
@@ -144,22 +143,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 					return retval;
 				});
 		},
-		
-		/**
-		 * Returns all issues that are related to the given milestone
-		 * @param milestone The milestone
-		 */
-		getIssuesByMilestone : function(milestone) {
-			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byMilestone?key="'+milestone._id+'"')
-				.then(function(response) {
-					var retval = new Array();
-					for (var i in response.data.rows) 
-						retval.push(response.data.rows[i].value);
-					return retval;
-				});
-		},
-		
-		
+	
 		/**
 		 * Returns all issues that are related to the given sprint
 		 * @param sprint The sprint
@@ -218,10 +202,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			
 			if (criteria.customer) 
 				params.cid = criteria.customer;
-			
-			if (criteria.milestone && criteria.milestone !== '') 
-				params.spec = criteria.milestone;
-			
+		
 			params.status = criteria.status;
 			return $http.get(url, { params : params }).then(function(response) {
 				return response.data.rows;
@@ -260,8 +241,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		createIssue : function(issue) {
 			if (typeof issue.customer == "object")
 				issue.customer = issue.customer._id;
-			if (typeof issue.milestone == "object")
-				issue.milestone = issue.milestone._id;
 			if (typeof issue.feature == "object")
 				issue.feature = issue.feature._id;
 			
@@ -507,22 +486,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		},
 		
 	
-		/**
-		 * Returns the total time of the milestone according to all issues timetracking data 
-		 * @param milestone The milestone to return the overall time
-		 */
-		getSpentTimesByMilestone : function(milestone) {
-			var def = $q.defer();
-			var k = 'startkey=["' + milestone._id + '"]';
-			$http.get(ProJack.config.dbUrl + '/_design/issues/_view/byTimeSpent?group=true&group_level=1&limit=1&' + k).success(function(data) {
-				def.resolve({ total : data.rows[0].value });
-			}).error(function() {
-				def.reject();
-			});
-			return def.promise;
-		},
-		
-		
 		getChangelog : function(customerId, from, to) {
 			var fd = new Date(from).getTime();
 			var td = new Date(to).getTime();
