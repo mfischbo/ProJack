@@ -12,10 +12,6 @@ ProJack.issues.config(['$routeProvider', function($routeProvider) {
             controller : 'IssueCreateController',
             templateUrl : './modules/issues/views/create.html'
         })
-        .when('/issues/customer/:cid/milestone/:mid/create', {
-            controller : 'IssueCreateController',
-            templateUrl : './modules/issues/views/create.html'
-        })
         .when('/issues/:id/edit', {
             controller : 'IssueEditController',
             templateUrl : './modules/issues/views/edit.html'

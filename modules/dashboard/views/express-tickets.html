@@ -11,17 +11,14 @@
 		<div class="row" data-ng-repeat="i in issues">
 			<div class="col-md-8">
 				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{::i.number}} - {{::i.title}}</a></h6>
+			</div>
+			<div class="col-md-3">
 				<small class="pull-right">Erledigen bis : {{::i.resolveUntil | date : 'dd.MM.yyyy'}}</small>
 			</div>
-			<div class="col-md-4">
-				<span data-ng-if="i.issuetype == 'BUG'" class="label label-danger">Bug</span>
-				<span data-ng-if="i.issuetype == 'CHANGE_REQUEST'" class="label label-default">Change Request</span>
-				<span data-ng-if="i.issuetype == 'FEATURE'" class="label label-info">Feature</span>
-				<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
-			</div>
-			
-			<div class="col-md-12">
-				<hr/>
+			<div class="col-md-1">
+				<div class="pull-right">
+					<span data-buglabel data-type="{{i.issuetype}}"></span>
+				</div>
 			</div>
 		</div>	
 		<hr/>	

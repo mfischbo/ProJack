@@ -21,8 +21,7 @@ ProJack.flashlight.service('FlashLightService', ['$http', function($http) {
 		parseResults : function(response) {
 			var retval = {
 						customers : [],
-						issues    : [],
-						milestones: []
+						issues    : []
 				};
 				
 				for (var i in response.data.hits.hits) {
@@ -32,8 +31,6 @@ ProJack.flashlight.service('FlashLightService', ['$http', function($http) {
 						retval.customers.push(e._source);
 					if (e._type == 'issue')
 						retval.issues.push(e._source);
-					if (e._type == 'milestone')
-						retval.milestones.push(e._source);
 				}
 				
 				// sum up all results

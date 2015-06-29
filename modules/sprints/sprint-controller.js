@@ -17,8 +17,6 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 
 	$scope.progressVisible = 'ALL';		// or OWN to display only issues assigned to current user
 	$scope.currentUserName = secService.getCurrentUserName();
-	
-	$scope.selectedMilestone = undefined;
 
 	// load the all future sprints and take the closest release as the current
 	var m = moment();

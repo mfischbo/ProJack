@@ -11,7 +11,7 @@
 	<div data-ng-repeat="i in results.issues track by $index">
 		<div class="row">
 			<div class="col-md-2">
-				<div data-buglabel type="{{i.issuetype}}"></div>
+				<span data-buglabel data-type="{{i.issuetype}}"></span>
 			</div>	
 			
 			<div class="col-md-1">
@@ -23,24 +23,9 @@
 		  	</div>
 	
 			<div class="col-md-3">
-				<span data-ng-if="i.state == 'NEW'">Neu</span>	
-				<span data-ng-if="i.state == 'FEEDBACK'">Feedback</span>	
-				<span data-ng-if="i.state == 'ASSIGNED'">Zugewiesen</span>	
-				<span data-ng-if="i.state == 'RESOLVED'">Resolved</span>	
-				<span data-ng-if="i.state == 'CLOSED'">Geschlossen</span>
+				<span data-statelabel data-state="{{i.state}}"></span>
 			</div>	
 		</div>
-	</div>
-	<hr/>
-</div>
-
-
-<div data-ng-if="results.milestones.length > 0">
-	<h5 class="pull-right">Milestones</h5>
-	<div class="clearfix"></div>
-	
-	<div data-ng-repeat="m in results.milestones track by $index">
-		{{m.customer.name}} - <a href="#/milestones/{{m._id}}/edit" data-ng-click="clearSearch()">{{m.name}}</a> {{m.version}}
 	</div>
 	<hr/>
 </div>
