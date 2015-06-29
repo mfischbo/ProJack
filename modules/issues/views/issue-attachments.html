@@ -1,6 +1,6 @@
 <div class="form-group">
 	<label class="Upload"></label>
-	<input type="file" data-ng-file-select="onAttachmentSelect($files)" class="form-control">
+	<input type="file" data-ngf-select data-ngf-change="onAttachmentSelect($files)" class="form-control">
 </div>
 <hr/>
 <div data-ng-repeat="a in issue.attachments">

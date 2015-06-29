@@ -1,5 +1,5 @@
-ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$modal',
-                                                   function($scope, KT, service, customerService, milestoneService, secService, $modal) {
+ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'SecurityService', '$modal',
+                                                   function($scope, KT, service, customerService, secService, $modal) {
 
 	var locKey = "__IssuesIndex_Criteria";
 	var sortKey= "__IssuesIndex_SortCriteria";
@@ -10,16 +10,14 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		selection : 0,
 		status : 'NEW',
 		customer : '',
-		milestone :'',
 		status : ''
 	};
 	
 	$scope.predicate = '';
 	$scope.reverse   = false;
 	
-	if (localStorage.getItem(locKey)) {
+	if (localStorage.getItem(locKey))
 		$scope.criteria = JSON.parse(localStorage.getItem(locKey));
-	}
 	
 	if (localStorage.getItem(sortKey)) {
 		var x = JSON.parse(localStorage.getItem(sortKey));
@@ -33,41 +31,12 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		if ($scope.criteria.customer == '') {
 			$scope.criteria.customer = data[0]._id;
 		}
-		
-		milestoneService.getMilestonesByCustomer(
-				KT.find("_id", $scope.criteria.customer, $scope.customers)).then(function(stones) {
-			if (!$scope.milestones)
-				$scope.milestones = [];
-			
-			$scope.milestones.push({version: 'Alle Versionen', _id : ''});
-			$scope.milestones.push({version: 'Ohne Milestone', _id : ProJack.config.lowId});
-			$scope.milestones = $scope.milestones.concat(stones);
-			if ($scope.criteria.milestone == '')
-				$scope.criteria.milestone = $scope.milestones[0]._id;
-		});
 	});
 
     // load all observed issues
     service.getObservedIssues().then(function(issues) {
        $scope.observedIssues = issues;
     });
-	
-	$scope.$watch('criteria.customer', function(val) {
-		if (!val || val.length == 0) return;
-		if (!$scope.customers || $scope.customers.length == 0) return;
-		
-		milestoneService.getMilestonesByCustomer(KT.find('_id', val, $scope.customers))
-			.then(function(data) {
-				$scope.milestones = [];
-				$scope.milestones.push({ version : 'Alle Versionen', _id : '' });
-				$scope.milestones.push({version : 'Ohne Milestone', _id : ProJack.config.lowId});
-			
-				$scope.milestones = $scope.milestones.concat(data);
-				if ($scope.milestones.length == 1) {
-					$scope.criteria.milestone = $scope.milestones[0]._id;
-				}
-			});
-	});
 	
 	$scope.$watch('criteria', function() {
 		localStorage.setItem(locKey, JSON.stringify($scope.criteria));
@@ -81,21 +50,14 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		localStorage.setItem(sortKey, JSON.stringify(x));
 	});
 
-	$scope.getMilestoneLabel = function(m) {
-		if (m._id == '') return 'Alle Versionen';
-		if (m._id == ProJack.config.lowId) return 'Ohne Milestone';
-		return m.version + ' - ' + m.name;
-	};
-
-   $scope.isObserving = function(issue) {
+	$scope.isObserving = function(issue) {
        if (!issue.observers) return false;
        return (issue.observers.indexOf(user) > -1);
-   };
+	};
 
-   $scope.toggleObservation = function(issue) {
+	$scope.toggleObservation = function(issue) {
        service.toggleObservation(issue);
-   };
-
+	};
 }]);
 
 ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalInstance', 'KT', 'IssueService', 'data', function($scope, $modalInstance, KT, service, data) {
@@ -187,8 +149,8 @@ ProJack.issues.controller('IssueResolveModalController', ['$scope', '$modalInsta
 }]);
 
 
-ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$routeParams', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
-                                                    function($scope, $location, $routeParams, KT, service, customerService, milestoneService) {
+ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$routeParams', 'KT', 'IssueService', 'CustomerService', 
+                                                    function($scope, $location, $routeParams, KT, service, customerService) {
 	
 	$scope.issue = service.newIssue();
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
@@ -205,23 +167,6 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
 		}
 	});
 	
-	$scope.$watch('issue.customer', function(val) {
-		if (!val || val.length == 0) return;
-		milestoneService.getMilestonesByCustomer(KT.find('_id', val, $scope.customers))
-			.then(function(data) {
-				$scope.milestones = [{ version : 'Ohne Milestone', _id : ProJack.config.lowId }];
-				$scope.milestones = $scope.milestones.concat(data);
-				if ($routeParams.mid) {
-					for (var i in $scope.milestones) {
-						if ($scope.milestones[i]._id == $routeParams.mid) {
-							$scope.issue.milestone = $scope.milestones[i]._id;
-							break;
-						}
-					}
-				}
-			});
-	});
-	
 	$scope.createIssue = function() {
 		service.createIssue($scope.issue).then(function() {
 			KT.alert("Das Issue wurde erfolgreich angelegt");
@@ -232,12 +177,11 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
 
 
 ProJack.issues.controller('IssueModifyController', 
-		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 
-		 function($scope, $routeParams, $location, KT, service, cService, mService) {
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 
+		 function($scope, $routeParams, $location, KT, service, cService) {
 	
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
 	
-
 	cService.getAllCustomers().then(function(customers) {
 		$scope.customers = customers;
 		service.getIssueById($routeParams.id).then(function(issue) {
@@ -252,23 +196,6 @@ ProJack.issues.controller('IssueModifyController',
 			$location.path('#/issues');
 		});
 	};
-	
-	$scope.$watch('issue.customer', function(val) {
-		if (!val || val.length == 0) return;
-		mService.getMilestonesByCustomer(KT.find('_id', val, $scope.customers))
-			.then(function(data) {
-				$scope.milestones = [{ version : 'Ohne Milestone', _id : ProJack.config.lowId }];
-				$scope.milestones = $scope.milestones.concat(data);
-				if ($routeParams.mid) {
-					for (var i in $scope.milestones) {
-						if ($scope.milestones[i]._id == $routeParams.mid) {
-							$scope.issue.milestone = $scope.milestones[i]._id;
-							break;
-						}
-					}
-				}
-			});
-	});
 }]);
 
 
@@ -306,45 +233,26 @@ ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerServic
 }]);
 
 
-ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', 'CustomerService', 'MilestoneService', function($scope, service, customerService, mService) {
+ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', 'CustomerService', 
+                                                     function($scope, service, customerService) {
 	
 	$scope.issues = [];
 	$scope.customers = [];
 
 	$scope.criteria = {
 			status		: 1,
-			customer	: undefined,
-			milestone	: undefined
+			customer	: undefined
 	};
 	
 	customerService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
 	});
-
-	$scope.$watch('criteria.customer', function(val) {
-		if (!$scope.criteria.customer) return;
-		mService.getMilestonesByCustomer($scope.criteria.customer).then(function(data) {
-			$scope.milestones = data;
-		});
-	});
-	
-	$scope.$watch('criteria.milestone', function(val) {
-		if (!val) return;
-		var criteria = {
-				customer : $scope.criteria.customer._id,
-				milestone: $scope.criteria.milestone,
-				status	 : 1
-		};
-		service.getIssuesByCriteria(criteria).then(function(data) {
-			$scope.issues = data;
-		});
-	});
 }]);
 
 
 ProJack.issues.controller('IssueEditController', 
-		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', 'GitlabService', '$upload', '$sce',
-        function($scope, $routeParams, $location, KT, service, customerService, milestoneService, secService, glService, $upload, $sce) {
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'SecurityService', 'GitlabService', '$sce',
+        function($scope, $routeParams, $location, KT, service, customerService, secService, glService, $sce) {
 	
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
@@ -390,17 +298,7 @@ ProJack.issues.controller('IssueEditController',
 				});
 			}
 		});
-
-		// load the milestone if the issue has one
-		if ($scope.issue.milestone != ProJack.config.lowId) {
-			milestoneService.getMilestoneById($scope.issue.milestone).then(function(data) {
-				$scope.milestone = data;
-				if ($scope.issue.feature && $scope.issue.feature != "") {
-					$scope.feature = KT.find("_id", $scope.issue.feature, $scope.milestone.specification.features);
-				}
-			});
-		}
-		
+	
 		// check if there is active time tracking. If so set an interval to calculate the current ticket time
 		$scope.setTicketTimeInterval();
 	});

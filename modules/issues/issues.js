@@ -1,5 +1,5 @@
 ProJack.issues = angular.module("IssuesModule", 
-		['CustomersModule', 'MileStonesModule','SecurityModule', 'Utils', 'angularFileUpload', 'ui.tinymce', 'ui.bootstrap']);
+		['CustomersModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap']);
 
 ProJack.issues.config(['$routeProvider', function($routeProvider) {
 
@@ -9,10 +9,6 @@ ProJack.issues.config(['$routeProvider', function($routeProvider) {
             templateUrl : './modules/issues/views/index.html'
         })
         .when('/issues/customer/:cid/create', {
-            controller : 'IssueCreateController',
-            templateUrl : './modules/issues/views/create.html'
-        })
-        .when('/issues/customer/:cid/milestone/:mid/create', {
             controller : 'IssueCreateController',
             templateUrl : './modules/issues/views/create.html'
         })

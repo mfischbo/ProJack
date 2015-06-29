@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-6 col-xs-12">
-		<h3>{{::sprint.name}}</h3>
+		<h3>{{sprint.name}}</h3>
 
 	</div>
 	<div class="col-md-6">
@@ -12,7 +12,7 @@
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				<li data-ng-repeat="s in sprints">
-					<a href="javascript:void('');" data-ng-click="switchSprint(s)">{{::s.startsAt|date:'dd.MM.yyyy'}} - {{::s.releaseAt|date:'dd.MM.yyyy'}} / {{::s.name}}</a>
+					<a href="javascript:void('');" data-ng-click="switchSprint(s)">{{s.startsAt|date:'dd.MM.yyyy'}} - {{s.releaseAt|date:'dd.MM.yyyy'}} / {{s.name}}</a>
 				</li>
 			</ul>	
 		</div>

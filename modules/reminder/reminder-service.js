@@ -23,8 +23,6 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 				.then(function(response) {
 					retval = {
 							length : 0,
-							milestoneReleases : [],
-							milestoneSpecsDone : [],
 							issues : [],
 							reminders : []
 					};
@@ -40,20 +38,6 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 							var r = that.getMomentForReminder(v);
 							v.overdue = that.isOverdue(r, 1);
 							retval.reminders.push(v);
-						}
-						
-						// milestone releases
-						if (k == 1) {
-							var r = moment(v.plannedReleaseDate);
-							v.overdue = that.isOverdue(r, 1);
-							retval.milestoneReleases.push(v);
-						}
-						
-						// milestone specs finished
-						if (k == 2) {
-							var r = moment(v.plannedCompletionDate);
-							v.overdue = that.isOverdue(r, 1);
-							retval.milestoneSpecsDone.push(v);
 						}
 						
 						// issues
@@ -86,8 +70,6 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 		},
 		
 		getMomentForReminder : function(reminder) {
-			//var d = reminder.alertAt.split('T')[0];
-			//var t = reminder.alertTime.split('T')[1];
 			var q = new Date(reminder.alertTime).getTime();
 			return moment(reminder.alertAt + q);
 		},

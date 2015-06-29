@@ -1,5 +1,5 @@
-ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'MilestoneService', 'SecurityService', '$modal',
-                                                    function($scope, KT, service, iService, cService, mService, secService, $modal) {
+ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'SecurityService', '$modal',
+                                                    function($scope, KT, service, iService, cService, secService, $modal) {
 
 	var locKey = '__ProJack.sprints.current.id';
 	
@@ -17,8 +17,6 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 
 	$scope.progressVisible = 'ALL';		// or OWN to display only issues assigned to current user
 	$scope.currentUserName = secService.getCurrentUserName();
-	
-	$scope.selectedMilestone = undefined;
 
 	// load the all future sprints and take the closest release as the current
 	var m = moment();
@@ -343,8 +341,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 
 	$scope.criteria = {
 			status		: 1,
-			customer	: undefined,
-			milestone	: undefined
+			customer	: undefined
 	};
 	if (localStorage.getItem('__ProJack.Sprint.IssueOverlay.criteria') != undefined) {
 		$scope.criteria = JSON.parse(localStorage.getItem('__ProJack.Sprint.IssueOverlay.criteria'));
@@ -352,36 +349,25 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	
 	cService.getAllCustomers().then(function(data) {
 		$scope.customers = data;
+		$scope.criteria.customer = data[0];
 	});
 
 	$scope.$watch('criteria.customer', function(val) {
 		if (!$scope.criteria.customer) return;
-		mService.getMilestonesByCustomer($scope.criteria.customer).then(function(data) {
-			$scope.milestones = data;
-			$scope.milestones.push({name : 'Alle Versionen', _id : ''});
-			$scope.milestones.push({name : 'Ohne Milestone', _id : ProJack.config.lowId});
-		});
-		localStorage.setItem('__ProJack.Sprint.IssueOverlay.criteria', JSON.stringify($scope.criteria));
-	});
-	
-	$scope.$watch('criteria.milestone', function(val) {
-		if (!val) return;
 		var criteria = {
-				customer : $scope.criteria.customer._id,
-				milestone: $scope.criteria.milestone,
-				status	 : 1
-		}
+			customer : $scope.criteria.customer._id,
+			status   : 1
+		};
 		iService.getIssuesByCriteria(criteria).then(function(data) {
 			$scope.issues = data;
 		});
 		localStorage.setItem('__ProJack.Sprint.IssueOverlay.criteria', JSON.stringify($scope.criteria));
 	});
-	
+
 	$scope.$watch('issueOverlayVisible', function(nval, oval) {
 		if (nval) {
 			var criteria = {
 					customer : $scope.criteria.customer._id,
-					mileston : $scope.criteria.milestone,
 					status   : 1
 			};
 			iService.getIssuesByCriteria(criteria).then(function(data) {

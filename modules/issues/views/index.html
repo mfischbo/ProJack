@@ -31,9 +31,6 @@
 							<label>Kunde</label>
 							<select data-ng-model="criteria.customer" class="form-control" data-ng-options="c._id as c.name for c in customers"></select>&nbsp;&nbsp;
 						
-							<label>Milestone</label>
-							<select data-ng-model="criteria.milestone" class="form-control" data-ng-options="m._id as getMilestoneLabel(m) for m in milestones | orderBy: 'version'"></select>&nbsp;&nbsp;
-							
 							<label>Status bis</label>
 							<select data-ng-model="criteria.status" class="form-control">
 								<option value="">Alle</option>
@@ -44,10 +41,9 @@
 								<option value="4">Geschlossen</option>
 							</select>
 							&nbsp;&nbsp;
-							<a href="#/issues/customer/{{::criteria.customer}}/milestone/{{::criteria.milestone}}/create" class="btn btn-primary" data-ng-if="criteria.milestone.length > 0">
+							<a href="#/issues/customer/{{::criteria.customer}}/create" class="btn btn-primary">
 								<span class="fa fa-plus"> Issue</span>
 							</a>
-							<a href="#/issues/customer/{{::criteria.customer}}/create" class="btn btn-primary" data-ng-if="criteria.milestone.length == 0"><span class="fa fa-plus"> Issue</span></a>
 						</div>
 					</div>
 				</div>

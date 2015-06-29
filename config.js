@@ -18,7 +18,7 @@ ProJack.config = {
 		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/spoffice",
+		dbUrl :  "/cdb/projack",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		
