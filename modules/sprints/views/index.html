@@ -52,8 +52,21 @@
 		<div class="pull-left">
 			<h4>Unassigned</h4>	
 		</div>
-		<div class="pull-right">
-			<div data-ng-model="selectedMilestone" data-milestone-picker data-show-empty="true" data-show-all="true"></div>
+		<div class="pull-right btn-group" data-dropdown style="margin-top:8px;">
+			<button type="button" class="btn btn-sm">
+				<span class="fa fa-eye">
+					<span data-ng-if="unassignedVisible == 'ALL'">All Issues</span>
+					<span data-ng-if="unassignedVisible == 'OWN'">My Issues</span>
+				</span>
+			</button>
+			<button type="button" class="btn btn-sm dropdown-toggle" data-dropdown-toggle>
+				<span class="caret"></span>
+				<span class="sr-only">Split</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a href="javascript:void('');" data-ng-click="unassignedVisible = 'ALL'">All Issues</a>
+				<li><a href="javascript:void('');" data-ng-click="unassignedVisible = 'OWN'">My Issues</a>
+			</ul>
 		</div>
 		<div class="clearfix"></div>		
 		
@@ -61,7 +74,7 @@
 	
 		<ul class="sprint-issueList">
 			<li data-ng-repeat="i in unassigned | orderBy: 'number'" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues" 
-				data-ng-if="!selectedMilestone || selectedMilestone.id == 'ffffffffffffffffffffffffffffffff' || (selectedMilestone && i.milestone == selectedMilestone.id)">
+				data-ng-if="unassignedVisible == 'ALL' || (unassignedVisible == 'OWN' && (i.assignedTo == currentUserName || i.assignedTo == 'org.couchdb.user:' + currentUserName))">
 				<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'"
 				 	 data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
 				</div>
@@ -74,13 +87,14 @@
 			<h4>In Progress</h4>	
 		</div>
 
-		<div class="pull-right btn-group" dropdown style="margin-top:8px;">
-			<button type="button" class="btn btn-sm"><span class="fa fa-eye">
-				<span data-ng-if="progressVisible == 'ALL'">All Issues</span>
-				<span data-ng-if="progressVisible == 'OWN'">My Issues</span>
-			</span>
+		<div class="pull-right btn-group" data-dropdown style="margin-top:8px;">
+			<button type="button" class="btn btn-sm">
+				<span class="fa fa-eye">
+					<span data-ng-if="progressVisible == 'ALL'">All Issues</span>
+					<span data-ng-if="progressVisible == 'OWN'">My Issues</span>
+				</span>
 			</button>
-			<button type="button" class="btn btn-sm dropdown-toggle" dropdown-toggle>
+			<button type="button" class="btn btn-sm dropdown-toggle" data-dropdown-toggle>
 				<span class="caret"></span>
 				<span class="sr-only">Split</span>
 			</button>

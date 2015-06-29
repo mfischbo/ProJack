@@ -15,6 +15,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	// issue to be created from the overlay
 	$scope.issue 	  = iService.newIssue();
 
+	$scope.unassignedVisible = 'ALL';
 	$scope.progressVisible = 'ALL';		// or OWN to display only issues assigned to current user
 	$scope.currentUserName = secService.getCurrentUserName();
 
