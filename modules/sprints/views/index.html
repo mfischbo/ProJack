@@ -24,6 +24,7 @@
 		<a href="#/sprints/create" class="btn btn-primary btn-sm">Neuer Sprint</a>
 		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueOverlayVisible}" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"> Issues</span></button>
 		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"> Issue</span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();"><span class="fa fa-check"> Schliessen</span></button>
 	</div>
 	<div class="col-md-5">
 		<progress>

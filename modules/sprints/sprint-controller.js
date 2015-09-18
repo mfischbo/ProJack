@@ -334,6 +334,21 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			$scope.toggleIssueCreateOverlay();
 		});
 	};
+
+	/**
+	 * Finalizes the sprint and put's all issues still in the unassigned lane back to the backlog
+	 */
+	$scope.finalizeSprint = function() {
+		KT.confirm("Soll der Sprint wirklich geschlossen werden?", function() {
+			for (var i=$scope.unassigned.length; i > 0; i--) {
+				var issue = $scope.unassigned[i-1];
+                issue.sprint = "";
+                iService.updateIssue(issue).then(function(data) {
+                	$scope.unassigned.splice(i-1, 1);
+                });
+			}
+		});
+	};
 	
 	/**
 	 * Issue overlay controller. Must stay here for drag/drop to work properly 
