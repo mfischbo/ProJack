@@ -2,9 +2,9 @@
   "name": "ProJack",
   "version": "1.0",
   "dependencies": {
-    "angular": "=1.4.0",
-    "angular-route": "=1.4.0",
-    "angular-i18n": "=1.4.0",
+    "angular": "=1.4.6",
+    "angular-route": "=1.4.6",
+    "angular-i18n": "=1.4.6",
     "angular-native-dragdrop": "latest",
     "angular-ui-tinymce": "=0.0.8",
     "bootstrap": "latest",
@@ -15,6 +15,6 @@
     "moment": "2.9.0"
   },
   "resolutions": {
-    "angular": "=1.4.0"
+    "angular": "=1.4.6"
   }
 }
