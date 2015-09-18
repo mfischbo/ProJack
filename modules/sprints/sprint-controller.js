@@ -331,6 +331,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			$scope.unassigned.push(data);
 			$scope.issue = iService.newIssue();
 			$scope.issue.resolveUntil = $scope.sprint.releaseAt;
+			$scope.toggleIssueCreateOverlay();
 		});
 	};
 	
