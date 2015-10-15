@@ -100,7 +100,7 @@ div.lane {
 
 div.sprint-lane {
 	border-right:1px solid #ddd;
-	min-height:80vh;	
+	min-height:250vh;	
 }
 
 ul.sprint-issueList {
