@@ -13,5 +13,9 @@ ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 			controller	:	'SprintCreateController',
 			templateUrl	:	'./modules/sprints/views/create.html'
 		})
+		.when('/sprints/:id/edit', {
+			controller  : 	'SprintEditController',
+			templateUrl :   './modules/sprints/views/create.html'
+		})
 		.otherwise({redirectTo : '/sprints'})
 }]);

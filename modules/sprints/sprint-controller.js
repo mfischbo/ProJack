@@ -409,3 +409,23 @@ ProJack.sprint.controller('SprintCreateController', ['$scope', '$location', 'Spr
 		});
 	};
 }]);
+
+
+/**
+ * Controller for editing a given sprint
+*/
+ProJack.sprint.controller('SprintEditController', ['$scope', '$location', '$routeParams', 'SprintService', 'KT', function($scope, $location, $routeParams, service, KT) {
+
+	$scope.tinymceOptions = ProJack.config.tinyOptions;
+	
+	service.getSprintById($routeParams.id).then(function(response) {
+		$scope.sprint = response.data;
+	});
+
+	$scope.saveSprint= function() {
+		service.saveSprint($scope.sprint).then(function() {
+			KT.alert('Der Sprint wurde erfolgreich gespeichert');
+			$location.path('/sprints');
+		});
+	};
+}]);

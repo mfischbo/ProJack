@@ -35,6 +35,10 @@ hr {
 	color:#333;
 }
 
+span.separator {
+	color:#bbb;
+	font-size:17px;
+}
 
 #alert-panel .alert {
     padding:1px;
