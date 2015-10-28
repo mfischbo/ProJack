@@ -21,12 +21,12 @@
 
 <div class="row">
 	<div class="col-md-3">
-		<a href="#/sprints/create" class="btn btn-primary btn-sm"><span class="fa fa-file"></span></a>
-		<a href="#/sprints/{{sprint._id}}/edit" class="btn btn-primary btn-sm"><span class="fa fa-pencil"></span></a>
+		<a href="#/sprints/create" class="btn btn-primary btn-sm" title="New Sprint"><span class="fa fa-file"></span></a>
+		<a href="#/sprints/{{sprint._id}}/edit" class="btn btn-primary btn-sm" title="Edit Sprint"><span class="fa fa-pencil"></span></a>
 		<span class="separator">&nbsp;|&nbsp;</span>
-		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueOverlayVisible}" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"></span></button>
-		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"></span></button>
-		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();"><span class="fa fa-check"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueOverlayVisible}" data-ng-click="toggleIssueOverlay()" title="Search Issue"><span class="fa fa-search"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()" title="New Issue"><span class="fa fa-plus"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();" title="Close Sprint"><span class="fa fa-check"></span></button>
 	</div>
 	<div class="col-md-5">
 		<progress>

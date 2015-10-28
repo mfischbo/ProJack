@@ -1,6 +1,6 @@
 <div>
 	<div>
-		<div class="pull-left" data-buglabel type="{{::i.issuetype}}"></div>
+		<div class="pull-left" data-buglabel data-type="{{::i.issuetype}}"></div>
 		<div class="pull-right">
 			<a href data-ng-click="removeFromSprint(i);" title="Move to backlog "data-ng-if="i.state == 'NEW'">
 				<span class="fa fa-recycle" title="Move to backlog" ></span>

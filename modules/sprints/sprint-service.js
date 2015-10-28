@@ -1,18 +1,35 @@
 /**
  * Service class that handles all back-end communication for sprints
  */
-ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', 'IssueService', function($http, $q, secService, iService) {
+ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService', 'IssueService', function($http, $q, KT, secService, iService) {
 	return {
 		newSprint : function() {
 			return {
 				type		: 'sprint',
 				name		: '',
 				version		: '',
+				metadata	: '',
 				dateCreated : new Date().getTime(),
 				userCreated : secService.getCurrentUserName(),
 				startsAt	: undefined,
-				releaseAt	: undefined
+				releaseAt	: undefined,
+				lanes		: []
 			}
+		},
+		
+		newSwimlane : function(isModifiable) {
+			return {
+				id 				: KT.UUID(),		 
+				title 			: 'Default Lane',
+				isModifieable	: isModifiable,
+				issues    		: {
+					unassigned  : [],
+					processing  : [],
+					qa			: [],
+					done		: []
+				},	// contains id's of all issues in this lane
+				uiStates 		: {} // contains user specific data about the ui state
+			};
 		},
 		
 		/**
@@ -27,7 +44,7 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'SecurityService', 'Issu
 					return retval;
 				});
 		},
-		
+	
 		/**
 		 * Returns all sprints that have a future release date
 		 */

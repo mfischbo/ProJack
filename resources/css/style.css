@@ -77,6 +77,18 @@ tr.weekend {
 	padding: 24px;	
 }
 
+.swimlane-metainf {
+	position:absolute;
+	right:15px;
+	top:0px;
+	width:375px;
+	min-height:90px;
+	padding:12px;
+	box-shadow: -2px 2px 10px 0px rgba(200, 200, 200, 1);
+	background-image: url('../images/white-opacity-95.png');
+	background-repeat: repeat;
+}
+
 .badge-danger {
 	background-color:#e51c23;
 }
@@ -102,9 +114,24 @@ div.lane {
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);	
 }
 
+div.lane-tab {
+    padding: 8px;
+    margin: 0;
+    position: absolute;
+    left: 0px;
+    top: -14px;
+    font-size: 16px;	
+    width:100%;
+}
+
+div.lane-tab.unassigned { border-bottom: 4px solid red; }
+div.lane-tab.processing { border-bottom: 4px solid yellow; }
+div.lane-tab.qa { border-bottom: 4px solid green; }
+div.lane-tab.done { border-bottom: 4px solid grey; }
+
 div.sprint-lane {
 	border-right:1px solid #ddd;
-	min-height:250vh;	
+	min-height:200px;	
 }
 
 ul.sprint-issueList {
