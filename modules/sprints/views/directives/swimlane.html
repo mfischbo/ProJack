@@ -1,0 +1,57 @@
+<div class="swimlane">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="col-md-1">
+						<span class="fa fa-chevron-down" data-ng-if="lane.state == 'EXPANDED' || !lane.state" data-ng-click="toggleExpansion()"></span>	
+						<span class="fa fa-chevron-right" data-ng-if="lane.state == 'COLLAPSED'" data-ng-click="toggleExpansion()"></span>
+					</div>
+					<div class="col-md-8">
+						{{lane.title}}	
+					</div>
+					
+					<div class="col-md-3">
+						<div class="pull-right">
+							<button class="btn btn-primary btn-sm" data-ng-click="showMetaInf(true)" data-ng-if="!editTitle">
+								<span class="fa fa-pencil"></span>
+							</button>
+							<button class="btn btn-danger btn-sm" data-ng-click="removeLane(lane)" data-ng-disabled="lane.isModifiable == 'false'">
+								<span class="fa fa-trash"></span>
+							</button>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+					
+				<div class="panel-body" data-ng-if="lane.state == 'EXPANDED'">
+					<div class="col-md-3 swimlane-unassigned sprint-lane">
+						<div class="lane-tab unassigned">Unassigned</div>
+					</div>
+					<div class="col-md-3 swimlane-processing sprint-lane">
+						<div class="lane-tab processing ">Processing</div>
+					</div>
+					<div class="col-md-3 swimlane-qa sprint-lane">
+						<div class="lane-tab qa">QA</div>
+					</div>
+					<div class="col-md-3 swimlane-done sprint-lane">
+						<div class="lane-tab done">Done</div>
+					</div>
+				
+				</div>
+			</div>
+	
+			<div class="swimlane-metainf" data-ng-if="metaInfVisible">
+				<h5>Swimlane Infos</h5>
+				<input type="text" data-ng-model="lane.title" class="form-control">
+		
+				<div class="pull-right">
+					<button class="btn btn-danger btn-sm" data-ng-click="showMetaInf(false)">Abbrechen</button>
+					<button class="btn btn-success btn-sm">Speichern</button>
+				</div>	
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>
