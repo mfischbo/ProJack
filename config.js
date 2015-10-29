@@ -24,8 +24,8 @@ ProJack.config = {
 		
 		// server url for elasticsearch
 		esEndpoint  	: '/es',
-		esIndex		: 'pj',
-		esUrl 		: '/es/pj',
+		esIndex			: 'pj',
+		esUrl 			: '/es/pj',
 		
 		// session key where user data is stored in the session storage
 		sessionKey : "__ProJack_Session",

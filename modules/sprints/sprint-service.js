@@ -22,12 +22,7 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService',
 				id 				: KT.UUID(),		 
 				title 			: 'Default Lane',
 				isModifieable	: isModifiable,
-				issues    		: {
-					unassigned  : [],
-					processing  : [],
-					qa			: [],
-					done		: []
-				},	// contains id's of all issues in this lane
+				issues    		: [],
 				uiStates 		: {} // contains user specific data about the ui state
 			};
 		},

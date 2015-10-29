@@ -41,8 +41,16 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		// add lanes array for backward compatibility
 		if ($scope.sprint.lanes == undefined || $scope.sprint.lanes.length == 0) {
 			$scope.sprint.lanes = [];
-			var defLane = service.newSwimlane(false);
-			$scope.sprint.lanes.push(defLane);
+			$scope.defaultLane = service.newSwimlane(false);
+			$scope.sprint.lanes.push($scope.defaultLane);
+		} else {
+			if ($scope.defaultLane !== undefined)
+				return;
+			
+			for (var i in $scope.sprint.lanes) {
+				if ($scope.sprint.lanes[i].isModifieable == false) 
+					$scope.defaultLane = $scope.sprint.lanes[i];
+			}
 		}
 	};
 	
@@ -56,48 +64,32 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		// create the swimlanes
 		$scope.initializeSwimlanes();
 
-		/*
-		// clear all issue lanes
-		$scope.unassigned = [];
-		$scope.inProgress = [];
-		$scope.qa		  = [];
-		$scope.done       = [];
-		*/
-		
 		$scope.issueCnt   = 0;
 		//$scope.lanes = [ $scope.unassigned, $scope.inProgress, $scope.qa, $scope.done ];
 	
 		// load all related issues and sort them
 		iService.getIssuesBySprint($scope.sprint).then(function(data) {
-			$scope.initializeSwimlanes();
+			$scope.issues = data;
 			
 			// sort issues into specified lanes
-			for (var i in $scope.sprint.lanes) {
-				for (var k in $scope.sprint.lanes[i].issues.unassigend) {
-					var issue = KT.find('_id', $scope.sprint.lanes[i].issues.unassigned[k]);
-					if (issue !== undefined) {
-						$scope.sprint.lanes[i].issues.unassigned[k]
+			for (var i in $scope.issues) {
+				var sorted = false;
+
+				for (var q in $scope.sprint.lanes) {
+					var idx = KT.indexOf('_id', $scope.issues[i]._id, $scope.sprint.lanes[q].issues);
+					if (idx >= 0) {
+						$scope.sprint.lanes[q].issues[idx] = $scope.issues[i];
+						sorted = true;
 					}
 				}
+				if (!sorted)
+					$scope.defaultLane.issues.push($scope.issues[i]);
 			}
-			/*
-			for (var i in data) {
-				var item = data[i];
-				if (item.state == 'NEW') 
-					$scope.unassigned.push(item);
-				if (item.state == 'ASSIGNED' || item.state == 'FEEDBACK') 
-					$scope.inProgress.push(item);
-				if (item.state == 'RESOLVED')
-					$scope.qa.push(item);
-				if (item.state == 'CLOSED')
-					$scope.done.push(item);
-			}
-			*/
+			
+			// notify lanes directives
+			$scope.$broadcast('issuesReloaded');
 			$scope.issueCnt = data.length;
 		});
-		
-		// poll the changes API
-		//$scope.runPoll();
 	};
 	
 	$scope.addSwimlane = function() {

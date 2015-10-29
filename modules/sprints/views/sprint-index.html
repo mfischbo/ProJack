@@ -31,12 +31,12 @@
 		<button class="btn btn-primary btn-sm" data-ng-click="addSwimlane()">X</button>
 	</div>
 	<div class="col-md-5">
-		<progress>
-			<bar value="(unassigned.length * 100) / issueCnt" type="danger"><span>{{unassigned.length}}</span></bar>
-			<bar value="(inProgress.length * 100) / issueCnt" type="info"><span>{{inProgress.length}}</span></bar>
-			<bar value="(qa.length * 100) / issueCnt" type="success"><span>{{qa.length}}</span></bar>
-			<bar value="(done.length * 100) / issueCnt" type="done"><span>{{done.length}}</span></bar>
-		</progress>
+		<uib-progress>
+			<uib-bar value="(unassigned.length * 100) / issueCnt" type="danger"><span>{{unassigned.length}}</span></uib-bar>
+			<uib-bar value="(inProgress.length * 100) / issueCnt" type="info"><span>{{inProgress.length}}</span></uib-bar>
+			<uib-bar value="(qa.length * 100) / issueCnt" type="success"><span>{{qa.length}}</span></uib-bar>
+			<uib-bar value="(done.length * 100) / issueCnt" type="done"><span>{{done.length}}</span></uib-bar>
+		</uib-progress>
 	</div>
 	<div class="col-md-4">
 		<div class="pull-right">
@@ -52,9 +52,7 @@
 </div>
 
 <div data-ng-repeat="lane in sprint.lanes">
-	<div data-swimlane data-lane="lane" data-sprint="sprint">
-	
-	</div>
+	<div data-swimlane data-lane="lane" data-sprint="sprint"></div>
 </div>
 
 
