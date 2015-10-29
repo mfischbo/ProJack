@@ -1,4 +1,4 @@
-ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'SecurityService', '$modal',
+ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'SecurityService', '$uibModal',
                                                     function($scope, KT, service, iService, cService, secService, $modal) {
 
 	var locKey = '__ProJack.sprints.current.id';

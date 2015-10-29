@@ -21,7 +21,7 @@ ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 }]);
 
 
-ProJack.sprint.directive('swimlane', ['SprintService', 'IssueService', function(service, iService) {
+ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'SecurityService', '$modal', function(KT, service, iService, secService, $modal) {
 
 	var linkFn = function(scope, elem, attrs) {
 		
@@ -35,13 +35,20 @@ ProJack.sprint.directive('swimlane', ['SprintService', 'IssueService', function(
 				resolved   : [],
 				done	   : []
 		};
+		scope.shadow = angular.copy(scope.lane);
 		
 
+		/**
+		 * Should be triggered when the sprint model has changed.
+		 */
 		scope.$on('issuesReloaded', function() {
 			scope.sortIssues();
 		});
 		
-	
+
+		/**
+		 * Sorts issues into the correct columns in the lane, according to their state
+		 */
 		scope.sortIssues = function() {
 			for (var i in scope.lane.issues) {
 				var issue = scope.lane.issues[i];
@@ -53,6 +60,22 @@ ProJack.sprint.directive('swimlane', ['SprintService', 'IssueService', function(
 					scope.issues.done.push(issue);
 			}
 		};
+
+		/**
+		 * Saves the lanes contents
+		 */
+		scope.saveLane = function() {
+			scope.lane.title = scope.shadow.title;
+			// http call
+			
+			scope.metaInfVisible = false;
+		};
+		
+		scope.cancelEdit = function() {
+			scope.shadow.title = scope.lane.title;
+			scope.metaInfVisible = false;
+		};
+		
 		
 		/**
 		 * Toggles expansion state of the lane
@@ -63,17 +86,106 @@ ProJack.sprint.directive('swimlane', ['SprintService', 'IssueService', function(
 			else
 				scope.lane.state = 'EXPANDED';
 		};
-		
+
 		scope.showMetaInf = function(value) {
 			scope.metaInfVisible = value;
+		};
+		
+		
+		// issue drag-drop
+		scope.onUnassignedDrop = function(event, issue) {
+			if (!issue.sprint || issue.sprint.length == 0)
+				issue.sprint = scope.sprint._id;
+			issue.state  = 'NEW';
+			issue.assignedTo = '';
+			scope.removeExcept(issue, scope.issues.unassigned);
+			scope.issues.unassigned.push(issue);
+		};
+		
+		scope.onAssignedDrop = function(event, issue) {
+			issue.state = 'ASSIGNED';
+			issue.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
+			/*
+			iService.updateIssue(issue).then(function() {
+				scope.removeExcept(issue, scope.assigned);
+				scope.assigned.push(issue);
+			});
+			*/
+			scope.removeExcept(issue, scope.issues.assigned);
+			scope.issues.assigned.push(issue);
+		};
+		
+		scope.onQADrop = function(event, issue) {
+			issue.state = 'RESOLVED';
+			issue.assignedTo = '';
+			var instance = $modal.open({
+				controller : 'IssueResolveModalController',
+				templateUrl: './modules/issues/views/resolve-modal.html',
+				size:		 'lg',
+				resolve : {
+					data : function() {
+						return { issue : issue }
+					}
+				}
+			});
+			instance.result.then(function() {
+				scope.removeExcept(issue, scope.issues.done);
+				scope.issues.resolved.push(issue);
+			});
+		};
+		
+		scope.onDoneDrop = function(event, issue) {
+			issue.state = 'CLOSED';
+			scope.removeExcept(issue, scope.issues.done);
+			scope.issues.done.push(issue);
+		};
+		
+		scope.validateUnassignedDrop = function(data) {
+			if (KT.indexOf('_id', data._id, scope.issues.unassigned) >= 0)
+				return false;
+			if (iService.hasActiveTracking(data))
+				return false;
+			return true;
+		};
+		
+		scope.validateAssignedDrop = function(data) {
+			if (KT.indexOf('_id', data._id, scope.issues.assigned) >= 0)
+				return false;
+			if (iService.hasActiveTracking(data))
+				return false;
+			return true;
+		};
+		
+		scope.validateQADrop = function(data) {
+			if (KT.indexOf('_id', data._id, scope.issues.resolved) >= 0)
+				return false;
+			if (iService.hasActiveTracking(data))
+				return false;
+			return true;
+		};
+		
+		scope.validateDoneDrop = function(data) {
+			if (KT.indexOf('_id', data._id, scope.issues.done) >= 0)
+				return false;
+			if (iService.hasActiveTracking(data))
+				return false;
+			return true;
+		};
+		
+		scope.removeExcept = function(issue, channel) {
+			for (var q in scope.issues) {
+				if (scope.issues[q] != channel) {
+					KT.remove('_id', issue._id, scope.issues[q]);
+				}
+			}
 		};
 	};
 	
 	return {
 		restrict : 	'A',
 		scope : {
-			'lane': 	'=',
-			'sprint' : '='
+			'lane'	 : '=',
+			'sprint' : '=',
 		},
 		templateUrl 	: './modules/sprints/views/directives/swimlane.html',
 		link 	: linkFn
