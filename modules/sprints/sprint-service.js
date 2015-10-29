@@ -14,7 +14,7 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService',
 				startsAt	: undefined,
 				releaseAt	: undefined,
 				lanes		: []
-			}
+			};
 		},
 		
 		newSwimlane : function(isModifiable) {
@@ -32,8 +32,8 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService',
 		 */
 		getAllSprints : function() {
 			return $http.get(ProJack.config.dbUrl + '/_design/sprints/_view/index')
-				then(function(response) {
-					var retval = [];
+				.then(function(response) {
+					var retval = new Array();
 					for (var i in response.data.rows)
 						retval.push(response.data.rows[i].value);
 					return retval;
@@ -46,7 +46,7 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService',
 		getSprintsStartingAt: function(date) {
 			return $http.get(ProJack.config.dbUrl + "/_design/sprints/_view/byReleaseDate?startKey=" + date.getTime())
 				.then(function(response) {
-					var retval = [];
+					var retval = new Array();
 					for (var i in response.data.rows)
 						retval.push(response.data.rows[i].value);
 					return retval;
@@ -94,7 +94,7 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService',
 					}
 					var retval = {
 							newDoc : data.results[0].doc
-					}
+					};
 					
 					// find the previous revision of the issue
 					iService.getIssueRevisions(retval.newDoc).then(function(data) {

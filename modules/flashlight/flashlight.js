@@ -51,7 +51,7 @@ ProJack.flashlight.service('FlashLightService', ['$http', function($http) {
 				return $http.get(ProJack.config.esUrl + "/_search?q=" + this.prepareESQuery(query)).then(this.parseResults);
 			}
 		}
-	}
+	};
 }]);
 
 ProJack.flashlight.controller('FlashLightController', ['$scope', '$location', 'FlashLightService', function($scope, $location, service) {
@@ -68,7 +68,7 @@ ProJack.flashlight.controller('FlashLightController', ['$scope', '$location', 'F
 			$scope.panelVisible = true;
 		else
 			$scope.panelVisible = false;
-	}
+	};
 	
 	$scope.clearSearch = function(href) {
 		$scope.query = '';
@@ -85,5 +85,5 @@ ProJack.flashlight.controller('FlashLightController', ['$scope', '$location', 'F
 				});
 			}
 		}, ProJack.config.searchDelayTimeout);
-	})
+	});
 }]);

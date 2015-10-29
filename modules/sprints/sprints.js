@@ -17,7 +17,7 @@ ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 			controller  : 	'SprintEditController',
 			templateUrl :   './modules/sprints/views/create.html'
 		})
-		.otherwise({redirectTo : '/sprints'})
+		.otherwise({redirectTo : '/sprints'});
 }]);
 
 
@@ -124,7 +124,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 				size:		 'lg',
 				resolve : {
 					data : function() {
-						return { issue : issue }
+						return { issue : issue };
 					}
 				}
 			});

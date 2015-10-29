@@ -18,7 +18,7 @@ ProJack.config = {
 		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/projack",
+		dbUrl :  "/cdb/projack-dev",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		
@@ -52,4 +52,4 @@ ProJack.config = {
 			height		: 'calc(100vh - 520px);',
 			toolbar     : 'undo redo styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist' 
 		}
-}
+};

@@ -192,6 +192,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
 	};
 
+	/*
 	var checkTracking = function(issue) {
 		// disallow to move issues that are currently time tracked
 		if (iService.hasActiveTracking(issue)) {
@@ -200,6 +201,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		}
 		return true;
 	}
+	*/
 	
 	/**
 	 * Methods to check whether or not the dropzone accepts the issue
