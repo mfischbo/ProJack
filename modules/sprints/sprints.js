@@ -54,6 +54,8 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 				var issue = scope.lane.issues[i];
 				if (issue.state == 'NEW')
 					scope.issues.unassigned.push(issue);
+				if (issue.state == 'ASSIGNED')
+					scope.issues.assigned.push(issue);
 				if (issue.state == 'RESOLVED')
 					scope.issues.resolved.push(issue);
 				if (issue.state == 'CLOSED')
@@ -94,25 +96,26 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 		
 		// issue drag-drop
 		scope.onUnassignedDrop = function(event, issue) {
+			// assign issue to the current sprint
 			if (!issue.sprint || issue.sprint.length == 0)
 				issue.sprint = scope.sprint._id;
 			issue.state  = 'NEW';
 			issue.assignedTo = '';
-			scope.removeExcept(issue, scope.issues.unassigned);
-			scope.issues.unassigned.push(issue);
+			
+			iService.updateIssue(issue).then(function() {
+				scope.removeExcept(issue, scope.issues.unassigned);
+				scope.issues.unassigned.push(issue);
+			});
 		};
 		
 		scope.onAssignedDrop = function(event, issue) {
 			issue.state = 'ASSIGNED';
 			issue.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
-			/*
+			
 			iService.updateIssue(issue).then(function() {
-				scope.removeExcept(issue, scope.assigned);
-				scope.assigned.push(issue);
+				scope.removeExcept(issue, scope.issues.assigned);
+				scope.issues.assigned.push(issue);
 			});
-			*/
-			scope.removeExcept(issue, scope.issues.assigned);
-			scope.issues.assigned.push(issue);
 		};
 		
 		scope.onQADrop = function(event, issue) {
@@ -136,8 +139,10 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 		
 		scope.onDoneDrop = function(event, issue) {
 			issue.state = 'CLOSED';
-			scope.removeExcept(issue, scope.issues.done);
-			scope.issues.done.push(issue);
+			iService.updateIssue(issue).then(function() {
+				scope.removeExcept(issue, scope.issues.done);
+				scope.issues.done.push(issue);
+			});
 		};
 		
 		scope.validateUnassignedDrop = function(data) {
