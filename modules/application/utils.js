@@ -10,7 +10,7 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 				}
 				for (var i in array)
 					if (array[i][property] == value)
-						return i;
+						return parseInt(i);
 				return -1;
 			},
 		
