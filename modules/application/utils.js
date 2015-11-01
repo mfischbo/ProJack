@@ -2,6 +2,9 @@ ProJack.utils = angular.module("Utils", ['ui.bootstrap']);
 ProJack.utils.service("KT", ['$modal', function($modal) {
 	
 	var x = { 
+			/**
+			 * Returns the index of an object who's property has the specified value
+			 */
 			indexOf : function(property, value, array) {
 				if (!array) {
 					array = value;
@@ -26,21 +29,31 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 						array[i][property] = value;
 				}
 			},
-			
+		
+			/**
+			 * Removes an object from an array who's property has the specified value
+			 */
 			remove : function(property, value, array) {
 				for (var i in array) {
 					if (array[i][property] == value)
 						array.splice(i,1);
 				}
 			},
-		
+	
+			/**
+			 * Returns an object from an array who's property has the specified value
+			 */
 			find:	function(property, value, array) {
 				for (var i in array)
 					if (array[i][property] == value)
 						return array[i];
 				return undefined;
 			},
-			
+		
+			/**
+			 * Returns a new array of objects from the specified array
+			 * when the given property has the specified value
+			 */
 			extract: function(property, value, array) {
 				var retval = new Array();
 				for (var i in array)
@@ -48,7 +61,12 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 						retval.push(array[i]);
 				return retval;
 			},
-			
+		
+			/**
+			 * Returns a new array of objects from the specified array
+			 * when the specified property exists and the callback (cb) 
+			 * evaluates to true
+			 */
 			filter: function(property, cb, array) {
 				var retval = new Array();
 				for (var i in array)
@@ -56,7 +74,11 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 						retval.push(array[i]);
 				return retval;
 			},
-			
+		
+			/**
+			 * Removes all objects from an array based on the specified property.
+			 * The returned array will contain unique values only
+			 */
 			unique: function(property, array) {
 				var retval = new Array();
 				for (var i in array) {
@@ -65,7 +87,11 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 				}
 				return retval;
 			},
-			
+		
+			/**
+			 * Recursively flattens a tree given a root element and the
+			 * property holding the children of the tree
+			 */
 			flattenTree: function(byProperty, root, list) {
 				if (!list)
 					list = new Array();
@@ -80,7 +106,10 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 				}
 				return list;
 			},
-			
+		
+			/**
+			 * Returns a UUID style string. It's not guaranteed that the ID's are truly unique
+			 */
 			UUID : function() {
 			    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
 			        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
@@ -100,7 +129,10 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 				var q = new Number(value);
 				if (q != Number.NaN) return q;
 			},
-			
+		
+			/**
+			 * Parses a HTTP query string an returns a map of key value pairs
+			 */
 			parseHTTPParams : function(querystring) {
 				querystring = querystring.substring(querystring.indexOf('?')+1).split('&');
 				var params = {}, pair, d = decodeURIComponent;
@@ -111,7 +143,10 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 				}
 				return params;	
 			},
-			
+		
+			/**
+			 * Calculates the seconds for a string in the format HH:mm
+			 */
 			timeToSecs : function(time) {
 				var retval = 0;
 				var q = time.split(":");
