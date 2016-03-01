@@ -6,7 +6,7 @@ ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider
 		.when('/sprints', {
-			controller	:	'SprintIndexController',
+			controller	:	'SprintWorkbenchController',
 			templateUrl :	'./modules/sprints/views/sprint-index.html'
 		})
 		.when('/sprints/create', {
@@ -27,7 +27,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 		
 		scope.metaInfVisible = false;
 		scope.lane.state = 'EXPANDED';
-
+		
 		// sort the lanes issues by their state
 		scope.issues = {
 				unassigned : [],
@@ -36,12 +36,18 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 				done	   : []
 		};
 		scope.shadow = angular.copy(scope.lane);
-		
+	
 
 		/**
 		 * Should be triggered when the sprint model has changed.
 		 */
 		scope.$on('issuesReloaded', function() {
+			scope.issues = {
+					unassigned : [],
+					assigned   : [],
+					resolved   : [],
+					done	   : []
+			};
 			scope.sortIssues();
 		});
 		
@@ -50,6 +56,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 		 * Sorts issues into the correct columns in the lane, according to their state
 		 */
 		scope.sortIssues = function() {
+		
 			for (var i in scope.lane.issues) {
 				var issue = scope.lane.issues[i];
 				if (issue.state == 'NEW')
@@ -93,6 +100,12 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 			scope.metaInfVisible = value;
 		};
 		
+		
+		scope.selectLane = function(issue, lane) {
+			// remove the issue from all swimlanes an put it in the specified one
+			KT.remove('_id', issue._id, scope.unassigned);
+			lane.issues.push(issue);
+		};
 		
 		// issue drag-drop
 		scope.onUnassignedDrop = function(event, issue) {
@@ -184,6 +197,9 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 				}
 			}
 		};
+		
+		// Initialization is done here
+		scope.sortIssues();
 	};
 	
 	return {

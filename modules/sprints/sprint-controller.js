@@ -94,10 +94,14 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	
 	$scope.addSwimlane = function() {
 		$scope.sprint.lanes.push(service.newSwimlane(true));
+		/*
 		service.saveSprint($scope.sprint).then(function(sprint) {
 			$scope.sprint = sprint;
 		});
+		*/
+		console.log($scope.sprint);
 	};
+	
 
 	/*
 	$scope.runPoll = function() {

@@ -1,10 +1,14 @@
-var T = angular.module('Setup', ['ngRoute']);
+var T = angular.module('Setup', ['ngRoute', 'CustomersModule', 'GitlabModule', 'IssuesModule', 'SecurityModule', 'SprintModule']);
 T.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider
 		.when('/', {
 			controller : 'SetupController',
 			templateUrl : 'modules/application/views/setup.html'
+		})
+		.when('/update', {
+			controller : 'UpdateController',
+			templateUrl : 'modules/application/views/update.html'
 		})
 		.otherwise({ redirectTo : '/' });
 }]);
@@ -68,5 +72,31 @@ T.controller('SetupController', ['$scope', '$http', '$q', function($scope, $http
 				$scope.status.isDDocsCreated = false;
 			});
 		}
+	};
+}]);
+
+T.controller('UpdateController', ['$scope', 'SprintService', 'IssueService', function($scope, service, issueService) {
+	
+
+	/**
+	 * Updates the sprint model.
+	 * Pulling all issues assigned to a sprint and add them to a 
+	 * default lane within the sprint 
+	 */
+	$scope.updateSprintModel = function() {
+	
+		var smap = { };
+		
+		service.getSprintsStartingAt(new Date(0)).then(function(sprints) {
+			
+			for (var q in sprints) {
+				smap[sprints[q]._id] = sprints[q];
+				issueService.getIssuesBySprint(sprints[q]).then(function(issues) {
+					var sprint = smap[issues[0].sprint];
+					sprint = service.prepareSprint(sprint, issues);
+					service.saveSprint(sprint);
+				});
+			}
+		});
 	};
 }]);

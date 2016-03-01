@@ -15,6 +15,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				title		: '',			
 				description : '',
 				sprint		: '',			// id of the sprint this issue is related to
+				lane		: undefined,	// id of the lane the ticket belongs to
 				feature		: '', 			// id of the feature this issue is related to
 				customer	: '', 			// id of the customer this issue is related to
 				assignedTo  : '', 			// the user the issue is assigned to

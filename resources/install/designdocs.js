@@ -67,6 +67,9 @@ function getDesignDocs() {
 	        		views : {
 	        			byReleaseDate : {
 	        				map : "function(doc) {\n if (doc.type == 'sprint') {\n var e = new Date(doc.releaseAt).getTime();\n emit(e, doc);\n }\n }"
+	        			},
+	        			fullsprint : {
+	        				map : "function (doc) {\n  if (doc.type === 'sprint') {\nemit ([doc._id, -1], 1);\n    if (doc.lanes) {\n      var x = 0;\n      for (var i in doc.lanes) {\n        for (var q in doc.lanes[i].issues) {\n          emit([doc._id, x], {_id : doc.lanes[i].issues[q]._id });\n          x++;\n        }\n      }\n    }\n  }}"
 	        			}
 	        		},
 	       		   filters : {
