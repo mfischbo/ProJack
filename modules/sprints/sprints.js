@@ -84,7 +84,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		 */
 		scope.removeLane = function() {
 			KT.confirm("Do you really want to remove this lane? All issues will be sorted in the default lane then.", function() {
-				//scope.$emit('remove-lane-requested', scope.lane);
 				if (scope.lane.isDefaultLane) {
 					console.error("You shouldn't even see this button!");
 					return;

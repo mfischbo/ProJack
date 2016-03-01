@@ -61,6 +61,18 @@ tr.weekend {
 	background-color:#eee;
 }
 
+/* 
+ * CSS for Issues
+ */
+#sprint-issueCreateOverlay {
+	right:0px; 
+	top:83px; 
+	max-height:80vh; 
+	width:50%; 
+	overflow-y:hidden;
+	position:fixed;
+}
+
 .overlay-panel {
 	min-width: 600px;
 	min-height: 100vh;
