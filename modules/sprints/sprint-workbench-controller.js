@@ -46,6 +46,13 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		});
 	};
 	
+	$scope.$on('lane-changed', function() {
+		sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
+			$scope.currentSprint = sprint;
+		});
+	});
+
+	
 	$scope.$on('remove-lane-requested', function(event, lane) {
 		if (lane.isDefaultLane) {
 			console.error("You shouldn't even see this button!");

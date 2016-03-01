@@ -40,7 +40,7 @@
 	</div>
 	<div class="col-md-4">
 		<div class="pull-right">
-			{{sprint.name}} <i>({{sprint.version}})</i> beginnt am {{sprint.startsAt|date:'dd.MM.yyyy'}} und endet am {{sprint.releaseAt|date:'dd.MM.yyyy'}}
+			{{currentSprint.name}} <i>({{currentSprint.version}})</i> beginnt am {{currentSprint.startsAt|date:'dd.MM.yyyy'}} und endet am {{currentSprint.releaseAt|date:'dd.MM.yyyy'}}
 		</div>
 	</div>
 </div>
@@ -53,7 +53,7 @@
 </div>
 
 <div data-ng-repeat="lane in currentSprint.lanes">
-	<div data-swimlane data-lane="lane" data-sprint="sprint"></div>
+	<div data-swimlane data-lane="lane" data-sprint="currentSprint"></div>
 </div>
 
 

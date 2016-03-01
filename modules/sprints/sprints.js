@@ -21,7 +21,7 @@ ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 }]);
 
 
-ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'SecurityService', '$modal', function(KT, service, iService, secService, $modal) {
+ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '$modal', function(KT, iService, secService, $modal) {
 
 	var linkFn = function(scope, elem, attrs) {
 		
@@ -73,11 +73,10 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 		/**
 		 * Saves the lanes contents
 		 */
-		scope.saveLane = function() {
+		scope.updateLane = function() {
 			scope.lane.title = scope.shadow.title;
-			// http call
-			
 			scope.metaInfVisible = false;
+			scope.$emit('lane-changed');
 		};
 	
 		/**
@@ -85,7 +84,17 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 		 */
 		scope.removeLane = function() {
 			KT.confirm("Do you really want to remove this lane? All issues will be sorted in the default lane then.", function() {
-				scope.$emit('remove-lane-requested', scope.lane);
+				//scope.$emit('remove-lane-requested', scope.lane);
+				if (scope.lane.isDefaultLane) {
+					console.error("You shouldn't even see this button!");
+					return;
+				} else {
+					var issues = scope.lane.issues;
+					var defaultLane = KT.find('isDefaultLane', true, scope.sprint.lanes);
+					defaultLane.issues = defaultLane.issues.concat(issues);
+					KT.remove('id', scope.lane.id, scope.sprint.lanes);
+					scope.$emit('lane-changed');
+				}
 			});
 		};
 		
