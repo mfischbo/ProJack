@@ -18,7 +18,8 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		var sprintId = undefined;
 		if (localStorage.getItem(locKey)) {
 			var current = localStorage.getItem(locKey);
-			sprintId = KT.find('_id', current, $scope.sprints);
+			var tmp = KT.find('_id', current, $scope.sprints);
+			sprintId = tmp._id;
 		} else {
 			sprintId = data[0]._id;
 		}
@@ -44,4 +45,16 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 			$scope.currentSprint = sprint;
 		});
 	};
+	
+	$scope.$on('remove-lane-requested', function(event, lane) {
+		if (lane.isDefaultLane) {
+			console.error("You shouldn't even see this button!");
+			return;
+		} else {
+			var issues = lane.issues;
+			var defaultLane = KT.find('isDefaultLane', true, $scope.currentSprint.lanes);
+			defaultLane.issues = defaultLane.issues.concat(issues);
+			KT.remove('id', lane.id, $scope.currentSprint.lanes);
+		}
+	});
 }]);

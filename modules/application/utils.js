@@ -34,7 +34,14 @@ ProJack.utils.service("KT", ['$modal', function($modal) {
 			 * Removes an object from an array who's property has the specified value
 			 */
 			remove : function(property, value, array) {
+				if (!array || !value) {
+					console.error("You are either missing a value or the array to remove from");
+					return;
+				}
 				for (var i in array) {
+					if (!array[i][property])
+						continue;
+					
 					if (array[i][property] == value)
 						array.splice(i,1);
 				}

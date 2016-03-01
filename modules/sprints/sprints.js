@@ -79,6 +79,15 @@ ProJack.sprint.directive('swimlane', ['KT', 'SprintService', 'IssueService', 'Se
 			
 			scope.metaInfVisible = false;
 		};
+	
+		/**
+		 * Removes the lane and emits an event containing all the issues of the lane
+		 */
+		scope.removeLane = function() {
+			KT.confirm("Do you really want to remove this lane? All issues will be sorted in the default lane then.", function() {
+				scope.$emit('remove-lane-requested', scope.lane);
+			});
+		};
 		
 		scope.cancelEdit = function() {
 			scope.shadow.title = scope.lane.title;
