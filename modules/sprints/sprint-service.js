@@ -71,6 +71,20 @@ ProJack.sprint.service('SprintService', ['$http', '$q', 'KT', 'SecurityService',
 				});
 		},
 		
+		/**
+		 * Returns whether the given issue is already member of the sprint
+		 */
+		containsIssue : function(sprint, issue) {
+			if (!sprint.lanes || sprint.lanes.length == 0)
+				return false;
+			
+			for (var x in sprint.lanes) {
+				if (KT.indexOf('_id', issue._id, sprint.lanes[x].issues) > -1)
+					return true;
+			}
+			return false;
+		},
+		
 	
 		/**
 		 * Merges all issues into the sprint data model

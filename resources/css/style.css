@@ -64,7 +64,8 @@ tr.weekend {
 /* 
  * CSS for Issues
  */
-#sprint-issueCreateOverlay {
+#sprint-issueCreateOverlay,
+#sprint-issueSearchOverlay {
 	right:0px; 
 	top:83px; 
 	max-height:80vh; 

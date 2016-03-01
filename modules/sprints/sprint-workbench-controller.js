@@ -76,13 +76,13 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 	/* --------------------------------
 	 * Overlays
 	 * --------------------------------*/
-	$scope.toggleIssueOverlay = function() {
+	$scope.toggleIssueSearchOverlay = function() {
 		$scope.issueCreateOverlayVisible = false;
-		$scope.issueOverlayVisible = !$scope.issueOverlayVisible;
+		$scope.issueSearchOverlayVisible = !$scope.issueSearchOverlayVisible;
 	};
 	
 	$scope.toggleIssueCreateOverlay = function() {
-		$scope.issueOverlayVisible = false;
+		$scope.issueSearchOverlayVisible = false;
 		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
 	};
 	
@@ -100,5 +100,24 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 
 	$scope.$on('close-requested', function() {
 		$scope.toggleIssueCreateOverlay();
+	});
+	
+	
+	$scope.$on('Issues::SearchDirective::issue-selected', function(event, issue) {
+		var lane = KT.find('isDefaultLane', true, $scope.currentSprint.lanes);
+		if (lane && lane.issues) {
+		
+			// make sure the issue is not already in the current sprint
+			if (sprintService.containsIssue($scope.currentSprint, issue)) {
+				KT.alert('The issue is already part of this sprint', 'warning');
+				return;
+			}
+			
+			lane.issues.push(issue);
+			sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
+				$scope.currentSprint = sprint;
+				$scope.$broadcast('issuesReloaded');
+			});
+		};
 	});
 }]);

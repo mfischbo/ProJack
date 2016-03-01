@@ -24,7 +24,7 @@
 		<a href="#/sprints/create" class="btn btn-primary btn-sm" title="New Sprint"><span class="fa fa-file"></span></a>
 		<a href="#/sprints/{{currentSprint._id}}/edit" class="btn btn-primary btn-sm" title="Edit Sprint"><span class="fa fa-pencil"></span></a>
 		<span class="separator">&nbsp;|&nbsp;</span>
-		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueOverlayVisible}" data-ng-click="toggleIssueOverlay()" title="Search Issue"><span class="fa fa-search"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueSearchOverlayVisible}" data-ng-click="toggleIssueSearchOverlay()" title="Search Issue"><span class="fa fa-search"></span></button>
 		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()" title="New Issue"><span class="fa fa-plus"></span></button>
 		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();" title="Close Sprint"><span class="fa fa-check"></span></button>
 		
@@ -56,7 +56,5 @@
 	<div data-swimlane data-lane="lane" data-sprint="currentSprint"></div>
 </div>
 
-
-<div id="sprint-issueOverlay" class="overlay-panel ng-hide" data-ng-include data-src="'./modules/issues/views/issue-overlay.html'" style="right:0px; top:83px; max-height:80vh; width:50%; overflow-y:hidden;position:fixed;" data-ng-show="issueOverlayVisible"></div>
-
+<div id="sprint-issueSearchOverlay" class="overlay-panel ng-hide" data-issue-search-directive data-ng-show="issueSearchOverlayVisible"></div>
 <div id="sprint-issueCreateOverlay" class="overlay-panel ng-hide" data-issue-create-directive data-ng-show="issueCreateOverlayVisible"></div>
