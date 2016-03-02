@@ -77,6 +77,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
 			$scope.currentSprint = sprint;
 		});
+		$scope.$broadcast('issuesReloaded');
 	});
 
 	

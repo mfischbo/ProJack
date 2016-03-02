@@ -27,8 +27,8 @@
 		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueSearchOverlayVisible}" data-ng-click="toggleIssueSearchOverlay()" title="Search Issue"><span class="fa fa-search"></span></button>
 		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()" title="New Issue"><span class="fa fa-plus"></span></button>
 		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();" title="Close Sprint"><span class="fa fa-check"></span></button>
-		
-		<button class="btn btn-primary btn-sm" data-ng-click="addSwimlane()" title="Add Swimlane">X</button>
+		<span class="separator">&nbsp;|&nbsp;</span>	
+		<button class="btn btn-primary btn-sm" data-ng-click="addSwimlane()" title="Add Swimlane"><span class="fa fa-plus">&nbsp;Lane</span></button>
 	</div>
 	<div class="col-md-5">
 		<uib-progress>

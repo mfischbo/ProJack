@@ -27,14 +27,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		
 		scope.metaInfVisible = false;
 		scope.lane.state = 'EXPANDED';
-		
-		// sort the lanes issues by their state
-		scope.issues = {
-				unassigned : [],
-				assigned   : [],
-				resolved   : [],
-				done	   : []
-		};
 		scope.shadow = angular.copy(scope.lane);
 	
 
@@ -42,12 +34,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		 * Should be triggered when the sprint model has changed.
 		 */
 		scope.$on('issuesReloaded', function() {
-			scope.issues = {
-					unassigned : [],
-					assigned   : [],
-					resolved   : [],
-					done	   : []
-			};
 			scope.sortIssues();
 		});
 		
@@ -56,7 +42,13 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		 * Sorts issues into the correct columns in the lane, according to their state
 		 */
 		scope.sortIssues = function() {
-		
+			scope.issues = {
+					unassigned : [],
+					assigned   : [],
+					resolved   : [],
+					done	   : []
+			};
+			
 			for (var i in scope.lane.issues) {
 				var issue = scope.lane.issues[i];
 				if (issue.state == 'NEW')
@@ -118,10 +110,11 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		};
 		
 		
-		scope.selectLane = function(issue, lane) {
-			// remove the issue from all swimlanes an put it in the specified one
-			KT.remove('_id', issue._id, scope.unassigned);
+		scope.pushToLane = function(issue, lane) {
+			KT.remove('_id', issue._id, scope.lane.issues);
 			lane.issues.push(issue);
+			scope.sortIssues();
+			scope.$emit('lane-changed');
 		};
 		
 		// issue drag-drop
