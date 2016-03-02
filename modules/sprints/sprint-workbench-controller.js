@@ -87,7 +87,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
 			$scope.currentSprint = sprint;
 		});
-		$scope.$broadcast('issuesReloaded');
+		$scope.$broadcast('Sprints::Workbench::issues-reloaded');
 	};
 	
 
@@ -95,27 +95,14 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 	 * Events emitted from lane components
 	 * -----------------------------------------------------
 	 */
-	$scope.$on('lane-changed', function() {
+	$scope.$on('Sprints::Swimlane::lane-changed', function() {
 		sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
 			$scope.currentSprint = sprint;
 		});
-		$scope.$broadcast('issuesReloaded');
+		$scope.$broadcast('Sprints::Workbench::issues-reloaded');
 	});
 
-	
-	$scope.$on('remove-lane-requested', function(event, lane) {
-		if (lane.isDefaultLane) {
-			console.error("You shouldn't even see this button!");
-			return;
-		} else {
-			var issues = lane.issues;
-			var defaultLane = KT.find('isDefaultLane', true, $scope.currentSprint.lanes);
-			defaultLane.issues = defaultLane.issues.concat(issues);
-			KT.remove('id', lane.id, $scope.currentSprint.lanes);
-		}
-	});
-	
-	
+
 	/* --------------------------------
 	 * Overlays
 	 * --------------------------------*/
@@ -129,7 +116,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
 	};
 	
-	$scope.$on('issue-created', function(event, issue) {
+	$scope.$on('Issues::CreateDirective::issue-created', function(event, issue) {
 		
 		// sort the issue in the default lane and update the lane directives
 		var lane = KT.find('isDefaultLane', true, $scope.currentSprint.lanes);
@@ -137,11 +124,11 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
 			$scope.currentSprint = sprint;
 			$scope.toggleIssueCreateOverlay();
-			$scope.$broadcast('issuesReloaded');
+			$scope.$broadcast('Sprints::Workbench::issues-reloaded');
 		});
 	});
 
-	$scope.$on('close-requested', function() {
+	$scope.$on('Issues::CreateDirective::close-requested', function() {
 		$scope.toggleIssueCreateOverlay();
 	});
 	
@@ -159,7 +146,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 			lane.issues.push(issue);
 			sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
 				$scope.currentSprint = sprint;
-				$scope.$broadcast('issuesReloaded');
+				$scope.$broadcast('Sprints::Workbench::issues-reloaded');
 			});
 		};
 	});

@@ -21,13 +21,13 @@ ProJack.issues.directive('issueCreateDirective', ['IssueService', function(servi
 		 */
 		scope.createIssue = function() {
 			service.createIssue(scope.issue).then(function(issue) {
-				scope.$emit('issue-created', issue);
+				scope.$emit('Issues::CreateDirective::issue-created', issue);
 			});
 		};
 		
 		scope.cancelCreate = function() {
 			delete scope.issue;
-			scope.$emit('close-requested');
+			scope.$emit('Issues::CreateDirective::close-requested');
 		};
 	};
 	

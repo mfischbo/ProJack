@@ -4,11 +4,11 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="col-md-1">
-						<span class="fa fa-chevron-down" data-ng-if="lane.state == 'EXPANDED' || !lane.state" data-ng-click="toggleExpansion()"></span>	
-						<span class="fa fa-chevron-right" data-ng-if="lane.state == 'COLLAPSED'" data-ng-click="toggleExpansion()"></span>
+						<span class="fa fa-chevron-down expander" data-ng-if="lane.state == 'EXPANDED' || !lane.state" data-ng-click="toggleExpansion()"></span>	
+						<span class="fa fa-chevron-right expander" data-ng-if="lane.state == 'COLLAPSED'" data-ng-click="toggleExpansion()"></span>
 					</div>
 					<div class="col-md-8">
-						{{lane.title}}	
+						<h4 style="margin:0px;">{{lane.title}}</h4>
 					</div>
 					
 					<div class="col-md-3">

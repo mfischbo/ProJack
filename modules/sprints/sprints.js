@@ -21,7 +21,7 @@ ProJack.sprint.config(['$routeProvider', function($routeProvider) {
 }]);
 
 
-ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '$modal', function(KT, iService, secService, $modal) {
+ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '$uibModal', function(KT, iService, secService, $modal) {
 
 	var linkFn = function(scope, elem, attrs) {
 		
@@ -33,7 +33,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		/**
 		 * Should be triggered when the sprint model has changed.
 		 */
-		scope.$on('issuesReloaded', function() {
+		scope.$on('Sprints::Workbench::issues-reloaded', function() {
 			scope.sortIssues();
 		});
 		
@@ -68,7 +68,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		scope.updateLane = function() {
 			scope.lane.title = scope.shadow.title;
 			scope.metaInfVisible = false;
-			scope.$emit('lane-changed');
+			scope.$emit('Sprints::Swimlane::lane-changed');
 		};
 	
 		/**
@@ -84,7 +84,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 					var defaultLane = KT.find('isDefaultLane', true, scope.sprint.lanes);
 					defaultLane.issues = defaultLane.issues.concat(issues);
 					KT.remove('id', scope.lane.id, scope.sprint.lanes);
-					scope.$emit('lane-changed');
+					scope.$emit('Sprints::Swimlane::lane-changed');
 				}
 			});
 		};
@@ -114,7 +114,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			KT.remove('_id', issue._id, scope.lane.issues);
 			lane.issues.push(issue);
 			scope.sortIssues();
-			scope.$emit('lane-changed');
+			scope.$emit('Sprints::Swimlane::lane-changed');
 		};
 		
 		// issue drag-drop

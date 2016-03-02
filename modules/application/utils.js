@@ -1,5 +1,5 @@
 ProJack.utils = angular.module("Utils", ['ui.bootstrap']);
-ProJack.utils.service("KT", ['$modal', function($modal) {
+ProJack.utils.service("KT", ['$uibModal', function($modal) {
 	
 	var x = { 
 			/**
@@ -277,7 +277,7 @@ ProJack.utils.directive('durationFormat', function() {
 });
 
 
-ProJack.utils.controller("ConfirmationInstanceController", ['$scope', '$modalInstance', 'text', function($scope, $instance, text) {
+ProJack.utils.controller("ConfirmationInstanceController", ['$scope', '$uibModalInstance', 'text', function($scope, $instance, text) {
 	
 	$scope.text = text;
 	$scope.ok = function() {
