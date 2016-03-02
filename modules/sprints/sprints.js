@@ -94,6 +94,15 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			scope.metaInfVisible = false;
 		};
 		
+	
+		/**
+		 * Removes the issue from the current sprint and put's it back on the backlog
+		 */
+		scope.removeFromSprint = function(issue) {
+			KT.remove('_id', issue._id, scope.lane.issues);
+			scope.$emit('Sprints::Swimlane::lane-changed');
+		};
+		
 		
 		/**
 		 * Toggles expansion state of the lane
