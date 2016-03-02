@@ -1,4 +1,4 @@
-<div>
+<div id="sprint-issueSearchOverlay" class="overlay-panel" data-ng-class="{'expanded' : issue}">
 	<div class="row">
 		<div class="col-md-4">
 			<label>Kunde</label>
@@ -26,8 +26,10 @@
 			</select>
 		</div>
 	</div>
+	
+	
 	<div class="row">
-		<div class="col-md-12" style="height:80vh; overflow-y:scroll;">
+		<div data-ng-class="{'col-md-12' : !issue, 'col-md-6' : issue}" style="height:80vh; overflow-y:scroll;">
 			<table class="table table-striped">
 			<thead>
 				<tr>
@@ -35,20 +37,27 @@
 					<th>ID</th>
 					<th>Type</th>
 					<th>Name</th>
+					<th>&nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr data-ng-repeat="issue in issues | orderBy: 'number'" data-ng-dblclick="selectIssue(issue)"
+				<tr data-ng-repeat="issue in issues | orderBy: 'number'"
 					data-ng-class="{'info' : issue.state == 'ASSIGNED', 'danger' : issue.state == 'NEW', 'warning' : issue.state == 'FEEDBACK', 'success' : issue.state == 'RESOLVED', 'active' : issue.state == 'CLOSED'}"
 					data-ng-if="!issue.sprint || issue.sprint.length == 0">
 				
-					<td><span class="fa fa-bars" style="cursor:pointer;" data-ng-click="selectIssue(issue)"></span>	
+					<td><span class="fa fa-chevron-left" style="cursor:pointer;" data-ng-click="selectIssue(issue)"></span>	
 					<td>{{issue.number}}</td>
 					<td><div data-buglabel data-type="{{issue.issuetype}}"></div></td>
 					<td>{{issue.title}}</td>
+					<td><a href="" data-ng-click="showDetails(issue)"><span class="fa fa-search"></span></a></td>
 				</tr>
 			</tbody>
 			</table>
+		</div>
+		
+		<div class="col-md-6" data-ng-if="issue">
+			<h3>#{{issue.number}}</h3>
+			<div data-ng-include data-src="'./modules/issues/views/issue-details.html'"></div>	
 		</div>
 	</div>
 </div>

@@ -1,11 +1,16 @@
-ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', 'CustomerService', function(KT, service, customerService) {
+ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', 'CustomerService', '$sce', function(KT, service, customerService, $sce) {
 
 	var locKey = '__Projack.issues.searchDirective.criteria';
 	
 	var linkFn = function(scope, elem, attrs) {
 	
 		scope.issues = [];
-
+		scope.issue  = undefined;
+		scope.html = {
+				description : '',
+				notes: ''
+		};
+		
 		scope.customers = [];
 	
 		// read stored criterias from the local storage if available
@@ -36,6 +41,15 @@ ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', 'Custome
 		scope.selectIssue = function(issue) {
 			KT.remove('_id', issue._id, scope.issues);
 			scope.$emit('Issues::SearchDirective::issue-selected', issue);
+		};
+		
+		scope.showDetails = function(issue) {
+			if (!scope.issue || scope.issue._id != issue._id) {
+				scope.issue = issue;
+				scope.html.description = $sce.trustAsHtml(scope.issue.description);
+			} else {
+				scope.issue = undefined;
+			}
 		};
 	};
 	

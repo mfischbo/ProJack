@@ -74,6 +74,10 @@ tr.weekend {
 	position:fixed;
 }
 
+#sprint-issueSearchOverlay.expanded {
+	width:80%;
+}
+
 .overlay-panel {
 	min-width: 600px;
 	min-height: 100vh;
