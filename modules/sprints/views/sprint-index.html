@@ -32,10 +32,10 @@
 	</div>
 	<div class="col-md-5">
 		<uib-progress>
-			<uib-bar value="(unassigned.length * 100) / issueCnt" type="danger"><span>{{unassigned.length}}</span></uib-bar>
-			<uib-bar value="(inProgress.length * 100) / issueCnt" type="info"><span>{{inProgress.length}}</span></uib-bar>
-			<uib-bar value="(qa.length * 100) / issueCnt" type="success"><span>{{qa.length}}</span></uib-bar>
-			<uib-bar value="(done.length * 100) / issueCnt" type="done"><span>{{done.length}}</span></uib-bar>
+			<uib-bar value="(stats.unassigned * 100) / stats.count" type="danger"><span>{{stats.unassigned}}</span></uib-bar>
+			<uib-bar value="(stats.inProgress * 100) / stats.count" type="info"><span>{{stats.inProgress}}</span></uib-bar>
+			<uib-bar value="(stats.qa * 100) / stats.count" type="success"><span>{{stats.qa}}</span></uib-bar>
+			<uib-bar value="(stats.done * 100) / stats.count" type="done"><span>{{stats.done}}</span></uib-bar>
 		</uib-progress>
 	</div>
 	<div class="col-md-4">

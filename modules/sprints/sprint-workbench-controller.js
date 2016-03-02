@@ -12,6 +12,15 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 	$scope.issueOverlayVisible = false;
 	$scope.issueCreateOverlayVisible = false;
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
+	
+	// contains data for overall sprint stats
+	$scope.stats = {
+			unassigned : 0,
+			inProgress : 0,
+			qa: 0,
+			done : 0,
+			count : 0
+	};
 
 	
 	var m = moment();
@@ -29,6 +38,19 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		
 		sprintService.getSprintById(sprintId).then(function(sprint) {
 			$scope.currentSprint = sprint;
+			
+			// calculate the stats on the current sprint
+			for (var i in sprint.lanes) {
+				for (var q in sprint.lanes[i].issues) {
+					var issue = sprint.lanes[i].issues[q];
+					if (issue.state == 'NEW') $scope.stats.unassigned++;
+					if (issue.state == 'ASSIGNED') $scope.stats.inProgress++;
+					if (issue.state == 'RESOLVED') $scope.stats.qa++;
+					if (issue.state == 'CLOSED') $scope.stats.done++;
+					$scope.stats.count++;
+				}
+			}
+			console.log($scope.stats);
 		});
 	});
 
