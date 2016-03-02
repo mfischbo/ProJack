@@ -48,6 +48,26 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 			$scope.currentSprint = sprint;
 		});
 	};
+	
+	
+	$scope.finalizeSprint = function() {
+	
+		for (var i in $scope.currentSprint.lanes) {
+			var lane = $scope.currentSprint.lanes[i];
+		
+			for (var q = lane.issues.length-1; q >= 0; q--) {
+				var issue = lane.issues[q];
+				if (issue.state == 'NEW') {
+					KT.remove('_id', issue._id, lane.issues);
+				}
+			}
+		}
+		sprintService.saveSprint($scope.currentSprint).then(function(sprint) {
+			$scope.currentSprint = sprint;
+		});
+		$scope.$broadcast('issuesReloaded');
+	};
+	
 
 	/* -----------------------------------------------------
 	 * Events emitted from lane components
