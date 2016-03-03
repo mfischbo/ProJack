@@ -14,6 +14,7 @@ ProJack.config = {
 		srvUrl : "http://localhost:5984/",
 	
 		// url for the gitlab service
+		enableGitLab : false,
 		gitlabUrl : "http://devops.copilot-office.de:7000/api/v3",
 		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
