@@ -1,12 +1,12 @@
 <div class="row">
 	<div class="col-md-6 col-xs-12">
-		<h3>{{sprint.name}}</h3>
+		<h3>{{currentSprint.name}}</h3>
 
 	</div>
 	<div class="col-md-6">
-		<div class="btn-group pull-right" data-dropdown style="margin-top:22px;">
-			<button type="button" class="btn">{{sprint.name}}</button>	
-			<button type="button" class="btn dropdown-toggle" data-dropdown-toggle>
+		<div class="btn-group pull-right" data-uib-dropdown style="margin-top:22px;">
+			<button type="button" class="btn">{{currentSprint.name}}</button>	
+			<button type="button" class="btn dropdown-toggle" data-uib-dropdown-toggle>
 				<span class="caret"></span>	
 				<span class="sr-only">Split</span>
 			</button>
@@ -19,12 +19,15 @@
 	</div>
 </div>
 
+<!-- 
 <div class="row">
 	<div class="col-md-3">
-		<a href="#/sprints/create" class="btn btn-primary btn-sm">Neuer Sprint</a>
-		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueOverlayVisible}" data-ng-click="toggleIssueOverlay()"><span class="fa fa-search"> Issues</span></button>
-		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()"><span class="fa fa-plus"> Issue</span></button>
-		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();"><span class="fa fa-check"> Schliessen</span></button>
+		<a href="#/sprints/create" class="btn btn-primary btn-sm" title="New Sprint"><span class="fa fa-file"></span></a>
+		<a href="#/sprints/{{sprint._id}}/edit" class="btn btn-primary btn-sm" title="Edit Sprint"><span class="fa fa-pencil"></span></a>
+		<span class="separator">&nbsp;|&nbsp;</span>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueOverlayVisible}" data-ng-click="toggleIssueOverlay()" title="Search Issue"><span class="fa fa-search"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()" title="New Issue"><span class="fa fa-plus"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();" title="Close Sprint"><span class="fa fa-check"></span></button>
 	</div>
 	<div class="col-md-5">
 		<progress>
@@ -40,6 +43,8 @@
 		</div>
 	</div>
 </div>
+-->
+
 
 <div class="row">
 	<div class="col-md-12">
@@ -53,14 +58,14 @@
 		<div class="pull-left">
 			<h4>Unassigned</h4>	
 		</div>
-		<div class="pull-right btn-group" data-dropdown style="margin-top:8px;">
+		<div class="pull-right btn-group" data-uib-dropdown style="margin-top:8px;">
 			<button type="button" class="btn btn-sm">
 				<span class="fa fa-eye">
 					<span data-ng-if="unassignedVisible == 'ALL'">All Issues</span>
 					<span data-ng-if="unassignedVisible == 'OWN'">My Issues</span>
 				</span>
 			</button>
-			<button type="button" class="btn btn-sm dropdown-toggle" data-dropdown-toggle>
+			<button type="button" class="btn btn-sm dropdown-toggle" data-uib-dropdown-toggle>
 				<span class="caret"></span>
 				<span class="sr-only">Split</span>
 			</button>
@@ -88,14 +93,14 @@
 			<h4>In Progress</h4>	
 		</div>
 
-		<div class="pull-right btn-group" data-dropdown style="margin-top:8px;">
+		<div class="pull-right btn-group" data-uib-dropdown style="margin-top:8px;">
 			<button type="button" class="btn btn-sm">
 				<span class="fa fa-eye">
 					<span data-ng-if="progressVisible == 'ALL'">All Issues</span>
 					<span data-ng-if="progressVisible == 'OWN'">My Issues</span>
 				</span>
 			</button>
-			<button type="button" class="btn btn-sm dropdown-toggle" data-dropdown-toggle>
+			<button type="button" class="btn btn-sm dropdown-toggle" data-uib-dropdown-toggle>
 				<span class="caret"></span>
 				<span class="sr-only">Split</span>
 			</button>

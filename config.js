@@ -18,14 +18,14 @@ ProJack.config = {
 		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/projack",
+		dbUrl :  "/cdb/projack-dev",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		
 		// server url for elasticsearch
 		esEndpoint  	: '/es',
-		esIndex		: 'pj',
-		esUrl 		: '/es/pj',
+		esIndex			: 'pj',
+		esUrl 			: '/es/pj',
 		
 		// session key where user data is stored in the session storage
 		sessionKey : "__ProJack_Session",
@@ -52,4 +52,4 @@ ProJack.config = {
 			height		: 'calc(100vh - 520px);',
 			toolbar     : 'undo redo styleselect | bold italic strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist' 
 		}
-}
+};

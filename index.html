@@ -68,9 +68,6 @@
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-form.html'"></div>
 								<hr/>
 								<div data-ng-include data-src="'./modules/reminder/views/reminder-list.html'"></div>
-								<audio id="projack-player">
-									<source src="./resources/media/coin-sound.mp3">
-								</audio>
 							</div>
 						</li>	
                         <li class="dropdown">
@@ -117,8 +114,12 @@
     <script src="./bower_components/angular-route/angular-route.min.js"></script>
     <script src="./bower_components/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="./bower_components/angular-i18n/angular-locale_de-de.js"></script>
+    
+    <!-- ui bootstrap -->
     <script src="./bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
     <script src="./bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+
     <script src="./bower_components/tinymce-dist/tinymce.min.js"></script>
     <script src="./bower_components/angular-ui-tinymce/src/tinymce.js"></script>
     <script src="./bower_components/angular-native-dragdrop/draganddrop.js"></script>
@@ -152,6 +153,8 @@
 	<script src="./modules/issues/issues.js"></script>
 	<script src="./modules/issues/issue-service.js"></script>
 	<script src="./modules/issues/issue-controller.js"></script>
+	<script src="./modules/issues/issue-create-directive.js"></script>
+	<script src="./modules/issues/issue-search-directive.js"></script>
 	
 	<!-- Reminder Module -->
 	<script src="./modules/reminder/reminder.js"></script>	
@@ -167,7 +170,8 @@
 	<!-- Sprint Module -->
 	<script src="./modules/sprints/sprints.js"></script>
 	<script src="./modules/sprints/sprint-service.js"></script>
-	<script src="./modules/sprints/sprint-controller.js"></script>
+	<script src="./modules/sprints/sprint-workbench-controller.js"></script>
+  	<script src="./modules/sprints/sprint-controller.js"></script> 
 	
 	<!-- Settings ... belongs to the core application -->
 	<script src="./modules/application/application-settings.js"></script>

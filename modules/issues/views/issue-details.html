@@ -36,7 +36,7 @@
 		<b>Typ</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<span data-buglabel type="{{::issue.issuetype}}"></span>
+		<span data-buglabel type="{{issue.issuetype}}"></span>
 	</div>
 </div>
 
@@ -45,7 +45,7 @@
 		<b>Eingereicht von</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{::issue.reportedBy}}
+		{{issue.reportedBy}}
 	</div>
 	<div class="col-md-3 col-xs-6">
 		<b>Zugewiesen an</b>	
@@ -67,7 +67,7 @@
 		<b>Zu erledigen bis</b>
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{::issue.resolveUntil|date:'dd.MM.yyyy'}}
+		{{issue.resolveUntil|date:'dd.MM.yyyy'}}
 	</div>
 </div>
 
@@ -76,13 +76,13 @@
 		<b>Angelegt am</b>
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{::issue.dateCreated | date:'dd.MM.yyyy'}}
+		{{issue.dateCreated | date:'dd.MM.yyyy'}}
 	</div>
 	<div class="col-md-3 col-xs-6">
 		<b>Priorität</b>
 	</div>
 	<div class="col-md-3 col-xs-6">
-		{{::issue.priority}}
+		{{issue.priority}}
 	</div>
 </div>
 
@@ -97,7 +97,7 @@
 		<b>Zusammenfassung</b>	
 	</div>
 	<div class="col-md-9 col-xs-6 issue-summary">
-		{{::issue.title}}
+		{{issue.title}}
 	</div>
 </div>
 

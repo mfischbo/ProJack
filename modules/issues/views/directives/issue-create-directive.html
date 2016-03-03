@@ -1,0 +1,67 @@
+<div>
+	<div class="form-group">
+	<!-- 
+		<div class="row">
+			<div class="col-md-12 col-xs-12">
+				<label>Kunde</label>
+				<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers" required></select>
+			</div>
+		</div>
+	-->
+	</div>
+
+	<div class="form-group">
+		<label>Name</label>
+		<input type="text" data-ng-model="issue.title" class="form-control" placeholder="Zusammenfassung des Problems" required>
+	</div>	
+
+	<div class="form-group">
+		<label>Beschreibung</label>	
+		<textarea data-ng-model="issue.description" class="form-control" data-ui-tinymce="tinymceOptions" required></textarea>
+	</div>
+
+	<div class="form-group">
+		<div class="row">
+			<div class="col-md-2 col-xs-6">
+				<label>Typ</label>
+				<select data-ng-model="issue.issuetype" class="form-control">
+					<option value="BUG">Bug</option>
+					<option value="FEATURE">Feature</option>
+					<option value="CHANGE_REQUEST">Change Request</option>
+					<option value="SUPPORT">Supportanfrage</option>
+				</select>
+			</div>	
+			
+			<div class="col-md-2 col-xs-6">
+				<label>Priority</label>
+				<select data-ng-model="issue.priority" class="form-control">
+					<option value="LOW">Low</option>
+					<option value="NORMAL">Normal</option>
+					<option value="HIGH">High</option>
+				</select>
+			</div>
+			
+			<div class="col-md-3 col-xs-6">
+				<label>Zugewiesen an</label>
+				<div data-user-selector data-select-as="issue.assignedTo"></div>			
+			</div>
+			
+			<div class="col-md-2 col-xs-6">
+				<label>Aufwand</label>	
+				<input type="text" data-ng-model="issue.estimatedTime" class="form-control" placeholder="HH:mm" data-duration-format>
+			</div>
+
+			<div class="col-md-3 col-xs-12">
+				<label>Zu erledigen bis</label>
+				<input type="date"  data-ng-model="issue.resolveUntil" class="form-control" data-date-format>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="pull-right">
+			<button type="button" class="btn btn-danger" data-ng-click="cancelCreate()">Abbrechen</button>
+			<button type="button" class="btn btn-success" data-ng-click="createIssue()">Speichern</button>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+</div>

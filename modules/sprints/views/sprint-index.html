@@ -1,0 +1,54 @@
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+		<h3>{{currentSprint.name}}</h3>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-3">
+		<a href="#/sprints/create" class="btn btn-primary btn-sm" title="New Sprint"><span class="fa fa-file"></span></a>
+		<a href="#/sprints/{{currentSprint._id}}/edit" class="btn btn-primary btn-sm" title="Edit Sprint"><span class="fa fa-pencil"></span></a>
+		<span class="separator">&nbsp;|&nbsp;</span>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueSearchOverlayVisible}" data-ng-click="toggleIssueSearchOverlay()" title="Search Issue"><span class="fa fa-search"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()" title="New Issue"><span class="fa fa-plus"></span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();" title="Close Sprint"><span class="fa fa-check"></span></button>
+		<span class="separator">&nbsp;|&nbsp;</span>	
+		<button class="btn btn-primary btn-sm" data-ng-click="addSwimlane()" title="Add Swimlane"><span class="fa fa-plus">&nbsp;Lane</span></button>
+	</div>
+	<div class="col-md-5">
+		<uib-progress>
+			<uib-bar value="(stats.unassigned * 100) / stats.count" type="danger"><span>{{stats.unassigned}}</span></uib-bar>
+			<uib-bar value="(stats.inProgress * 100) / stats.count" type="info"><span>{{stats.inProgress}}</span></uib-bar>
+			<uib-bar value="(stats.qa * 100) / stats.count" type="success"><span>{{stats.qa}}</span></uib-bar>
+			<uib-bar value="(stats.done * 100) / stats.count" type="done"><span>{{stats.done}}</span></uib-bar>
+		</uib-progress>
+	</div>
+	<div class="col-md-4">
+		<div class="btn-group pull-right" data-uib-dropdown>
+			<button type="button" class="btn">{{currentSprint.name}}</button>	
+			<button type="button" class="btn dropdown-toggle" data-uib-dropdown-toggle>
+				<span class="caret"></span>	
+				<span class="sr-only">Split</span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li data-ng-repeat="s in sprints">
+					<a href="javascript:void('');" data-ng-click="switchSprint(s)">{{s.startsAt|date:'dd.MM.yyyy'}} - {{s.releaseAt|date:'dd.MM.yyyy'}} / {{s.name}}</a>
+				</li>
+			</ul>	
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<hr/>
+	</div>
+</div>
+
+<div data-ng-repeat="lane in currentSprint.lanes">
+	<div data-swimlane data-lane="lane" data-sprint="currentSprint"></div>
+</div>
+
+<div class="ng-hide" data-issue-search-directive data-ng-show="issueSearchOverlayVisible"></div>
+<div id="sprint-issueCreateOverlay" class="overlay-panel ng-hide" data-issue-create-directive data-ng-show="issueCreateOverlayVisible"></div>

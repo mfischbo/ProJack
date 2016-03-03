@@ -1,6 +1,6 @@
 <div>
 	<div>
-		<div class="pull-left" data-buglabel type="{{::i.issuetype}}"></div>
+		<div class="pull-left" data-buglabel data-type="{{::i.issuetype}}"></div>
 		<div class="pull-right">
 			<a href data-ng-click="removeFromSprint(i);" title="Move to backlog "data-ng-if="i.state == 'NEW'">
 				<span class="fa fa-recycle" title="Move to backlog" ></span>
@@ -19,7 +19,10 @@
 <div class="sprint-issueHeading">
 	<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> 
 </div>
-<div class="pull-right" data-ng-if="i.assignedTo && i.assignedTo.length > 0">
+<div class="pull-left" data-ng-if="i.assignedTo && i.assignedTo.length > 0">
 	Assigned to : {{i.assignedTo | userName}}
+</div>
+<div class="pull-right">
+	<span popover-placement="bottom" uib-popover-template="'./modules/sprints/views/lane-select.html'" type="button" class="fa fa-random" style="cursor:pointer;"></span>
 </div>
 <div class="clearfix"></div>

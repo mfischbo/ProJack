@@ -1,4 +1,4 @@
-ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'SecurityService', '$modal',
+ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'SecurityService', '$uibModal',
                                                    function($scope, KT, service, customerService, secService, $modal) {
 
 	var locKey = "__IssuesIndex_Criteria";

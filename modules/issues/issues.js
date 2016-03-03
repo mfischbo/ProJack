@@ -63,7 +63,7 @@ ProJack.issues.directive('statelabel', function() {
 });
 
 
-ProJack.issues.directive('trackingControls', ['$compile', '$modal', 'IssueService', 'SecurityService', function($compile, $modal, service, secService) {
+ProJack.issues.directive('trackingControls', ['$compile', '$uibModal', 'IssueService', 'SecurityService', function($compile, $modal, service, secService) {
 
 	var linkFn = function(scope, elem, attrs) {
 	

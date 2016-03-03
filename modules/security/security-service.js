@@ -13,12 +13,12 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 					lastName 	: '',
 					email		: ''
 				}
-			}
+			};
 		},
 		
 		getAllUserNames : function() {
 			return $http.get(ProJack.config.srvUrl + "/_users/_all_docs").then(function(response) {
-				var retval = [];
+				var retval = new Array();
 				for (var i in response.data.rows) {
 					if (response.data.rows[i].id.indexOf("org.couchdb.user") == 0) {
 						var tmp = response.data.rows[i].id.split(":");

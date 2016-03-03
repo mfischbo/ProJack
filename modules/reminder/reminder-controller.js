@@ -21,13 +21,6 @@ ProJack.reminder.controller('ReminderController', ['$scope', '$window', 'Reminde
 	
 	$scope.fetchReminders = function() {
 		service.getAllActiveReminders().then(function(reminders) {
-			if ($scope.reminders && $scope.reminders.length < reminders.length) {
-				$('#projack-player')[0].play();
-			}
-
-			if (!$scope.reminders && reminders.length > 0) {
-				$('#projack-player')[0].play();
-			}
 			$scope.reminders = reminders;
 		});
 	};

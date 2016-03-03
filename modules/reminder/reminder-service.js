@@ -9,7 +9,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 				alertAt		: new Date().getTime(),
 				alertTime	: '',
 				userCreated : securityService.getCurrentUserName(),
-			}
+			};
 		},
 		
 		
@@ -26,8 +26,6 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 							issues : [],
 							reminders : []
 					};
-					
-					var currentUser = 'org.couchdb.user:' + securityService.getCurrentUserName();
 					
 					for (var i in response.data.rows) {
 						var k = response.data.rows[i].key[response.data.rows[i].key.length -1];
@@ -76,7 +74,7 @@ ProJack.reminder.service('ReminderService', ['$http', 'SecurityService', functio
 		
 		isOverdue : function(m, dayOffset) {
 			var q = new Date().getTime();
-			return (q - m.valueOf() > 3600 * 1000 * 24 * dayOffset)
+			return (q - m.valueOf() > 3600 * 1000 * 24 * dayOffset);
 		}
 	};
 }]);

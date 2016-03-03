@@ -1,4 +1,4 @@
-ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'SecurityService', '$modal',
+ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintService', 'IssueService', 'CustomerService', 'SecurityService', '$uibModal',
                                                     function($scope, KT, service, iService, cService, secService, $modal) {
 
 	var locKey = '__ProJack.sprints.current.id';
@@ -32,51 +32,86 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		} else {
 			$scope.sprint = data[0];
 		}
-		
+	
+		// run the initialization for the current sprint
 		$scope.initializeSprint();
 	});
 
+	$scope.initializeSwimlanes = function() {
+		// add lanes array for backward compatibility
+		if ($scope.sprint.lanes == undefined || $scope.sprint.lanes.length == 0) {
+			$scope.sprint.lanes = [];
+			$scope.defaultLane = service.newSwimlane(false);
+			$scope.sprint.lanes.push($scope.defaultLane);
+		} else {
+			if ($scope.defaultLane !== undefined)
+				return;
+			
+			for (var i in $scope.sprint.lanes) {
+				if ($scope.sprint.lanes[i].isModifieable == false) 
+					$scope.defaultLane = $scope.sprint.lanes[i];
+			}
+		}
+	};
+	
 	/**
 	 * Loads all tickets for the given sprint and sorts it in the lanes
 	 */
 	$scope.initializeSprint = function() {
 		// update the empty issue
 		$scope.issue.resolveUntil = $scope.sprint.releaseAt;
+		
+		// create the swimlanes
+		$scope.initializeSwimlanes();
 
-		// clear all issue lanes
-		$scope.unassigned = [];
-		$scope.inProgress = [];
-		$scope.qa		  = [];
-		$scope.done       = [];
-		$scope.lanes = [ $scope.unassigned, $scope.inProgress, $scope.qa, $scope.done ];
 		$scope.issueCnt   = 0;
+		//$scope.lanes = [ $scope.unassigned, $scope.inProgress, $scope.qa, $scope.done ];
 	
 		// load all related issues and sort them
 		iService.getIssuesBySprint($scope.sprint).then(function(data) {
-			for (var i in data) {
-				var item = data[i];
-				if (item.state == 'NEW') 
-					$scope.unassigned.push(item);
-				if (item.state == 'ASSIGNED' || item.state == 'FEEDBACK') 
-					$scope.inProgress.push(item);
-				if (item.state == 'RESOLVED')
-					$scope.qa.push(item);
-				if (item.state == 'CLOSED')
-					$scope.done.push(item);
+			$scope.issues = data;
+			
+			// sort issues into specified lanes
+			for (var i in $scope.issues) {
+				var sorted = false;
+
+				for (var q in $scope.sprint.lanes) {
+					var idx = KT.indexOf('_id', $scope.issues[i]._id, $scope.sprint.lanes[q].issues);
+					if (idx >= 0) {
+						$scope.sprint.lanes[q].issues[idx] = $scope.issues[i];
+						sorted = true;
+					}
+				}
+				if (!sorted)
+					$scope.defaultLane.issues.push($scope.issues[i]);
 			}
+			
+			// notify lanes directives
+			$scope.$broadcast('issuesReloaded');
 			$scope.issueCnt = data.length;
 		});
-		
-		// poll the changes API
-		$scope.runPoll();
 	};
 	
+	$scope.addSwimlane = function() {
+		$scope.sprint.lanes.push(service.newSwimlane(true));
+		/*
+		service.saveSprint($scope.sprint).then(function(sprint) {
+			$scope.sprint = sprint;
+		});
+		*/
+		console.log($scope.sprint);
+	};
+	
+
+	/*
 	$scope.runPoll = function() {
 		service.pollChanges($scope.sprint).then(function(data) {
 			$scope.updateSprintView(data);
 		});
 	};
-	
+	*/
+
+	/*
 	$scope.updateSprintView = function(revs) {
 		if (!revs.newDoc || !revs.oldDoc)
 			return $scope.runPoll();
@@ -141,6 +176,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			return $scope.runPoll();
 		}
 	};
+	*/
 	
 	
 	$scope.switchSprint = function(sprint) {
@@ -160,6 +196,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
 	};
 
+	/*
 	var checkTracking = function(issue) {
 		// disallow to move issues that are currently time tracked
 		if (iService.hasActiveTracking(issue)) {
@@ -168,10 +205,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 		}
 		return true;
 	}
+	*/
 	
 	/**
 	 * Methods to check whether or not the dropzone accepts the issue
 	 */
+	/*
 	$scope.validateUnassignedDrop = function(issue) {
 		if (KT.indexOf('_id', issue._id, $scope.unassigned) >= 0)
 			return false;
@@ -205,20 +244,24 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			return false;
 		return false;
 	};
-
+	*/
+	
 	/**
 	 * Removes the given issue from the sprint
 	 */
 	$scope.removeFromSprint = function(issue) {
+		/*
 		issue.sprint = '';
 		iService.updateIssue(issue).then(function() {
 			KT.remove('_id', issue._id, $scope.unassigned);
 		});
+		*/
 	};
 	
 	/**
 	 * Handler to be called, when dragging from the issue overlay to the unassigned lane
 	 */
+	/*
 	$scope.onUnassignedDrop = function($event, issue, fromFeed) {
 		if (fromFeed) {
 			$scope.unassigned.push(issue);
@@ -247,6 +290,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	 * Handler to be called when dropping item on the inProgress lane
 	 * Issue will be stated to ASSIGNED for the current user, saved and removed from all other lanes
 	 */
+	/*
 	$scope.onInProgressDrop = function($event, issue, fromFeed) {
 		if (fromFeed) {
 			$scope.inProgress.push(issue);
@@ -268,6 +312,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	 * Issue will be stated as RESOLVED and modal will open to leave notes.
 	 * Issue will be saved on modal success.
 	 */
+	/*
 	$scope.onQADrop = function($event, issue, fromFeed) {
 		if (fromFeed) {
 			$scope.qa.push(issue);
@@ -297,6 +342,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	 * Handler to be called when issue is dropped on done lane.
 	 * Issue will be stated to CLOSED and saved
 	 */
+	/*
 	$scope.onDoneDrop = function($event, issue, fromFeed) {
 		if (fromFeed) {
 			$scope.done.push(issue);
@@ -325,6 +371,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 	/**
 	 * Create new issues from the overlay
 	 */
+	/*
 	$scope.createIssue = function() {
 		$scope.issue.sprint = $scope.sprint._id;
 		iService.createIssue($scope.issue).then(function(data) {
@@ -334,10 +381,12 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			$scope.toggleIssueCreateOverlay();
 		});
 	};
+	*/
 
 	/**
 	 * Finalizes the sprint and put's all issues still in the unassigned lane back to the backlog
 	 */
+	/*
 	$scope.finalizeSprint = function() {
 		KT.confirm("Soll der Sprint wirklich geschlossen werden?", function() {
 			for (var i=$scope.unassigned.length; i > 0; i--) {
@@ -349,6 +398,7 @@ ProJack.sprint.controller('SprintIndexController', ['$scope', 'KT', 'SprintServi
 			}
 		});
 	};
+	*/
 	
 	/**
 	 * Issue overlay controller. Must stay here for drag/drop to work properly 
@@ -405,6 +455,26 @@ ProJack.sprint.controller('SprintCreateController', ['$scope', '$location', 'Spr
 	$scope.saveSprint = function() {
 		service.saveSprint($scope.sprint).then(function() {
 			KT.alert("Der Sprint wurde angelegt");
+			$location.path('/sprints');
+		});
+	};
+}]);
+
+
+/**
+ * Controller for editing a given sprint
+*/
+ProJack.sprint.controller('SprintEditController', ['$scope', '$location', '$routeParams', 'SprintService', 'KT', function($scope, $location, $routeParams, service, KT) {
+
+	$scope.tinymceOptions = ProJack.config.tinyOptions;
+	
+	service.getSprintById($routeParams.id).then(function(response) {
+		$scope.sprint = response.data;
+	});
+
+	$scope.saveSprint= function() {
+		service.saveSprint($scope.sprint).then(function() {
+			KT.alert('Der Sprint wurde erfolgreich gespeichert');
 			$location.path('/sprints');
 		});
 	};
