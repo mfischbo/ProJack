@@ -11,7 +11,7 @@
 ProJack.config = {
 
 		// server url for couchdb
-		srvUrl : "http://localhost:5984/",
+		srvUrl : "http://localhost:5984",
 	
 		// url for the gitlab service
 		enableGitLab : false,

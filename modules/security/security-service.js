@@ -15,6 +15,42 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 				}
 			};
 		},
+	
+		getAllUsers : function() {
+			return $http.get(ProJack.config.dbUrl+ '/_security').then(function(response) {
+				var retval = {};
+				
+				// admin accounts
+				for (var i in response.data.admins) {
+					var admins = response.data.admins[i];
+					for (var q in admins) {
+						retval[admins[q]] = {
+							_id  : 'org.couchdb.user:' + admins[q],
+							name : admins[q],
+							roles : []
+						};
+						retval[admins[q]].roles.push('admin');
+					}
+				}
+				
+				// member accounts
+				for (var i in response.data.members) {
+					var members = response.data.members[i];
+					for (var q in members) {
+						
+						if (!retval[members[q]]) {
+							retval[members[q]] = {
+								_id  : 'org.couchdb.user:' + members[q],
+								name : members[q],
+								roles : []
+							};
+						}
+						retval[members[q]].roles.push('member');
+					}
+				}
+				return retval;
+			});
+		},
 		
 		getAllUserNames : function() {
 			return $http.get(ProJack.config.srvUrl + "/_users/_all_docs").then(function(response) {
@@ -106,10 +142,13 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 		},
 		
 		getCurrentUser : function() {
-			var uname = this.getCurrentUserName();
-			return $http.get(ProJack.config.srvUrl + '/_users/org.couchdb.user:' + uname).then(function(response) {
-				return response.data;
+			return this.getCurrentSession().then(function(data) {
+				var uname = data.userCtx.name;
+				return $http.get(ProJack.config.srvUrl + '/_users/org.couchdb.user:' + uname).then(function(response) {
+					return response.data;
+				});
 			});
+			
 		},
 		
 		getCurrentUserName : function() {
