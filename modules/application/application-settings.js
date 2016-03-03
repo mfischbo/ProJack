@@ -5,14 +5,10 @@ ProJack.app.controller('ApplicationSettingsController', ['$scope', '$http', 'KT'
 			online : false
 	};
 	
-	$scope.java = {
-			online : false
-	};
-	
 	$scope.esParams = {
 			type : 'couchdb',
 			couchdb : {
-				host : '192.168.1.146',
+				host : '',
 				port : 5984,
 				db   : 'projack',
 				filter : null,
@@ -34,11 +30,6 @@ ProJack.app.controller('ApplicationSettingsController', ['$scope', '$http', 'KT'
 	}).error(function() {
 		$scope.elastic.online = false;
 	});
-	
-	$http.get(ProJack.config.serviceUrl + '/health').success(function(data) {
-		$scope.java.online = (data.status == 'UP');
-	});
-	
 	
 	$scope.deleteESIndex = function() {
 		KT.confirm("Soll der Elasticsearch Index wirklich entfernt werden?", function() {
