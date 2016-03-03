@@ -11,14 +11,14 @@
 ProJack.config = {
 
 		// server url for couchdb
-		srvUrl : "/cdb",
+		srvUrl : "http://localhost:5984/",
 	
 		// url for the gitlab service
 		gitlabUrl : "http://devops.copilot-office.de:7000/api/v3",
 		gitlabToken : 'ojgZXL8sxe7nkp97G_PE',
 		
 		// server url and db for couch
-		dbUrl :  "/cdb/projack-dev",
+		dbUrl :  "http://localhost:5984/projack-dev",
 		lowId : "00000000000000000000000000000000",
 		highId: "ffffffffffffffffffffffffffffffff",
 		

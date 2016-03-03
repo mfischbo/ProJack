@@ -6,6 +6,7 @@ File : /etc/couchdb/local.ini (or similar)
 enable_cors=true 
 
 [cors]
+credentials = true
 origins = *
 
 
