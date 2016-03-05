@@ -1,5 +1,5 @@
 ProJack.issues = angular.module("IssuesModule", 
-		['CustomersModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap']);
+		['CustomersModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap', 'IssueTagsModule']);
 
 ProJack.issues.config(['$routeProvider', function($routeProvider) {
 

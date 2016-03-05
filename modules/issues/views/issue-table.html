@@ -30,7 +30,10 @@
 		</td>
 		<td>{{i.assignedTo.split(":").pop()}}</td>
 		<td>{{i.resolveUntil|date:'dd.MM.yyyy'}}</td>
-		<td><a href="#/issues/{{i._id}}/edit">{{i.title}}</a></td>
+		<td>
+			<span data-ng-repeat="t in i.tags" class="badge">{{t}}</span>		
+			<a href="#/issues/{{i._id}}/edit">{{i.title}}</a>
+		</td>
 		<td class="tools">
 			<a href="#/issues/{{i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 			<a href="javascript:void('');" data-ng-click="toggleObservation(i)">

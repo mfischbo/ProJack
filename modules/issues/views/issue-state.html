@@ -28,6 +28,10 @@
 	</div>
 	
 	<div class="col-md-6">
+		<div class="form-group">
+			<div issue-tags data-tags="issue.tags"></div>
+		</div>
+	
 		<div class="form-group" data-ng-if="issue.state == 'RESOLVED' || issue.state == 'CLOSED'">
 			<label>Committed in</label>
 			<div data-ng-repeat="b in branches track by $index">

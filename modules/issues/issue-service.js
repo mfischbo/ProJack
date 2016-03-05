@@ -14,10 +14,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				number		: 0,			// the issues ticket number to be displayed
 				title		: '',			
 				description : '',
-				sprint		: '',			// id of the sprint this issue is related to
-				lane		: undefined,	// id of the lane the ticket belongs to
-				feature		: '', 			// id of the feature this issue is related to
-				customer	: '', 			// id of the customer this issue is related to
 				assignedTo  : '', 			// the user the issue is assigned to
 				reportedBy  : secService.getCurrentUserName(),
 				state		: 'NEW', 		// NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
@@ -28,6 +24,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateModified: new Date().getTime(),
 				estimatedTime: undefined,	// estimated time in seconds this issue will take to be resolved
 				resolveUntil: undefined,	// the deadline for this issue,
+				tags		: [],			// array of user input strings
 				fixedIn		: [],			// takes an array of branches, where the issue has been fixed
 				notes		: [],
 				times		: [],	        // array of time tracking object for all users,
@@ -149,6 +146,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * Returns all issues that are related to the given sprint
 		 * @param sprint The sprint
 		 */
+		/*
 		getIssuesBySprint : function(sprint) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/bySprint?key="' + sprint._id + '"')
 				.then(function(response) {
@@ -158,17 +156,20 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 					return retval;
 				});
 		},
+		*/
 		
 		/**
 		 * Returns all issues that are related to the given feature
 		 * @param feature The given feature
 		 */
+		/*
 		getIssueByFeature : function(feature) {
 			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byFeature?key="'+feature._id+'"')
 				.then(function(response) {
 					return response.data.rows[0].value;
 				});
 		},
+		*/
 
         /**
          * Returns all issues that are visible by the current user
@@ -201,8 +202,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			if (criteria.selection == 2)
 				params.uid = '';
 			
-			if (criteria.customer) 
-				params.cid = criteria.customer;
+			//if (criteria.customer) 
+			//	params.cid = criteria.customer;
 		
 			params.status = criteria.status;
 			return $http.get(url, { params : params }).then(function(response) {
@@ -240,10 +241,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param issue The issue that should be persisted
 		 */
 		createIssue : function(issue) {
-			if (typeof issue.customer == "object")
-				issue.customer = issue.customer._id;
-			if (typeof issue.feature == "object")
-				issue.feature = issue.feature._id;
+			//if (typeof issue.customer == "object")
+			//	issue.customer = issue.customer._id;
+			//if (typeof issue.feature == "object")
+			//	issue.feature = issue.feature._id;
 			
 			if (issue.assignedTo && issue.assignedTo.length > 0)
 				issue.state = 'ASSIGNED';
