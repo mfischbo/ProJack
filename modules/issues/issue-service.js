@@ -231,6 +231,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 					.success(function(response) {
 						issue._id = response.id;
 						issue._rev= response.rev;
+						elastic.index('issue', issue);
 						d.resolve(issue);
 					}).error(function() {
 						d.reject();
@@ -256,7 +257,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			
 			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue).then(function(response) {
 				issue._rev = response.data.rev;
-				elastic.index(issue);
+				elastic.index('issues', issue);
 				return issue;
 			});
 		},

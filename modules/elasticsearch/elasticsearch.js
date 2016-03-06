@@ -3,10 +3,10 @@ ProJack.elasticsearch = angular.module('Elasticsearch', []);
 ProJack.elasticsearch.service('ESService', ['$http', function($http) {
 	
 	return {
-		index : function(document) {
+		index : function(index, document) {
 			if (!document._id) 
 				console.error("The specified document does not have a valid ID");
-			$http.put(ProJack.config.esUrl + '/issues/' + document._id, document)
+			$http.put(ProJack.config.esUrl + '/' + ProJack.config.esIndex + '/'+index+'/' + document._id, document)
 				.then(function() {
 					console.log('Did work');
 				}, function() {
