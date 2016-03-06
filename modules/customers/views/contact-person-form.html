@@ -1,18 +1,18 @@
 <form name="contactForm">
 	<div class="form-group col-md-12 col-xs-12">
-		<label>Anrede</label>
+		<label>Salutation</label>
 		<select data-ng-model="contact.gender" class="form-control">
-			<option value="M">Herr</option>
-			<option value="F">Frau</option>
+			<option value="M">Mr.</option>
+			<option value="F">Mrs.</option>
 		</select>
 	</div>
 	<div class="form-group">
 		<div class="col-md-6 col-xs-12">
-			<label>Vorname</label>
+			<label>Firstname</label>
 			<input type="text" data-ng-model="contact.firstName" placeholder="Max" class="form-control" required>
 		</div>
 		<div class="col-md-6 col-xs-12">
-			<label>Nachname</label>
+			<label>Lastname</label>
 			<input type="text" data-ng-model="contact.lastName" placeholder="Mustermann" class="form-control" required>
 		</div>
 	</div>
@@ -23,14 +23,14 @@
 	</div>
 	
 	<div class="form-group col-xs-12 col-md-12">
-		<label>Telefon</label>
+		<label>Phone</label>
 		<input type="text" data-ng-model="contact.phone" placeholder="+49 12345 56799" class="form-control">
 	</div>
 
 	<div class="pull-right">
-		<button type="button" class="btn btn-danger" data-ng-click="unfocusContact()">Abbrechen</button>
+		<button type="button" class="btn btn-danger" data-ng-click="unfocusContact()">Cancel</button>
 		<button type="submit" class="btn btn-primary" data-ng-click="addContact()" data-ng-disabled="contactForm.$invalid">
-			&Uuml;bernehmen
+			Apply
 		</button>
 	</div>
 </form>

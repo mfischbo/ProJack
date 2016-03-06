@@ -3,13 +3,13 @@
 	<tr>
 		<th>Name</th>
 		<th>E-Mail</th>
-		<th>Telefon</th>
+		<th>Phone</th>
 		<th>&nbsp;</th>
 	</tr>
 </thead>
 <tbody>
 	<tr data-ng-if="customer.contacts.length == 0">
-		<td colspan="4">Bisher sind noch keine Kontaktpersonen hinterlegt</td>
+		<td colspan="4">-- No contacts available --</td>
 	</tr>
 	<tr data-ng-repeat="c in customer.contacts | orderBy: 'lastName'">
 		<td><b>{{c.lastName}}</b> {{c.firstName}}</td>
