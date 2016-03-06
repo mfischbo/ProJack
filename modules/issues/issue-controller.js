@@ -9,8 +9,7 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 		type   : '',
 		selection : 0,
 		status : 'NEW',
-		customer : '',
-		status : ''
+		tags : []
 	};
 	
 	$scope.predicate = '';

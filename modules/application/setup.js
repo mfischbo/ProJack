@@ -84,7 +84,6 @@ T.controller('UpdateController', ['$scope', 'SprintService', 'IssueService', fun
 	 * default lane within the sprint 
 	 */
 	$scope.updateSprintModel = function() {
-	
 		var smap = { };
 		
 		service.getSprintsStartingAt(new Date(0)).then(function(sprints) {

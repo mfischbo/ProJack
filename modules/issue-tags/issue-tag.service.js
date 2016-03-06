@@ -85,7 +85,8 @@ ProJack.issueTags.directive('issueTags', ['IssueTagsService', function(service) 
 		templateUrl : './modules/issue-tags/views/issue-tags.directive.html',
 		link : linkFn,
 		scope : {
-			tags : '='
+			tags : '=',
+			allowCreate : '@'
 		}
 	}
 }]);

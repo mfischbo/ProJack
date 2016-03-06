@@ -1,7 +1,7 @@
 ProJack.app = angular.module("ProJack", 
 		['ngRoute', 'ang-drag-drop', 'Utils', 'SecurityModule', 
 		 'DashBoardModule', 'CustomersModule', 
-		 'IssuesModule', 'FlashLightModule', 'SprintModule', 'GitlabModule']);
+		 'IssuesModule', 'FlashLightModule', 'SprintModule', 'GitlabModule', 'Elasticsearch']);
 
 ProJack.app.filter('numberFixedLen', function () {
     return function(a,b){

@@ -1,7 +1,7 @@
 /**
  * Service that handles all affairs related to issues
  */
-ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', function ($http, $q, KT, secService) {
+ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 'ESService', function ($http, $q, KT, secService, elastic) {
 	
 	return {
 		
@@ -142,35 +142,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 	
-		/**
-		 * Returns all issues that are related to the given sprint
-		 * @param sprint The sprint
-		 */
-		/*
-		getIssuesBySprint : function(sprint) {
-			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/bySprint?key="' + sprint._id + '"')
-				.then(function(response) {
-					var retval = new Array();
-					for (var i in response.data.rows)
-						retval.push(response.data.rows[i].value);
-					return retval;
-				});
-		},
-		*/
-		
-		/**
-		 * Returns all issues that are related to the given feature
-		 * @param feature The given feature
-		 */
-		/*
-		getIssueByFeature : function(feature) {
-			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byFeature?key="'+feature._id+'"')
-				.then(function(response) {
-					return response.data.rows[0].value;
-				});
-		},
-		*/
-
         /**
          * Returns all issues that are visible by the current user
          * @returns Array of issues
@@ -191,24 +162,22 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param criteria The criteria to filter the issues
 		 */
 		getIssuesByCriteria : function(criteria) {
-			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search";
 			var params = {};
-			
-			if (criteria.type && criteria.type !== '') 
-				params.type = criteria.type;
-			
-			if (criteria.selection == 1)
-				params.uid = 'org.couchdb.user:' + secService.getCurrentUserName();
-			if (criteria.selection == 2)
-				params.uid = '';
-			
-			//if (criteria.customer) 
-			//	params.cid = criteria.customer;
 		
-			params.status = criteria.status;
-			return $http.get(url, { params : params }).then(function(response) {
-				return response.data.rows;
-			});
+			if (criteria.issuetype && criteria.issuetype !== '') 
+				params.issuetype = criteria.issuetype;
+		
+			if (criteria.selection == 1)
+				params.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
+			if (criteria.selection == 2)
+				params.assignedTo = '';
+		
+			if (criteria.tags)
+				params.tags = criteria.tags;
+			
+			params.state = criteria.status;
+			
+			return elastic.query('issues', params, 'number', true); 
 		},
 		
 		/**
@@ -241,11 +210,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param issue The issue that should be persisted
 		 */
 		createIssue : function(issue) {
-			//if (typeof issue.customer == "object")
-			//	issue.customer = issue.customer._id;
-			//if (typeof issue.feature == "object")
-			//	issue.feature = issue.feature._id;
-			
+		
 			if (issue.assignedTo && issue.assignedTo.length > 0)
 				issue.state = 'ASSIGNED';
 			
@@ -276,12 +241,20 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param issue The issue that should be updated
 		 */
 		updateIssue : function(issue) {
+			
+			// dates shall be stored as timestamps
+			issue.dateCreated  = KT.sanitizeDate(issue.dateCreated);
+			issue.resolveUntil = KT.sanitizeDate(issue.resolveUntil);
 			issue.dateModified = new Date().getTime();
-			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
-				.then(function(response) {
-					issue._rev = response.data.rev;
-					return response.data;
-				});
+			
+			// remove customer, since it doesn't exist any more
+			issue.customer = undefined;
+			
+			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue).then(function(response) {
+				issue._rev = response.data.rev;
+				elastic.index(issue);
+				return issue;
+			});
 		},
 		
 		
