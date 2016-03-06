@@ -4,16 +4,16 @@
 	</div>
 	
 	<div class="panel-body">
-		<h5>Dringende Tickets</h5>
+		<h5>Urgent Tickets</h5>
 		<div data-ng-if="issues.length == 0">
-			<span class="fa fa-smile-o" style="font-size:18px;"></span><i> Aktuell liegen keine drigenden Tickets vor</i>	
+			<span class="fa fa-smile-o" style="font-size:18px;"></span><i> Currently no urgent tickets</i>	
 		</div>
 		<div class="row" data-ng-repeat="i in issues">
 			<div class="col-md-8">
 				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{::i.number}} - {{::i.title}}</a></h6>
 			</div>
 			<div class="col-md-3">
-				<small class="pull-right">Erledigen bis : {{::i.resolveUntil | date : 'dd.MM.yyyy'}}</small>
+				<small class="pull-right">To be done until : {{::i.resolveUntil | date : 'dd.MM.yyyy'}}</small>
 			</div>
 			<div class="col-md-1">
 				<div class="pull-right">
@@ -23,25 +23,25 @@
 		</div>	
 		<hr/>	
 		
-		<h5>Aktuell getracked</h5>	
+		<h5>Tracked Issues</h5>	
 		<div data-ng-if="currentTracked.length == 0">
-			<i>Aktuell werden keine Tickets getracked</i>
+			<i>Currently no tracked issues</i>
 		</div>
 		<div class="row" data-ng-repeat="i in currentTracked">
 			<div class="col-md-8">
 				<h6><a href="#/issues/{{i._id}}/edit" title="{{i.description}}">#{{::i.number}} - {{::i.title}}</a></h6>
 			</div>
 			<div class="col-md-4">
-				<span class="text-bold pull-right" data-ng-if="i.times.state == 'RUNNING'">Läuft</span>
-				<span class="text-bold pull-right" data-ng-if="i.times.state == 'PAUSED'">Pausiert</span>
+				<span class="text-bold pull-right" data-ng-if="i.times.state == 'RUNNING'">In Progress</span>
+				<span class="text-bold pull-right" data-ng-if="i.times.state == 'PAUSED'">Paused</span>
 			</div>
 		</div>
 		
 		<hr/>	
 		
-		<h5>Dir zugewiesen</h5>
+		<h5>Assigned to you</h5>
 		<div data-ng-if="assigned.length == 0">
-			<span class="fa fa-smile-o" style="font-size:18px;"></span><i> Aktuell sind dir keine Tickets zugewiesen</i>	
+			<span class="fa fa-smile-o" style="font-size:18px;"></span><i>Currently no assigned tickets</i>	
 		</div>
 		<div class="row" data-ng-repeat="i in assigned">
 				<div class="col-md-8">
@@ -55,7 +55,6 @@
 					<span data-ng-if="i.issuetype == 'SUPPORT'" class="label label-warning">Support</span>	
 				</div>
 			</div>
-			
 			<div class="col-md-12">
 				<hr/>
 			</div>

@@ -61,7 +61,7 @@ ProJack.dashboard.controller('IssueChartController', ['$scope', '$http', functio
 	var i18n   = { 
 			BUG : 'Bugs', CHANGE_REQUEST : 'Change Requests',
 			FEATURE : 'Features', SUPPORT : 'Support', 
-			CLOSED : 'Geschlossen', ASSIGNED : 'Zugewiesen', RESOLVED : 'Fertig', CLOSED : 'Geschlossen', NEW : 'Neu', FEEDBACK : 'Feedback' };
+			CLOSED : 'Closed', ASSIGNED : 'Assigned', RESOLVED : 'Resolved', CLOSED : 'Done', NEW : 'New', FEEDBACK : 'Feedback' };
 	
 	$scope.issuesByType = [];
 	
