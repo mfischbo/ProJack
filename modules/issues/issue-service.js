@@ -161,23 +161,27 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * Returns all issues matching the given filter criteria
 		 * @param criteria The criteria to filter the issues
 		 */
-		getIssuesByCriteria : function(criteria) {
+		getIssuesByCriteria : function(predicates, sort, page) {
 			var params = {};
 		
-			if (criteria.issuetype && criteria.issuetype !== '') 
-				params.issuetype = criteria.issuetype;
+			if (predicates.issuetype && predicates.issuetype !== '') 
+				params.issuetype = predicates.issuetype;
 		
-			if (criteria.selection == 1)
+			if (predicates.selection == 1)
 				params.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
-			if (criteria.selection == 2)
+			if (predicates.selection == 2)
 				params.assignedTo = '';
 		
-			if (criteria.tags)
-				params.tags = criteria.tags;
+			if (predicates.tags)
+				params.tags = predicates.tags;
 			
-			params.state = criteria.status;
+			params.state = predicates.status;
 			
-			return elastic.query('issues', params, 'number', true); 
+			return elastic.query('issues', params, 
+					sort.predicate, 
+					sort.reverse, 
+					page.offset,
+					page.size); 
 		},
 		
 		/**

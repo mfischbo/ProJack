@@ -11,32 +11,31 @@ ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', 'Custome
 				notes: ''
 		};
 		
-		scope.customers = [];
-	
-		// read stored criterias from the local storage if available
-		if (localStorage.getItem(locKey)) {
-			scope.criteria = JSON.parse(localStorage.getItem(locKey));
-			service.getIssuesByCriteria(scope.criteria).then(function(issues) {
-				scope.issues = issues;
-			});
-		} else {
-			scope.criteria = {
-				customer : undefined
-			};
-		}
+		var scrollTimeout = undefined;
+
+		// we sort by issue number by default here
+		scope.$broadcast('Issues::IssueController::sort-changed', { predicate : 'number', reverse : 'false' });
 		
-		customerService.getAllCustomers().then(function(customers) {
-			scope.customers = customers;
+		scope.$on('Issues::SearchCriteriaDirective::predicates-changed', function($event, criteria) {
+			service.getIssuesByCriteria(criteria.predicates, criteria.sort, criteria.page).then(function(data) {
+				scope.issues = data;
+			});
 		});
 		
-		scope.$watch('criteria', function(nval, oval) {
-			if (nval && nval != oval) {
-				service.getIssuesByCriteria(scope.criteria).then(function(issues) {
-					scope.issues = issues;
-					localStorage.setItem(locKey, JSON.stringify(scope.criteria));
-				});
+		scope.$on('Issues::SearchCriteriaDirective::page-changed', function($event, criteria) {
+			service.getIssuesByCriteria(criteria.predicates, criteria.sort, criteria.page).then(function(data) {
+				scope.issues = scope.issues.concat(data);
+			});
+		});
+
+		scope.scroll = function() {
+			if (!scrollTimeout) {
+				scrollTimeout = window.setTimeout(function() {
+					scope.$broadcast('Issues::IssueController::scroll-event');
+					scrollTimeout = undefined;
+				}, 500);
 			}
-		}, true);
+		};
 		
 		scope.selectIssue = function(issue) {
 			KT.remove('_id', issue._id, scope.issues);

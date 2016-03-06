@@ -61,6 +61,14 @@ tr.weekend {
 	background-color:#eee;
 }
 
+/*
+ * CSS for issues
+ */
+span.tag-label {
+	margin-right:8px;
+}
+
+
 /* 
  * CSS for Sprints 
  */

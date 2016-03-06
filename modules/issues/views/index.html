@@ -11,41 +11,12 @@
 				<div class="row">
 					<div class="col-md-12 col-xs-12">
 						<span class="fa fa-bug" style="font-size:22px;line-height:37px;"></span>
-						
-						<div class="form-inline pull-right">
-							<label>Tags</label>	
-							<span issue-tags data-tags="criteria.tags" data-allow-new="false"></span>
-						
-							<label>Typ</label>
-							<select data-ng-model="criteria.issuetype" class="form-control">
-								<option value="">Alle</option>
-								<option value="bug">Bug</option>
-								<option value="change_request">Change Requests</option>
-								<option value="feature">Features</option>
-								<option value="support">Support</option>
-							</select>&nbsp;&nbsp;
-							
-							<label>Zuweisung</label>
-							<select data-ng-model="criteria.selection" class="form-control">
-								<option value="">Alle</option>
-								<option value="1">Mir zugewiesen</option>
-								<option value="2">Nicht zugewiesen</option>
-							</select>&nbsp;&nbsp;
-
-							<label>Status</label>
-							<select data-ng-model="criteria.status" class="form-control">
-								<option value="">Alle</option>
-								<option value="new">Neu</option>
-								<option value="assigned">Zugewiesen</option>
-								<option value="feedback">Feedback</option>
-								<option value="resolved">Resolved</option>
-								<option value="closed">Geschlossen</option>
-							</select>
-							&nbsp;&nbsp;
-							<a href="#/issues/customer/{{::criteria.customer}}/create" class="btn btn-primary">
-								<span class="fa fa-plus"> Issue</span>
-							</a>
-						</div>
+					
+						<div data-search-criteria class="form-inline pull-right"></div>	
+						&nbsp;&nbsp;
+						<a href="#/issues/customer/{{::criteria.customer}}/create" class="btn btn-primary">
+							<span class="fa fa-plus"> Issue</span>
+						</a>
 					</div>
 				</div>
 			</div>

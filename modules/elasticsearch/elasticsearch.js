@@ -59,12 +59,10 @@ ProJack.elasticsearch.service('ESService', ['$http', function($http) {
 				post.query.bool.must.push(x);
 			}
 			
-			if (!offset)
-				var offset = 0;
-			if (!size)
-				var size = 50;
+			var from = offset || 0;
+			var pageSize = size || 50;
 			
-			return $http.post(ProJack.config.esUrl + '/' + index + '/_search?size='+size+'&offset='+offset, post)
+			return $http.post(ProJack.config.esUrl + '/' + index + '/_search?size='+pageSize+'&from='+from, post)
 				.then(function(response) {
 					var retval = [];
 					for (var i in response.data.hits.hits)

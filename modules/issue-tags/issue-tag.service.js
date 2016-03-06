@@ -26,7 +26,6 @@ ProJack.issueTags.service('IssueTagsService', ['$http', function($http) {
 	}
 }]);
 
-
 ProJack.issueTags.directive('issueTags', ['IssueTagsService', function(service) {
 
 	var linkFn = function(scope, elem, attrs) {
@@ -45,11 +44,15 @@ ProJack.issueTags.directive('issueTags', ['IssueTagsService', function(service) 
 			if (scope.availableTags.length == 0) {
 				service.getAllTags().then(function(tags) {
 					scope.availableTags = tags;
+					scope.availableTags.forEach(function(t) {
+						if (t.toLowerCase().indexOf(scope.value.toLowerCase()) == 0)
+							scope.suggestions.push(t);
+					});
 				});
 			} else {
 				scope.suggestions = [];
 				scope.availableTags.forEach(function(t) {
-					if (t.indexOf(scope.value) == 0) {
+					if (t.toLowerCase().indexOf(scope.value.toLowerCase()) == 0) {
 						scope.suggestions.push(t);
 					}
 				});

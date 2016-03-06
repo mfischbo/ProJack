@@ -12,7 +12,8 @@
     "ng-file-upload": "latest",
     "angular-nvd3": "1.0.5",
     "fontawesome": "latest",
-    "moment": "2.11.2"
+    "moment": "2.11.2",
+    "ngInfiniteScroll" : "latest"
   },
   "resolutions": {
     "angular": "=1.5.0",

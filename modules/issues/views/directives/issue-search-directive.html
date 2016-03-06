@@ -1,36 +1,13 @@
 <div id="sprint-issueSearchOverlay" class="overlay-panel" data-ng-class="{'expanded' : issue}">
 	<div class="row">
-		<div class="col-md-4">
-			<label>Kunde</label>
-			<select data-ng-model="criteria.customer" data-ng-options="c._id as c.name for c in customers" class="form-control"></select>
-		</div>
-		<div class="col-md-4">
-			<label>Typ</label>
-			<select data-ng-model="criteria.type" class="form-control">
-				<option value="">Alle</option>
-				<option value="0">Bug</option>
-				<option value="1">Change Requests</option>
-				<option value="2">Features</option>
-				<option value="3">Support</option>
-			</select>
-		</div>
-		<div class="col-md-4">
-			<label>Status bis</label>
-			<select data-ng-model="criteria.status" class="form-control">
-				<option value="">Alle</option>
-				<option value="0">Neu</option>
-				<option value="1">Zugewiesen</option>
-				<option value="2">Feedback</option>
-				<option value="3">Resolved</option>
-				<option value="4">Geschlossen</option>
-			</select>
+		<div class="col-md-12">
+			<div data-search-criteria class="form-inline"></div>
 		</div>
 	</div>
 	
-	
-	<div class="row">
-		<div data-ng-class="{'col-md-12' : !issue, 'col-md-6' : issue}" style="height:80vh; overflow-y:scroll;">
-			<table class="table table-striped">
+	<div class="row" >
+		<div data-ng-class="{'col-md-12' : !issue, 'col-md-6' : issue}" id="iScroll" style="height:90vh; overflow-y: scroll;">
+			<table class="table table-striped" data-infinite-scroll="scroll()" data-infinite-scroll-immediate-check="false" infinite-scroll-container="'#iScroll'">
 			<thead>
 				<tr>
 					<th>&nbsp;</th>
@@ -40,19 +17,20 @@
 					<th>&nbsp;</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr data-ng-repeat="issue in issues | orderBy: 'number'"
+			<tbody >
+				<tr data-ng-repeat="issue in issues track by issue._id"
 					data-ng-class="{'info' : issue.state == 'ASSIGNED', 'danger' : issue.state == 'NEW', 'warning' : issue.state == 'FEEDBACK', 'success' : issue.state == 'RESOLVED', 'active' : issue.state == 'CLOSED'}"
-					data-ng-if="!issue.sprint || issue.sprint.length == 0">
+					>
 				
 					<td><span class="fa fa-chevron-left" style="cursor:pointer;" data-ng-click="selectIssue(issue)"></span>	
 					<td>{{issue.number}}</td>
 					<td><div data-buglabel data-type="{{issue.issuetype}}"></div></td>
-					<td>{{issue.title}}</td>
+					<td><span data-ng-repeat="t in issue.tags" class="label label-success tag-label">{{t}}</span>{{issue.title}}</td>
 					<td><a href="" data-ng-click="showDetails(issue)"><span class="fa fa-search"></span></a></td>
 				</tr>
 			</tbody>
 			</table>
+			<div style="height:400px;">&nbsp;</div>
 		</div>
 		
 		<div class="col-md-6" data-ng-if="issue">

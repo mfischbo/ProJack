@@ -1,53 +1,48 @@
 ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'SecurityService', '$uibModal',
                                                    function($scope, KT, service, customerService, secService, $modal) {
 
-	var locKey = "__IssuesIndex_Criteria";
-	var sortKey= "__IssuesIndex_SortCriteria";
+	var scrollTimeout = undefined;
 	var user   = secService.getCurrentUserName();
-	
-	$scope.criteria = {
-		type   : '',
-		selection : 0,
-		status : 'NEW',
-		tags : []
-	};
-	
-	$scope.predicate = '';
-	$scope.reverse   = false;
-	
-	if (localStorage.getItem(locKey))
-		$scope.criteria = JSON.parse(localStorage.getItem(locKey));
-	
-	if (localStorage.getItem(sortKey)) {
-		var x = JSON.parse(localStorage.getItem(sortKey));
-		$scope.predicate = x.predicate;
-		$scope.reverse   = x.reverse;
-	}
-	
-	customerService.getAllCustomers().then(function(data) {
-		$scope.customers = data;
-		
-		if ($scope.criteria.customer == '') {
-			$scope.criteria.customer = data[0]._id;
-		}
-	});
 
+	$scope.issues = [];
+
+	$scope.predicate = 'number';
+	$scope.reverse   = true;
+	
+	
     // load all observed issues
     service.getObservedIssues().then(function(issues) {
        $scope.observedIssues = issues;
     });
 	
-	$scope.$watch('criteria', function() {
-		localStorage.setItem(locKey, JSON.stringify($scope.criteria));
-		service.getIssuesByCriteria($scope.criteria).then(function(data) {
-			$scope.issues = data;
-		});
-	}, true);
-	
-	$scope.$watch('predicate', function() {
-		var x = { predicate : $scope.predicate, reverse : $scope.reverse };
-		localStorage.setItem(sortKey, JSON.stringify(x));
-	});
+    $scope.$on('Issues::SearchCriteriaDirective::predicates-changed', function($event, criteria) {
+    	service.getIssuesByCriteria(criteria.predicates, criteria.sort, criteria.page).then(function(data) {
+    		$scope.issues = data;
+    	});
+    });
+    
+    $scope.$on('Issues::SearchCriteriaDirective::page-changed', function($event, criteria) {
+    	service.getIssuesByCriteria(criteria.predicates, criteria.sort, criteria.page).then(function(data) {
+    		$scope.issues = $scope.issues.concat(data);
+    	});
+    });
+    
+    $scope.$watch('predicate', function() {
+    	$scope.$broadcast('Issues::IssueController::sort-changed', { predicate : $scope.predicate, reverse : $scope.reverse });
+    });
+    
+    $scope.$watch('reverse', function() {
+    	$scope.$broadcast('Issues::IssueController::sort-changed', { predicate : $scope.predicate, reverse : $scope.reverse });
+    });
+    
+    $scope.scroll = function() {
+    	if (!scrollTimeout) {
+    		scrollTimeout = window.setTimeout(function() {
+    			$scope.$broadcast('Issues::IssueController::scroll-event');
+    			scrollTimeout = undefined;
+    		}, 500); 
+    	}
+    };
 
 	$scope.isObserving = function(issue) {
        if (!issue.observers) return false;
