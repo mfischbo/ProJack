@@ -20,16 +20,13 @@ ProJack.flashlight.service('FlashLightService', ['$http', function($http) {
 		
 		parseResults : function(response) {
 			var retval = {
-						customers : [],
-						issues    : []
+					issues    : []
 				};
 				
 				for (var i in response.data.hits.hits) {
 					var e = response.data.hits.hits[i];
 					
-					if (e._type == 'customer')
-						retval.customers.push(e._source);
-					if (e._type == 'issue')
+					if (e._type == 'issues')
 						retval.issues.push(e._source);
 				}
 				
@@ -46,9 +43,9 @@ ProJack.flashlight.service('FlashLightService', ['$http', function($http) {
 			
 			var q = this.prepareESQuery(query);
 			if (query.indexOf("#") == 0) {
-				return $http.get(ProJack.config.esUrl + "/issue/_search?q=number:" + q).then(this.parseResults);
+				return $http.get(ProJack.config.esUrl + '/' + ProJack.config.esIndex + '/issues/_search?q=number:' + q).then(this.parseResults);
 			} else {
-				return $http.get(ProJack.config.esUrl + "/_search?q=" + this.prepareESQuery(query)).then(this.parseResults);
+				return $http.get(ProJack.config.esUrl + '/' + ProJack.config.esIndex + "/issues/_search?q=" + this.prepareESQuery(query)).then(this.parseResults);
 			}
 		}
 	};

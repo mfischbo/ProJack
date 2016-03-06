@@ -18,14 +18,14 @@ ProJack.elasticsearch.service('ESService', ['$http', function($http) {
 		/**
 		 * Takes a hashmap (or javascript object) and creates a query
 		 * string to search for.
-		 * @param index		The name of the index to search in
+		 * @param type		The document type that should be queried
 		 * @param criteria	Object containing the query parameters
 		 * @param sort		The name of the field to sort the results after
 		 * @param asc		If true sort is ascending, descending otherwise
 		 * @param offset	Results offset
 		 * @param size		Maximum amount of results beeing returned 
 		 */
-		query : function(index, criteria, sort, asc, offset, size) {
+		query : function(type, criteria, sort, asc, offset, size) {
 			
 			var qstring = '?q=';
 			var post = { 
@@ -62,7 +62,7 @@ ProJack.elasticsearch.service('ESService', ['$http', function($http) {
 			var from = offset || 0;
 			var pageSize = size || 50;
 			
-			return $http.post(ProJack.config.esUrl + '/' + index + '/_search?size='+pageSize+'&from='+from, post)
+			return $http.post(ProJack.config.esUrl + '/' + ProJack.config.esIndex + '/' + type +  '/_search?size='+pageSize+'&from='+from, post)
 				.then(function(response) {
 					var retval = [];
 					for (var i in response.data.hits.hits)
