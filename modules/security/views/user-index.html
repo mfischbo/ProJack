@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12 col-xs-12">
-		<h3>Benutzerverwaltung</h3>
+		<h3>User Management</h3>
 	</div>
 </div>
 
@@ -9,7 +9,7 @@
 	<div class="col-md-12 col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<span class="fa fa-user" style="font-size:22px; line-height:37px;"></span>
+				<h3 class="panel-title"><span class="fa fa-user"></span>&nbsp;Users</h3>
 			</div>
 			
 			<div class="panel-body">
@@ -23,12 +23,12 @@
 				</thead>
 				<tbody>
 					<tr data-ng-repeat="u in users">
-						<td>{{u.name}}</td>
+						<td>{{::u.name}}</td>
 						<td>
-							<span data-ng-repeat="r in u.roles">{{r}}</span>	
+							<span data-ng-repeat="r in u.roles">{{::r}}</span>	
 						</td>
 						<td class="tools">
-							<a href="#/admin/users/{{::u._id}}/edit" title="Bearbeiten" data-ng-if="u._id == currentUser._id || hasCreatePermission">
+							<a href="#/admin/users/{{::u._id}}/edit" title="Edit" data-ng-if="u._id == currentUser._id || hasCreatePermission">
 								<span class="fa fa-pencil"></span>
 							</a>	
 						</td>
@@ -40,12 +40,11 @@
 			<div class="panel-footer">
 				<div class="pull-right">
 					<a href="#/admin/users/create" class="btn btn-primary" data-ng-if="hasCreatePermission">
-						<span class="fa fa-plus"> Benutzer</span>
+						<span class="fa fa-plus"> User</span>
 					</a>
 				</div>
 				<div class="clearfix"></div>
 			</div>
 		</div>
-
 	</div>
 </div>

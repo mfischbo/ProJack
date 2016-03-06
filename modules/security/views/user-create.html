@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12 col-xs-12">
-		<h3>Neuen Benutzer anlegen</h3>
+		<h3>Create a new user</h3>
 	</div>
 </div>
 
@@ -9,7 +9,7 @@
 		<div class="panel panel-default">
 			<form name="createUserForm">
 				<div class="panel-heading">
-					<h5 class="panel-title">Account Daten</h5>
+					<h5 class="panel-title">Account</h5>
 				</div>
 				
 				<div class="panel-body">
@@ -18,8 +18,10 @@
 				
 				<div class="panel-footer">
 					<div class="pull-right">
-						<a href="#/admin/users"	class="btn btn-danger">Abbrechen</a>
-						<button class="btn btn-success" data-ng-click="createUser()" data-ng-disabled="createUserForm.$invalid || user.password != user.passwordConfirmation">Speichern</button>
+						<a href="#/admin/users"	class="btn btn-danger">Cancel</a>
+						<button class="btn btn-success" data-ng-click="createUser()" data-ng-disabled="createUserForm.$invalid || user.password != user.passwordConfirmation">
+							Save
+						</button>
 					</div>	
 					<div class="clearfix"></div>
 				</div>
