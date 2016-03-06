@@ -31,7 +31,7 @@
 		<td>{{i.assignedTo.split(":").pop()}}</td>
 		<td>{{i.resolveUntil|date:'dd.MM.yyyy'}}</td>
 		<td>
-			<span data-ng-repeat="t in i.tags" class="badge">{{t}}</span>		
+			<span data-ng-repeat="t in i.tags" class="label label-success tag-label">{{t}}</span>		
 			<a href="#/issues/{{i._id}}/edit">{{i.title}}</a>
 		</td>
 		<td class="tools">
