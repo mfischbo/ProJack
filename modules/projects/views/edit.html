@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+		<h3>{{::project.name}}</h3>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Edit {{::project.name}}</h3>
+			</div>
+			
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6 col-xs-12">
+						<h4>Project Metadata</h4>
+						<div data-ng-include data-src="'./modules/projects/views/form.html'"></div>
+					</div>
+					
+					<div class="col-md-6 col-xs-12">
+						<h4>Contacts</h4>
+						<div data-ng-include data-src="'./modules/projects/views/contact-person-table.html'"></div>
+						
+						<button type="button" data-ng-if="!contact" class="btn btn-primary pull-right" data-ng-click="createContact()">
+							<span class="fa fa-plus"> Contact</span>
+						</button>
+					
+						<div data-ng-if="contact">
+							<h4>Add contact</h4>	
+							<div data-ng-include data-src="'./modules/projects/views/contact-person-form.html'"></div>
+						</div>	
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="pull-right">
+					<a href="#/projects" class="btn btn-danger">Cancel</a>
+					<button type="button" class="btn btn-success" data-ng-click="saveProject()">Save</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>

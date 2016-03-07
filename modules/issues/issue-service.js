@@ -16,6 +16,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				description : '',
 				assignedTo  : '', 			// the user the issue is assigned to
 				reportedBy  : secService.getCurrentUserName(),
+				project		: '',			// the id of the project this issue belongs to
 				state		: 'NEW', 		// NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
 				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT,
 				priority	: 'NORMAL',		// LOW, NORMAL, HIGH

@@ -2,15 +2,12 @@ function getDesignDocs() {
 	
 	return [
 	        {
-	        	name : "customers",
+	        	name : "projects",
 	        	doc  : {
 	        		language: "javascript",
 	                views: {
 	                    index: {
-	                        map: "function(doc) {\n  if (doc.type == \"customer\" || doc._type == 'customer')\n      emit(doc._id, doc);\n}"
-	                    },
-	                    byCountry: {
-	                        map: "function(doc) {\n  if (doc.type == \"customer\" && doc.address && doc.address.country)\n      emit(doc.address.country, doc);\n}"
+	                        map: "function(doc) {\n  if (doc.type == \"project\")\n      emit(doc._id, doc);\n}"
 	                    }
 	                }
 	        	}
