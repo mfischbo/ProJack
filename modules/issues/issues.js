@@ -1,5 +1,5 @@
 ProJack.issues = angular.module("IssuesModule", 
-		['CustomersModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap', 'IssueTagsModule']);
+		['ProjectsModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap', 'IssueTagsModule']);
 
 ProJack.issues.config(['$routeProvider', function($routeProvider) {
 
@@ -8,7 +8,7 @@ ProJack.issues.config(['$routeProvider', function($routeProvider) {
             controller : 'IssueIndexController',
             templateUrl : './modules/issues/views/index.html'
         })
-        .when('/issues/customer/:cid/create', {
+        .when('/issues/create', {
             controller : 'IssueCreateController',
             templateUrl : './modules/issues/views/create.html'
         })
@@ -62,7 +62,7 @@ ProJack.issues.directive('statelabel', function() {
 	};
 });
 
-ProJack.issues.directive('searchCriteria', function() {
+ProJack.issues.directive('searchCriteria', ['ProjectService', function(projectService) {
 
 	var locKey = '__IssuesIndex_Criteria';
 	
@@ -73,6 +73,7 @@ ProJack.issues.directive('searchCriteria', function() {
 				type : '',
 				selection : 0,
 				status : 0,
+				project : '',
 				tags : []
 			},
 			sort : {
@@ -84,6 +85,14 @@ ProJack.issues.directive('searchCriteria', function() {
 				size      : 50
 			}
 		};
+		
+		scope.projects = [];
+
+		projectService.getAllProjects().then(function(data) {
+			scope.projects.push({ _id : '', name : 'All'});
+			for (var i in data)
+				scope.projects.push(data[i]);
+		});
 		
 		if (localStorage.getItem(locKey)) {
 			scope.criteria.predicates = JSON.parse(localStorage.getItem(locKey));
@@ -113,7 +122,7 @@ ProJack.issues.directive('searchCriteria', function() {
 		link: linkFn, 
 		scope :false 
 	}
-});
+}]);
 
 
 ProJack.issues.directive('trackingControls', ['$compile', '$uibModal', 'IssueService', 'SecurityService', function($compile, $modal, service, secService) {

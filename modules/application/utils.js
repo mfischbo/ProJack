@@ -163,7 +163,7 @@ ProJack.utils.service("KT", ['$uibModal', function($modal) {
 			
 			sanitizeDate : function(date) {
 				if (!date)
-					return 0;
+					return undefined;
 		
 				if (typeof date === 'number')
 					return date;

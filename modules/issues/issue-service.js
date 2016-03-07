@@ -172,13 +172,16 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				params.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
 			if (predicates.selection == 2)
 				params.assignedTo = '';
-		
+	
+			if (predicates.project != '')
+				params.project = predicates.project;
+			
 			if (predicates.tags)
 				params.tags = predicates.tags;
 			
 			params.state = predicates.status;
 			
-			return elastic.query('issues', params, 
+			return elastic.query('issue', params, 
 					sort.predicate, 
 					sort.reverse, 
 					page.offset,
@@ -258,7 +261,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			
 			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue).then(function(response) {
 				issue._rev = response.data.rev;
-				elastic.index('issues', issue);
+				elastic.index('issue', issue);
 				return issue;
 			});
 		},
@@ -310,8 +313,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issue._attachments[file.name] = {};
 				issue._attachments[file.name]["content_type"] = file.type;
 				issue._attachments[file.name]['data'] = fr.result.split(",")[1];
-				$http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
-				.success(function() {
+				
+				$http.put(ProJack.config.dbUrl + "/" + issue._id, issue).success(function(response) {
+					issue._rev = response.rev;
+					elastic.index('issue', issue);
 					deferred.resolve({filename : file.name, type : file.type, length : file.size || 0 });
 				})
 				.error(function(response) {

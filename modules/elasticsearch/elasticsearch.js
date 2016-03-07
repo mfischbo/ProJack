@@ -6,6 +6,8 @@ ProJack.elasticsearch.service('ESService', ['$http', function($http) {
 		index : function(index, document) {
 			if (!document._id) 
 				console.error("The specified document does not have a valid ID");
+			
+			console.log(document);
 			$http.put(ProJack.config.esUrl + '/' + ProJack.config.esIndex + '/'+index+'/' + document._id, document)
 				.then(function() {
 					console.log('Did work');

@@ -1,4 +1,4 @@
-ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', 'CustomerService', '$sce', function(KT, service, customerService, $sce) {
+ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', '$sce', function(KT, service, $sce) {
 
 	var locKey = '__Projack.issues.searchDirective.criteria';
 	

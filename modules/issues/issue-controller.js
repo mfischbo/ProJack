@@ -1,5 +1,5 @@
-ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'CustomerService', 'SecurityService', '$uibModal',
-                                                   function($scope, KT, service, customerService, secService, $modal) {
+ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService', 'SecurityService', '$uibModal',
+                                                   function($scope, KT, service, secService, $modal) {
 
 	var scrollTimeout = undefined;
 	var user   = secService.getCurrentUserName();
@@ -54,6 +54,7 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 	};
 }]);
 
+
 ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalInstance', 'KT', 'IssueService', 'data', function($scope, $modalInstance, KT, service, data) {
 
 	$scope.issue = data.issue;
@@ -93,18 +94,18 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 	};
 }]);
 
-ProJack.issues.controller('IssueResolveModalController', ['$scope', '$modalInstance', 'IssueService', 'CustomerService', 'GitlabService', 'data', 
-                                                          function($scope, $modalInstance, service, cService, glService, data) {
+ProJack.issues.controller('IssueResolveModalController', ['$scope', '$modalInstance', 'IssueService', 'ProjectService', 'GitlabService', 'data', 
+                                                          function($scope, $modalInstance, service, projectService, glService, data) {
 
 	$scope.issue = data.issue;
 	$scope.branches = [];
 	$scope.tinyOptions = ProJack.config.tinyOptions;
 	$scope.tinyOptions.height = '200px';
-	
-	cService.getCustomerById($scope.issue.customer).then(function(customer) {
-		if (customer.gitlabProject) {
-			glService.getBranchesByProjectId(customer.gitlabProject).then(function(branches) {
-				for (var q in branches) 
+
+	projectService.getProjectById($scope.issue.project).then(function(project) {
+		if (project.gitlabProject) {
+			glService.getBranchesByProjectId(project.gitlabProject).then(function(branches) {
+				for (var q in branches)
 					$scope.branches.push(branches[q].name);
 			});
 		}
@@ -143,24 +144,16 @@ ProJack.issues.controller('IssueResolveModalController', ['$scope', '$modalInsta
 }]);
 
 
-ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$routeParams', 'KT', 'IssueService', 'CustomerService', 
-                                                    function($scope, $location, $routeParams, KT, service, customerService) {
+ProJack.issues.controller('IssueCreateController', ['$scope', '$location', 'KT', 'IssueService', 'ProjectService', 
+                                                    function($scope, $location, KT, service, projectService) {
 	
 	$scope.issue = service.newIssue();
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
 	
-	customerService.getAllCustomers().then(function(data) {
-		$scope.customers = data;
-		if ($routeParams.cid) {
-			for (var i in $scope.customers) {
-				if ($scope.customers[i]._id == $routeParams.cid) {
-					$scope.issue.customer = $scope.customers[i]._id;
-					break;
-				}
-			}
-		}
+	projectService.getAllProjects().then(function(data) {
+		$scope.projects = data;
 	});
-	
+
 	$scope.createIssue = function() {
 		service.createIssue($scope.issue).then(function() {
 			KT.alert("Das Issue wurde erfolgreich angelegt");
@@ -171,18 +164,20 @@ ProJack.issues.controller('IssueCreateController', ['$scope', '$location', '$rou
 
 
 ProJack.issues.controller('IssueModifyController', 
-		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 
-		 function($scope, $routeParams, $location, KT, service, cService) {
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'ProjectService', 
+		 function($scope, $routeParams, $location, KT, service, projectService) {
 	
 	$scope.tinymceOptions = ProJack.config.tinyOptions;
-	
-	cService.getAllCustomers().then(function(customers) {
-		$scope.customers = customers;
-		service.getIssueById($routeParams.id).then(function(issue) {
-			$scope.issue = issue;
-		});
+
+	projectService.getAllProjects().then(function(data) {
+		$scope.projects = data;
 	});
 	
+	service.getIssueById($routeParams.id).then(function(issue) {
+		$scope.issue = issue;
+	});
+
+
 	$scope.updateIssue = function() {
 		service.updateIssue($scope.issue).then(function(data) {
 			$scope.issue._rev = data.rev;
@@ -193,13 +188,13 @@ ProJack.issues.controller('IssueModifyController',
 }]);
 
 
-ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerService', 'IssueService', function($scope, CustomerService, IssueService) {
+ProJack.issues.controller('IssueChangelogController', ['$scope', 'ProjectService', 'IssueService', function($scope, projectService, IssueService) {
 
 	
 	if (localStorage.getItem("__Projack_Changelog_Criteria")) {
 		var x = JSON.parse(localStorage.getItem("__Projack_Changelog_Criteria"));
 		$scope.criteria = {
-				customer : x.customer,
+				project	: x.project,
 				from     : new Date(x.from),
 				to		 : new Date(x.to)
 		};
@@ -207,18 +202,18 @@ ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerServic
 		$scope.criteria = {
 			from : new Date(),
 			to   : new Date(),
-			customer : ''
+			project : ''
 		};
 	}
 	
-	CustomerService.getAllCustomers().then(function(data) {
-		$scope.customers = data;
+	projectService.getAllProjects().then(function(data) {
+		$scope.projects = data;
 	});
 	
 	$scope.$watch('criteria', function(val) {
-		if (!$scope.criteria.customer || !$scope.criteria.from || !$scope.criteria.to) return;
+		if (!$scope.criteria.project || !$scope.criteria.from || !$scope.criteria.to) return;
 		
-		IssueService.getChangelog($scope.criteria.customer, $scope.criteria.from, $scope.criteria.to).then(function(issues) {
+		IssueService.getChangelog($scope.criteria.project, $scope.criteria.from, $scope.criteria.to).then(function(issues) {
 			$scope.issues = issues;
 		});
 		
@@ -227,26 +222,26 @@ ProJack.issues.controller('IssueChangelogController', ['$scope', 'CustomerServic
 }]);
 
 
-ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', 'CustomerService', 
-                                                     function($scope, service, customerService) {
+ProJack.issues.controller('IssueOverlayController', ['$scope', 'IssueService', 'ProjectService', 
+                                                     function($scope, service, projectService) {
 	
 	$scope.issues = [];
-	$scope.customers = [];
+	$scope.projects = [];
 
 	$scope.criteria = {
 			status		: 1,
-			customer	: undefined
+			project: undefined
 	};
-	
-	customerService.getAllCustomers().then(function(data) {
-		$scope.customers = data;
+
+	projectService.getAllProjects().then(function(data) {
+		$scope.projects = data;
 	});
 }]);
 
 
 ProJack.issues.controller('IssueEditController', 
-		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'CustomerService', 'SecurityService', 'GitlabService', '$sce',
-        function($scope, $routeParams, $location, KT, service, customerService, secService, glService, $sce) {
+		['$scope', '$routeParams', '$location', 'KT', 'IssueService', 'ProjectService', 'SecurityService', 'GitlabService', '$sce',
+        function($scope, $routeParams, $location, KT, service, projectService, secService, glService, $sce) {
 	
 	$scope.html = { description : '', notes : {} };
 	$scope.tinyOptions = ProJack.config.tinyOptions;
@@ -278,13 +273,13 @@ ProJack.issues.controller('IssueEditController',
 		$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
 		$scope.sanitizeHtml();
 
-		// load the customer if the issue has one
-		customerService.getCustomerById($scope.issue.customer).then(function(data) {
-			$scope.customer = data;
+		// load the project if the issue has one
+		projectService.getProjectById($scope.issue.project).then(function(data) {
+			$scope.project = data;
 
 			// the branches
-			if ($scope.customer.gitlabProject) {
-				glService.getBranchesByProjectId($scope.customer.gitlabProject).then(function(data) {
+			if ($scope.project.gitlabProject) {
+				glService.getBranchesByProjectId($scope.project.gitlabProject).then(function(data) {
 					$scope.branches = [];
 					for (var i in data) {
 						$scope.branches.push(data[i].name);
@@ -380,8 +375,8 @@ ProJack.issues.controller('IssueEditController',
 			$scope.currentSpent = 0;
 		}
 	
-		service.updateIssue($scope.issue).then(function(data) {
-			$scope.issue._rev = data.rev;
+		service.updateIssue($scope.issue).then(function(issue) {
+			$scope.issue = issue;
 			$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
 			$scope.sanitizeHtml();
 			KT.alert("Notiz gespeichert");

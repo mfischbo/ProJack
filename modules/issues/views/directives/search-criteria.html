@@ -3,6 +3,11 @@
 	<label>Tags</label>
 	<span issue-tags data-tags='criteria.predicates.tags' data-allow-new="false"></span>		
 
+	<label>Project</label>
+	<select data-ng-model="criteria.predicates.project" class="form-control">
+		<option data-ng-repeat="p in projects" value="{{p._id}}">{{p.name}}</option>	
+	</select>
+
 	<label>Typ</label>
 	<select data-ng-model="criteria.predicates.issuetype" class="form-control">
 		<option value="">Alle</option>

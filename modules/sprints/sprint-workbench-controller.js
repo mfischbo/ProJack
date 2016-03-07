@@ -1,12 +1,12 @@
 ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintService', 'IssueService',
-                                                        'CustomerService', 'SecurityService', '$uibModal',
-                         function($scope, KT, sprintService, issueService, customerService, secService, $uibModal) {
+                                                        'SecurityService', '$uibModal',
+                         function($scope, KT, sprintService, issueService, secService, $uibModal) {
 	
 	var locKey = "__Projack.sprints.current.id";
 	
 	// all available sprints and the current focused sprint
 	$scope.sprints = [];
-	$scope.currentSprint = {};
+	$scope.currentSprint = undefined;
 
 	// states for the overlays
 	$scope.issueOverlayVisible = false;
@@ -27,6 +27,9 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 	m = m.subtract(1, 'months');
 	sprintService.getSprintsStartingAt(m.toDate()).then(function(data) {
 		$scope.sprints = data;
+		if (data.length == 0)
+			return;
+		
 		var sprintId = undefined;
 		if (localStorage.getItem(locKey)) {
 			var current = localStorage.getItem(locKey);
@@ -50,13 +53,11 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 					$scope.stats.count++;
 				}
 			}
-			console.log($scope.stats);
 		});
 	});
 
 
 	$scope.switchSprint = function(sprint) {
-		
 		sprintService.getSprintById(sprint._id).then(function(sprint) {
 			$scope.currentSprint = sprint;
 			localStorage.setItem(locKey, sprint._id);
