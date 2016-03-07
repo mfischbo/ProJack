@@ -53,15 +53,24 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 		},
 		
 		getAllUserNames : function() {
-			return $http.get(ProJack.config.srvUrl + "/_users/_all_docs").then(function(response) {
-				var retval = new Array();
-				for (var i in response.data.rows) {
-					if (response.data.rows[i].id.indexOf("org.couchdb.user") == 0) {
-						var tmp = response.data.rows[i].id.split(":");
-						tmp.splice(0,1);
-						var login = tmp.join(":");
-						retval.push({id : response.data.rows[i].id, login : login});
-					} 
+			return $http.get(ProJack.config.dbUrl + '/_security').then(function(response) {
+				var retval = [];
+				if (response.data.admins) {
+					for (var i in response.data.admins.names) {
+						retval.push({
+							id : 'org.couchdb.user:' + response.data.admins.names[i],
+							login : response.data.admins.names[i]
+						});
+					}
+				}
+			
+				if (response.data.members) {
+					for (var i in response.data.members.names) {
+						retval.push({
+							id : 'org.couchdb.user:' + response.data.members.names[i],
+							login: response.data.members.names[i]
+						});
+					}
 				}
 				return retval;
 			});
