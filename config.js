@@ -25,7 +25,7 @@ ProJack.config = {
 		srvUrl : "http://localhost:5984",
 		
 		// url to your database
-		dbUrl :  "http://localhost:5984/projack-dev",
+		dbUrl :  "http://localhost:5984/projack-ng",
 
 		/**
 		 * Elasticsearch Configruation
@@ -35,7 +35,7 @@ ProJack.config = {
 		esUrl 			: 'http://localhost:9200',
 		
 		// the name of the index that should be used
-		esIndex			: 'projack',
+		esIndex			: 'projack-ng',
 		
 		
 		/**

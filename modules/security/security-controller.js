@@ -54,7 +54,7 @@ ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT'
 		
 		service.createUser($scope.user).then(function(response) {
 			if (response.data.ok) { 
-				service.addUserAsMember($scope.user).then(function(isOk) {
+				service.addUser($scope.user, 'members').then(function(isOk) {
 					if (isOk.ok)
 						KT.alert('Der Benutzer wurde erfolgreich angelegt');
 					else

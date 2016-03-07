@@ -73,13 +73,6 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			});
 		},
 		
-		createAdminUser : function(user) {
-			return $http.put(ProJack.config.srvUrl + "/_config/admins/" + user.name, user.password)
-				.then(function(response) {
-					return response.data;
-				});
-		},
-		
 		createUser : function(user) {
 			return $http.put(ProJack.config.srvUrl + "/_users/org.couchdb.user:" + user.name, user)
 				.success(function(response) {
@@ -88,7 +81,37 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 					return undefined;
 				});
 		},
+
+		/**
+		 * Adds the user to the database in the provided role
+		 * @param role 	Either 'admins' or 'members'
+		 */
+		addUser : function(user, role) {
+			var def = $q.defer();
+			$http.get(ProJack.config.dbUrl + '/_security').success(function(security) {
+				if (!security[role]) {
+					security[role] = {
+							names : []
+					};	
+				}
+				
+				if (security[role].names.indexOf(user.name) > -1)
+					def.reject();
+				else {
+					security[role].names.push(user.name);
+					$http.put(ProJack.config.dbUrl + '/_security', security).success(function(data) {
+						def.resolve(data);
+					}).error(function() {
+						def.reject();
+					});
+				}
+			}).error(function() {
+				def.reject();
+			});
+			return def.promise;
+		},
 		
+/*	
 		addUserAsMember : function(user) {
 			var def = $q.defer();
 			$http.get(ProJack.config.dbUrl + "/_security").success(function(security) {
@@ -107,7 +130,7 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			});
 			return def.promise;
 		},
-	
+*/	
 		/**
 		 * Updates the given user and returns the persisted instance 
 		 */

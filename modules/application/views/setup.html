@@ -36,6 +36,10 @@
 			<span class="text-muted" data-ng-if="status.isDDocsCreated == undefined">Database installed</span>
 			<span class="fa fa-check" style="color:green;" data-ng-if="status.isDDocsCreated == true">&nbsp; Database successfully installed</span>	
 			<span class="fa fa-close" style="color:red;" data-ng-if="status.isDDocsCreated == false">&nbsp; Error setting up the database></span>
+			<br/>
+			<span class="text-muted" data-ng-if="status.isAdminCreated == undefined">Admin user added to DB</span>
+			<span class="fa fa-check" style="color:green;" data-ng-if="status.isAdminCreated == true">&nbsp; Successfully added the user account <span>	
+			<span class="fa fa-close" style="color:red;" data-ng-if="status.isAdminCreated == false">&nbsp; Error adding the user account</span>	
 		</div>
 	</div>
 </form>
