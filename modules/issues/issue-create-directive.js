@@ -8,13 +8,16 @@
  * 'close-requested'		: When the user requested to close the component
  * 
  */
-ProJack.issues.directive('issueCreateDirective', ['IssueService', function(service) {
+ProJack.issues.directive('issueCreateDirective', ['IssueService', 'ProjectService', function(service, projectService) {
 
 	var linkFn = function(scope, elem, attrs) {
 		
 		scope.issue = service.newIssue();
 		scope.tinymceOptions = ProJack.config.tinyOptions;
-	
+
+		projectService.getAllProjects().then(function(projects) {
+			scope.projects = projects;
+		});
 		
 		/**
 		 * Creates a new issue and emits it to parent scopes

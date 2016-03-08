@@ -55,7 +55,9 @@ ProJack.issues.controller('IssueIndexController', ['$scope', 'KT', 'IssueService
 }]);
 
 
-ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalInstance', 'KT', 'IssueService', 'data', function($scope, $modalInstance, KT, service, data) {
+ProJack.issues.controller('IssueTimeTrackModalController', 
+		['$scope', '$uibModalInstance', 'KT', 'IssueService', 'data', 
+		 function($scope, $modalInstance, KT, service, data) {
 
 	$scope.issue = data.issue;
 	$scope.user  = data.user;
@@ -94,8 +96,9 @@ ProJack.issues.controller('IssueTimeTrackModalController', ['$scope', '$modalIns
 	};
 }]);
 
-ProJack.issues.controller('IssueResolveModalController', ['$scope', '$modalInstance', 'IssueService', 'ProjectService', 'GitlabService', 'data', 
-                                                          function($scope, $modalInstance, service, projectService, glService, data) {
+ProJack.issues.controller('IssueResolveModalController', 
+		['$scope', '$uibModalInstance', 'IssueService', 'ProjectService', 'GitlabService', 'data', 
+        function($scope, $modalInstance, service, projectService, glService, data) {
 
 	$scope.issue = data.issue;
 	$scope.branches = [];
