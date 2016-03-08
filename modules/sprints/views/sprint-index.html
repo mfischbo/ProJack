@@ -53,5 +53,5 @@
 	<div data-swimlane data-lane="lane" data-sprint="currentSprint"></div>
 </div>
 
-<div class="ng-hide" data-issue-search-directive data-hide="issueIds" data-ng-show="issueSearchOverlayVisible"></div>
-<div id="sprint-issueCreateOverlay" class="overlay-panel ng-hide" data-issue-create-directive data-ng-show="issueCreateOverlayVisible"></div>
+<div data-issue-search-directive data-hide="issueIds" data-ng-if="issueSearchOverlayVisible"></div>
+<div id="sprint-issueCreateOverlay" class="overlay-panel" data-issue-create-directive data-ng-if="issueCreateOverlayVisible"></div>
