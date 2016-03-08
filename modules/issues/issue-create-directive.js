@@ -25,6 +25,7 @@ ProJack.issues.directive('issueCreateDirective', ['IssueService', 'ProjectServic
 		scope.createIssue = function() {
 			service.createIssue(scope.issue).then(function(issue) {
 				scope.$emit('Issues::CreateDirective::issue-created', issue);
+				scope.issue = service.newIssue();
 			});
 		};
 		
