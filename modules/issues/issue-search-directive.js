@@ -6,6 +6,7 @@ ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', '$sce', 
 	
 		scope.issues = [];
 		scope.issue  = undefined;
+		scope.showHidden = false;
 		scope.html = {
 				description : '',
 				notes: ''
@@ -18,7 +19,7 @@ ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', '$sce', 
 		
 		scope.$on('Issues::SearchCriteriaDirective::predicates-changed', function($event, criteria) {
 			service.getIssuesByCriteria(criteria.predicates, criteria.sort, criteria.page).then(function(data) {
-				scope.issues = data;
+					scope.issues = data;
 			});
 		});
 		
@@ -27,7 +28,7 @@ ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', '$sce', 
 				scope.issues = scope.issues.concat(data);
 			});
 		});
-
+		
 		scope.scroll = function() {
 			if (!scrollTimeout) {
 				scrollTimeout = window.setTimeout(function() {
@@ -54,7 +55,9 @@ ProJack.issues.directive('issueSearchDirective', ['KT', 'IssueService', '$sce', 
 	
 	return {
 		restrict : 'A',
-		scope    : { },
+		scope    : {
+			hide : '='
+		},
 		templateUrl : './modules/issues/views/directives/issue-search-directive.html',
 		link : linkFn
 	};

@@ -5,6 +5,16 @@
 		</div>
 	</div>
 	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" data-ng-model="showHidden" data-ng-change="toggleHidden"> Show issues that are already in the sprint 
+				</label>
+			</div>
+		</div>
+	</div>
+	
 	<div class="row" >
 		<div data-ng-class="{'col-md-12' : !issue, 'col-md-6' : issue}" id="iScroll" style="height:90vh; overflow-y: scroll;">
 			<table class="table table-striped" data-infinite-scroll="scroll()" data-infinite-scroll-immediate-check="false" infinite-scroll-container="'#iScroll'">
@@ -20,7 +30,7 @@
 			<tbody >
 				<tr data-ng-repeat="issue in issues track by issue._id"
 					data-ng-class="{'info' : issue.state == 'ASSIGNED', 'danger' : issue.state == 'NEW', 'warning' : issue.state == 'FEEDBACK', 'success' : issue.state == 'RESOLVED', 'active' : issue.state == 'CLOSED'}"
-					>
+					data-ng-if="hide.indexOf(issue._id) < 0 || showHidden">
 				
 					<td><span class="fa fa-chevron-left" style="cursor:pointer;" data-ng-click="selectIssue(issue)"></span>	
 					<td>{{issue.number}}</td>

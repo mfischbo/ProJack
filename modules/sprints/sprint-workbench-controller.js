@@ -7,6 +7,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 	// all available sprints and the current focused sprint
 	$scope.sprints = [];
 	$scope.currentSprint = undefined;
+	$scope.issueIds = [];
 
 	// states for the overlays
 	$scope.issueOverlayVisible = false;
@@ -43,6 +44,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 			$scope.currentSprint = sprint;
 			
 			// calculate the stats on the current sprint
+			// further collect all issue id's in the current sprint
 			for (var i in sprint.lanes) {
 				for (var q in sprint.lanes[i].issues) {
 					var issue = sprint.lanes[i].issues[q];
@@ -51,6 +53,7 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 					if (issue.state == 'RESOLVED') $scope.stats.qa++;
 					if (issue.state == 'CLOSED') $scope.stats.done++;
 					$scope.stats.count++;
+					$scope.issueIds.push(sprint.lanes[i].issues[q]._id);
 				}
 			}
 		});
