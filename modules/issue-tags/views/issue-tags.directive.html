@@ -1,12 +1,13 @@
 <input type="text" 
 	data-uib-typeahead="tag for tag in suggestions" 
 	data-typeahead-on-select="selectSuggestion($item)" class="form-control" 
-	data-ng-change='onInputChange()' data-ng-model="value"></input>
+	data-ng-change='onInputChange()' data-ng-model="value">
+
 <button type="button" class="btn btn-sm" data-ng-click="addTag()" data-ng-if="allowCreate == 'true'">
 	<span class="fa fa-plus"></span>
 </button>
-	
-<div>	
+
+<div style="display:inline;">	
 	<span data-ng-repeat="t in tags" class="label label-success tag-label">{{t}}&nbsp;
 		<span class="fa fa-remove" data-ng-click="purge(t)" style="cursor:pointer;"></span>
 	</span>
