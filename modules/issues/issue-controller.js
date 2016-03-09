@@ -99,7 +99,13 @@ ProJack.issues.controller('IssueResolveModalController',
 		['$scope', '$uibModalInstance', 'IssueService', 'ProjectService', 'GitlabService', 'data', 
         function($scope, $modalInstance, service, projectService, glService, data) {
 
+	var assignedTo = data.issue.assignedTo;
+	var state      = data.issue.state;
+	
 	$scope.issue = data.issue;
+	$scope.issue.state = 'RESOLVED';
+	$scope.issue.assignedTo = '';
+	
 	$scope.branches = [];
 	$scope.tinyOptions = ProJack.config.tinyOptions;
 	$scope.tinyOptions.height = '200px';
@@ -141,6 +147,9 @@ ProJack.issues.controller('IssueResolveModalController',
 	};
 	
 	$scope.dismiss = function() {
+		// rollback and dismiss
+		$scope.issue.assignedTo = assignedTo;
+		$scope.issue.state      = state;
 		$modalInstance.dismiss();
 	};
 }]);

@@ -122,10 +122,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 					}
 				}
 			});
-			instance.result.then(function() {
-				issue.state = 'RESOLVED';
-				issue.assignedTo = '';
-			});
 		};
 		
 		scope.onDoneDrop = function(event, $data) {
