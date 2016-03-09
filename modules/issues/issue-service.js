@@ -376,8 +376,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				// create a new time tracking
 				track = this.newTimeTrack(user);
 				issue.times.push(track);
-				this.updateIssue(issue).then(function(data) {
-					issue._rev = data.rev;
+				this.updateIssue(issue).then(function() {
 					def.resolve();
 				});
 			} else {
@@ -392,8 +391,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				track.pauseTimes += pauseTime;
 				track.pause = undefined;
 				track.state = 'RUNNING';
-				this.updateIssue(issue).then(function(data) {
-					issue._rev = data.rev;
+				this.updateIssue(issue).then(function() {
 					def.resolve();
 				});
 			}
@@ -409,8 +407,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			if (track) {
                 track.pause = this.newPause();
 				track.state = 'PAUSED';
-				this.updateIssue(issue).then(function(data) {
-					issue._rev = data.rev;
+				this.updateIssue(issue).then(function() {
+					return issue;
 				});
 			}
 		},
@@ -504,7 +502,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
             }
             var def = $q.defer();
             this.updateIssue(issue).then(function(data) {
-               issue._rev = data.rev;
                def.resolve();
             });
             return def.promise;

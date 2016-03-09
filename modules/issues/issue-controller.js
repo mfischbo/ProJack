@@ -84,9 +84,8 @@ ProJack.issues.controller('IssueTimeTrackModalController',
 		$scope.issue.notes.push($scope.note);
 		
 		// update the issue using the service
-		service.updateIssue($scope.issue).then(function(data) {
-			$scope.issue._rev = data.rev;
-			KT.alert('Notiz wurde erfolgreich hinzugefügt');
+		service.updateIssue($scope.issue).then(function() {
+			KT.alert('The note has been added');
 			$modalInstance.close();
 		});
 	};
@@ -182,8 +181,7 @@ ProJack.issues.controller('IssueModifyController',
 
 
 	$scope.updateIssue = function() {
-		service.updateIssue($scope.issue).then(function(data) {
-			$scope.issue._rev = data.rev;
+		service.updateIssue($scope.issue).then(function() {
 			KT.alert('Das Issue wurde erfolgreich gespeichert');
 			$location.path('#/issues');
 		});
@@ -378,11 +376,10 @@ ProJack.issues.controller('IssueEditController',
 			$scope.currentSpent = 0;
 		}
 	
-		service.updateIssue($scope.issue).then(function(issue) {
-			$scope.issue = issue;
+		service.updateIssue($scope.issue).then(function() {
 			$scope.timeOnIssue = service.calculateTimeOnIssue($scope.issue);
 			$scope.sanitizeHtml();
-			KT.alert("Notiz gespeichert");
+			KT.alert("The note has been added");
 			$scope.removeTrackingData = false;
 			if (redirect) 
 				$location.path('/issues');
