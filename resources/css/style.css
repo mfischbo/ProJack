@@ -160,7 +160,7 @@ div.lane-tab {
 }
 
 div.lane-tab.unassigned { border-bottom: 4px solid red; }
-div.lane-tab.processing { border-bottom: 4px solid yellow; }
+div.lane-tab.processing { border-bottom: 4px solid #9c27b0; }
 div.lane-tab.qa { border-bottom: 4px solid green; }
 div.lane-tab.done { border-bottom: 4px solid grey; }
 

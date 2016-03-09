@@ -51,7 +51,7 @@
 
 <div data-ng-if="note">
 	<div class="form-group">
-		<label>Notiz</label>
+		<label>Notes</label>
 		<textarea rows="4" data-ng-model="note.text" class="form-control" data-ui-tinymce="$parent.tinyOptions"></textarea>
 	</div>
 	
@@ -76,5 +76,5 @@
 	</div>
 </div>
 
-<button class="btn btn-primary btn-xs pull-right" data-ng-click="addNote()" data-ng-if="!note"><span class="fa fa-plus"> Notiz</span></button>
-<button class="btn btn-danger btn-xs pull-right" data-ng-click="unfocusNote()" data-ng-if="note"><span class="fa fa-minus"> Notiz</span></button>
+<button class="btn btn-primary btn-xs pull-right" data-ng-click="addNote()" data-ng-if="!note"><span class="fa fa-plus">&nbsp;</span> Note</button>
+<button class="btn btn-danger btn-xs pull-right" data-ng-click="unfocusNote()" data-ng-if="note"><span class="fa fa-minus">&nbsp;</span> Note</button>
