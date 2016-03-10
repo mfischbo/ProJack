@@ -73,6 +73,10 @@ span.tag-label {
 	padding-right:12px;
 }
 
+a.strikethrough {
+	text-decoration: line-through;
+}
+
 /* 
  * CSS for Sprints 
  */

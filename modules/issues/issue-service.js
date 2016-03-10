@@ -223,6 +223,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issue.state = 'ASSIGNED';
 			
 			var d = $q.defer();
+			var that = this;
 		
 			// get the next available numerical ticket number
 			$http.get(ProJack.config.dbUrl + "/_design/issues/_view/count?group=false").success(function(data) {
@@ -231,7 +232,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				} else {
 					issue.number = (parseInt(data.rows[0].value) + 1);
 				}
-				$http.post(ProJack.config.dbUrl, issue)
+				
+				that.createHyperlinks(issue).then(function(issue) {
+					$http.post(ProJack.config.dbUrl, issue)
 					.success(function(response) {
 						issue._id = response.id;
 						issue._rev= response.rev;
@@ -239,7 +242,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 						d.resolve(issue);
 					}).error(function() {
 						d.reject();
-					});
+					});				
+				});
 			});
 			return d.promise;
 		},
@@ -259,9 +263,59 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			// remove customer, since it doesn't exist any more
 			issue.customer = undefined;
 			
-			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue).then(function(response) {
-				issue._rev = response.data.rev;
-				elastic.index('issue', issue);
+			return this.createHyperlinks(issue).then(function(issue) {
+				return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue).then(function(response) {
+					issue._rev = response.data.rev;
+					elastic.index('issue', issue);
+					return issue;
+				});
+			});
+		},
+		
+	
+		/**
+		 * Creates a hyperlink to another issue by exchanging all occurences of the pattern
+		 * #[0-9]* with an actual hyperlink in the issues description and notes
+		 */
+		createHyperlinks : function(issue) {
+		
+			// pattern matches #12 but not within a hyperlink like <a>#15</a>
+			var pattern = /[^>|"]#([0-9]*)/g;
+			var occurences = {};
+			var numbers = [];
+			
+		
+			var t = null;
+			while ((t = pattern.exec(issue.description)) !== null) {
+				occurences[t[1]] = undefined;
+				numbers.push(t[1]);
+			}
+
+			angular.forEach(issue.notes, function(e) {
+				while ((t = pattern.exec(e.text)) !== null) {
+					occurences[t[1]] = undefined;
+					numbers.push(t[1]);
+				}
+			});
+		
+			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byNumber?keys=[' + numbers + ']').then(function(result) {
+				for (var x in occurences) {
+					occurences[x] = KT.find('key', x, result.data.rows);
+					
+					if (occurences[x]) {
+						var strikeout = '';
+						if (occurences[x].value.state == 'CLOSED')
+							strikeout = ' class="strikethrough" '
+						var link = ' <a href="#/issues/'+ occurences[x].id +'/edit" '+strikeout+'>#' + x + '</a> ';
+			
+						var t = new RegExp('[^>|"]#('+x+')', 'g'); 
+						
+						issue.description = issue.description.replace(t, link);
+						angular.forEach(issue.notes, function(e) {
+							e.text = e.text.replace(t, link);
+						});
+					}
+				}
 				return issue;
 			});
 		},
