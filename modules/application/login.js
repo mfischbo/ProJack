@@ -1,5 +1,5 @@
 var T = angular.module("Login", ['ngRoute', 'SecurityModule']);
-T.config(['$routeProvider', function($routeProvider) {
+T.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
 		.when('/', {
@@ -11,6 +11,9 @@ T.config(['$routeProvider', function($routeProvider) {
 			templateUrl : "./modules/security/views/login.html"
 		})
 		.otherwise({redirectTo : "/" });
+	
+	$httpProvider.defaults.userXDomain = true;
+	$httpProvider.defaults.withCredentials = true;
 }]);
 
 

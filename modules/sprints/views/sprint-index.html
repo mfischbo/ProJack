@@ -13,7 +13,7 @@
 		<button class="btn btn-primary btn-sm" data-ng-class="{active : issueCreateOverlayVisible}" data-ng-click="toggleIssueCreateOverlay()" title="New Issue"><span class="fa fa-plus"></span></button>
 		<button class="btn btn-primary btn-sm" data-ng-click="finalizeSprint();" title="Close Sprint"><span class="fa fa-check"></span></button>
 		<span class="separator">&nbsp;|&nbsp;</span>	
-		<button class="btn btn-primary btn-sm" data-ng-click="addSwimlane()" title="Add Swimlane"><span class="fa fa-plus">&nbsp;Lane</span></button>
+		<button class="btn btn-primary btn-sm" data-ng-click="addSwimlane()" title="Add Swimlane"><span class="fa fa-plus"></span>&nbsp;Lane</button>
 	</div>
 	<div class="col-md-5">
 		<uib-progress>
@@ -24,7 +24,7 @@
 		</uib-progress>
 	</div>
 	<div class="col-md-4">
-		<div class="btn-group pull-right" data-uib-dropdown>
+		<div class="btn-group pull-right" data-uib-dropdown data-ng-if="sprints.length > 0">
 			<button type="button" class="btn">{{currentSprint.name}}</button>	
 			<button type="button" class="btn dropdown-toggle" data-uib-dropdown-toggle>
 				<span class="caret"></span>	
@@ -43,6 +43,9 @@
 <div class="row">
 	<div class="col-md-12">
 		<hr/>
+		<div data-ng-if="!currentSprint && sprints.length == 0" class="center">
+			<h3>You haven't created a sprint yet. <a href="#/sprints/create">Create your first sprint!</a></h3>	
+		</div>
 	</div>
 </div>
 
@@ -50,5 +53,18 @@
 	<div data-swimlane data-lane="lane" data-sprint="currentSprint"></div>
 </div>
 
-<div class="ng-hide" data-issue-search-directive data-ng-show="issueSearchOverlayVisible"></div>
-<div id="sprint-issueCreateOverlay" class="overlay-panel ng-hide" data-issue-create-directive data-ng-show="issueCreateOverlayVisible"></div>
+<div data-issue-search-directive data-hide="issueIds" data-ng-if="issueSearchOverlayVisible"></div>
+<div id="sprint-issueCreateOverlay" class="overlay-panel" data-issue-create-directive data-ng-if="issueCreateOverlayVisible"></div>
+<div id="sprint-issueDetailsOverlay" class="overlay-panel" data-ng-if="issueDetailsOverlayVisible">
+	<div class="row">
+		<div class="pull-right">
+			<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueDetailsOverlay()"><span class="fa fa-close"></span></button>
+		</div>
+	</div>
+
+	<h5>Status #{{issue.number}}</h5>
+	<div data-ng-include data-src="'./modules/issues/views/issue-details.html'"></div>
+	
+	<h5>Notes</h5>
+	<div data-ng-include data-src="'./modules/issues/views/issue-notes.html'"></div>
+</div>

@@ -29,39 +29,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		scope.lane.state = 'EXPANDED';
 		scope.shadow = angular.copy(scope.lane);
 	
-
-		/**
-		 * Should be triggered when the sprint model has changed.
-		 */
-		scope.$on('Sprints::Workbench::issues-reloaded', function() {
-			scope.sortIssues();
-		});
-		
-
-		/**
-		 * Sorts issues into the correct columns in the lane, according to their state
-		 */
-		scope.sortIssues = function() {
-			scope.issues = {
-					unassigned : [],
-					assigned   : [],
-					resolved   : [],
-					done	   : []
-			};
-			
-			for (var i in scope.lane.issues) {
-				var issue = scope.lane.issues[i];
-				if (issue.state == 'NEW')
-					scope.issues.unassigned.push(issue);
-				if (issue.state == 'ASSIGNED')
-					scope.issues.assigned.push(issue);
-				if (issue.state == 'RESOLVED')
-					scope.issues.resolved.push(issue);
-				if (issue.state == 'CLOSED')
-					scope.issues.done.push(issue);
-			}
-		};
-
 		/**
 		 * Saves the lanes contents
 		 */
@@ -94,7 +61,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			scope.metaInfVisible = false;
 		};
 		
-	
 		/**
 		 * Removes the issue from the current sprint and put's it back on the backlog
 		 */
@@ -102,8 +68,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			KT.remove('_id', issue._id, scope.lane.issues);
 			scope.$emit('Sprints::Swimlane::lane-changed');
 		};
-		
-		
+	
 		/**
 		 * Toggles expansion state of the lane
 		 */
@@ -122,37 +87,42 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 		scope.pushToLane = function(issue, lane) {
 			KT.remove('_id', issue._id, scope.lane.issues);
 			lane.issues.push(issue);
-			scope.sortIssues();
 			scope.$emit('Sprints::Swimlane::lane-changed');
 		};
+
+		/**
+		 * Signals that the user has clicked on an issue and wants to see the issues
+		 * details. This however is not being coped in the directive but in the
+		 * controller
+		 */
+		scope.focusIssue = function(issue) {
+			scope.$emit('Sprints::Swimlane::issue-selected', issue);
+		};
 		
-		// issue drag-drop
-		scope.onUnassignedDrop = function(event, issue) {
-			// assign issue to the current sprint
-			if (!issue.sprint || issue.sprint.length == 0)
-				issue.sprint = scope.sprint._id;
+		
+		/* --------------------------------------------------------
+		 * Drag and drop functionality
+		 * --------------------------------------------------------
+		 */
+		scope.onUnassignedDrop = function(event, $data) {
+			var issue = KT.find('_id', $data._id, scope.lane.issues);
+			if (!issue) {
+				scope.lane.issues.push($data);
+			}
 			issue.state  = 'NEW';
 			issue.assignedTo = '';
-			
-			iService.updateIssue(issue).then(function() {
-				scope.removeExcept(issue, scope.issues.unassigned);
-				scope.issues.unassigned.push(issue);
-			});
+			iService.updateIssue(issue);
 		};
 		
-		scope.onAssignedDrop = function(event, issue) {
+		scope.onAssignedDrop = function(event, $data) {
+			var issue = KT.find('_id', $data._id, scope.lane.issues); 
 			issue.state = 'ASSIGNED';
 			issue.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
-			
-			iService.updateIssue(issue).then(function() {
-				scope.removeExcept(issue, scope.issues.assigned);
-				scope.issues.assigned.push(issue);
-			});
+			iService.updateIssue(issue);
 		};
 		
-		scope.onQADrop = function(event, issue) {
-			issue.state = 'RESOLVED';
-			issue.assignedTo = '';
+		scope.onQADrop = function(event, $data) {
+			var issue = KT.find('_id', $data._id, scope.lane.issues);
 			var instance = $modal.open({
 				controller : 'IssueResolveModalController',
 				templateUrl: './modules/issues/views/resolve-modal.html',
@@ -163,62 +133,45 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 					}
 				}
 			});
-			instance.result.then(function() {
-				scope.removeExcept(issue, scope.issues.done);
-				scope.issues.resolved.push(issue);
-			});
 		};
 		
-		scope.onDoneDrop = function(event, issue) {
+		scope.onDoneDrop = function(event, $data) {
+			var issue = KT.find('_id', $data._id, scope.lane.issues);
 			issue.state = 'CLOSED';
-			iService.updateIssue(issue).then(function() {
-				scope.removeExcept(issue, scope.issues.done);
-				scope.issues.done.push(issue);
-			});
+			iService.updateIssue(issue);
 		};
 		
-		scope.validateUnassignedDrop = function(data) {
-			if (KT.indexOf('_id', data._id, scope.issues.unassigned) >= 0)
+		scope.validateUnassignedDrop = function(issue) {
+			if (issue.state == 'NEW')
 				return false;
-			if (iService.hasActiveTracking(data))
+			if (iService.hasActiveTracking(issue))
 				return false;
 			return true;
 		};
 		
-		scope.validateAssignedDrop = function(data) {
-			if (KT.indexOf('_id', data._id, scope.issues.assigned) >= 0)
+		scope.validateAssignedDrop = function(issue) {
+			if (issue.state == 'ASSIGNED')
 				return false;
-			if (iService.hasActiveTracking(data))
-				return false;
-			return true;
-		};
-		
-		scope.validateQADrop = function(data) {
-			if (KT.indexOf('_id', data._id, scope.issues.resolved) >= 0)
-				return false;
-			if (iService.hasActiveTracking(data))
+			if (iService.hasActiveTracking(issue))
 				return false;
 			return true;
 		};
 		
-		scope.validateDoneDrop = function(data) {
-			if (KT.indexOf('_id', data._id, scope.issues.done) >= 0)
+		scope.validateQADrop = function(issue) {
+			if (issue.state == 'RESOLVED')
 				return false;
-			if (iService.hasActiveTracking(data))
+			if (iService.hasActiveTracking(issue))
 				return false;
 			return true;
 		};
 		
-		scope.removeExcept = function(issue, channel) {
-			for (var q in scope.issues) {
-				if (scope.issues[q] != channel) {
-					KT.remove('_id', issue._id, scope.issues[q]);
-				}
-			}
+		scope.validateDoneDrop = function(issue) {
+			if (issue.state == 'CLOSED')
+				return false;
+			if (iService.hasActiveTracking(issue))
+				return false;
+			return true;
 		};
-		
-		// Initialization is done here
-		scope.sortIssues();
 	};
 	
 	return {

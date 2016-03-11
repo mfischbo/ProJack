@@ -1,7 +1,7 @@
-<h4>Ergebnisse</h4>
+<h4>Results</h4>
 
 <div data-ng-if="results.length == 0">
-	Bitte wählen Sie eine andere Permuation des Suchbegriffs
+	Nothing found for your current search
 </div>
 
 <div data-ng-if="results.issues.length > 0">
@@ -31,7 +31,7 @@
 </div>
 
 <div data-ng-if="results.customers.length > 0">
-	<h5 class="pull-right">Kunden</h5>
+	<h5 class="pull-right">Projects</h5>
 	<div class="clearfix"></div>
 	
 	<div data-ng-repeat="c in results.customers track by $index">

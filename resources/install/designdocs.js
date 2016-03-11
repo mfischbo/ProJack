@@ -2,15 +2,12 @@ function getDesignDocs() {
 	
 	return [
 	        {
-	        	name : "customers",
+	        	name : "projects",
 	        	doc  : {
 	        		language: "javascript",
 	                views: {
 	                    index: {
-	                        map: "function(doc) {\n  if (doc.type == \"customer\" || doc._type == 'customer')\n      emit(doc._id, doc);\n}"
-	                    },
-	                    byCountry: {
-	                        map: "function(doc) {\n  if (doc.type == \"customer\" && doc.address && doc.address.country)\n      emit(doc.address.country, doc);\n}"
+	                        map: "function(doc) {\n  if (doc.type == \"project\")\n      emit(doc._id, doc);\n}"
 	                    }
 	                }
 	        	}
@@ -44,7 +41,7 @@ function getDesignDocs() {
 	                        map: "function(doc) {\n  if (doc.type == 'issue') {\n    var d = undefined;\n    if (typeof doc.resolveUntil === 'string' && doc.resolveUntil.length > 0)\n       d = new Date(doc.resolveUntil).getTime();\n    \n    if (typeof doc.resolveUntil === 'number')    \n       d = doc.resolveUntil;\n\n    if (d == undefined)\n       d = Number.MAX_VALUE;\n\n    emit([doc.assignedTo.replace('org.couchdb.user:', ''), doc.state, d], doc);\n  }   \n}"
 	                    },
 	                    byClosingDate: {
-	                    	map: "function(doc) { if (doc.type == 'issue' && (doc.state == 'CLOSED' || doc.state == 'RESOLVED')) { var cid = doc.customer; if (typeof doc.customer === 'object') cid = doc.customer._id; emit([cid, '' + doc.dateModified + ''], doc); } }"
+	                    	map: "function(doc) { if (doc.type == 'issue' && (doc.state == 'CLOSED' || doc.state == 'RESOLVED')) { var cid = doc.project; if (typeof doc.project === 'object') cid = doc.project._id; emit([cid, '' + doc.dateModified + ''], doc); } }"
 	                    },
 	                    bySprint : {
 	                    	map: "function(doc) { if (doc.type == 'issue' && doc.sprint && doc.sprint.length > 0) { emit(doc.sprint, doc); } }"
@@ -76,6 +73,20 @@ function getDesignDocs() {
 	       			   sprint : "function(doc, req) { return (doc.type == 'issue' && doc.sprint && doc.sprint == req.query.sprint)}" 
 	        	   }
 	        	}
+	        },
+	        
+	        {
+	        	name : 'timefeed',
+	        	doc : {
+	        		language : 'javascript',
+	        		lists: {
+	        			userfilter : "function (head, req) { var r; var retval = { rows : [] }; while (r = getRow()) { if (r.value.userCreated && r.value.userCreated.length > 0) { if ((r.value.userCreated) == req.userCtx.name) retval.rows.push(r); } else if (r.value.type == 'issue') { var user = 'org.couchdb.user:' + req.userCtx.name; if (!r.value.assignedTo) retval.rows.push(r); if (r.value.assignedTo == user) retval.rows.push(r); } else { retval.rows.push(r); } } return toJSON(retval); }"
+	        		},
+	        		
+	        		views : {
+	        			reminders : "function(doc) {\nif (doc.type == 'reminder') {\n if (doc.alertAt !== undefined && doc.alertTime !== undefined) {\n var x = new Date(doc.alertAt);\n var q = new Date(doc.alertTime);\nemit([x.getFullYear(), x.getMonth()+1, x.getDate(), q.getUTCHours()+1, q.getUTCMinutes(), 0], doc);\n}\n}\n\n}"
+	        		}
+	        	}        	
 	        }
 	];
 };

@@ -1,10 +1,17 @@
 /**
  * Controller to list all users
  */
-ProJack.security.controller("UserIndexController", ['$scope', 'SecurityService', function($scope, service) {
-	
-	service.getAllUserNames().then(function(data) {
-		$scope.users = data;
+ProJack.security.controller("UserIndexController", ['$scope', 'SecurityService', 'KT', function($scope, service, KT) {
+
+	service.getCurrentUser().then(function(user) {
+		$scope.currentUser = user;
+		service.getAllUsers().then(function(users) {
+			$scope.users = users;
+			var x = KT.find('_id', $scope.currentUser._id, users);
+			if (x.roles.indexOf('admin') > -1) {
+				$scope.hasCreatePermission = true;
+			}
+		});
 	});
 }]);
 
@@ -47,7 +54,7 @@ ProJack.security.controller("UserCreateController", ['$scope', '$location', 'KT'
 		
 		service.createUser($scope.user).then(function(response) {
 			if (response.data.ok) { 
-				service.addUserAsMember($scope.user).then(function(isOk) {
+				service.addUser($scope.user, 'members').then(function(isOk) {
 					if (isOk.ok)
 						KT.alert('Der Benutzer wurde erfolgreich angelegt');
 					else

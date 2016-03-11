@@ -2,19 +2,22 @@
   "name": "ProJack",
   "version": "1.0",
   "dependencies": {
-    "angular": "=1.4.6",
-    "angular-route": "=1.4.6",
-    "angular-i18n": "=1.4.6",
+    "angular": "=1.5.0",
+    "angular-route": "=1.5.0",
+    "angular-i18n": "=1.5.0",
     "angular-native-dragdrop": "latest",
-    "angular-ui-tinymce": "=0.0.8",
+    "angular-ui-tinymce": "=0.0.14",
     "bootstrap": "latest",
     "angular-bootstrap": ">=0.12.1",
     "ng-file-upload": "latest",
-    "angular-nvd3": "0.1.0",
+    "angular-nvd3": "1.0.5",
     "fontawesome": "latest",
-    "moment": "2.9.0"
+    "moment": "2.11.2",
+    "ngInfiniteScroll" : "latest"
   },
   "resolutions": {
-    "angular": "=1.4.6"
+    "angular": "=1.5.0",
+    "nvd3"   : "=1.8.2",
+    "angular-nvd3" : "1.0.5"
   }
 }

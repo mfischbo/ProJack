@@ -1,4 +1,4 @@
-<table class="table table-condensed">
+<table class="table table-condensed" data-infinite-scroll="scroll()" data-infinite-scroll-immediate-check="false"> 
 <thead>
 	<tr>
 		<th><a href="" data-ng-click="$parent.predicate = 'number'; 		$parent.reverse=!reverse">#</a></th>
@@ -16,7 +16,7 @@
 	<tr data-ng-if="!issues || issues.length == 0">
 		<td colspan="7" style="text-align:center;"><i>Für die aktuelle Auwahl sind keine Ergebnisse vorhanden</i></td>
 	</tr>
-	<tr data-ng-repeat="i in issues | orderBy:$parent.predicate:$parent.reverse track by $index"
+	<tr data-ng-repeat="i in issues track by i._id"
 		data-ng-class="{'info' : i.state == 'ASSIGNED', 'danger' : i.state == 'NEW', 'warning' : i.state == 'FEEDBACK', 'success' : i.state == 'RESOLVED', 'active' : i.state == 'CLOSED'}">
 		
 		<td>#{{i.number}}</td>
@@ -30,7 +30,10 @@
 		</td>
 		<td>{{i.assignedTo.split(":").pop()}}</td>
 		<td>{{i.resolveUntil|date:'dd.MM.yyyy'}}</td>
-		<td><a href="#/issues/{{i._id}}/edit">{{i.title}}</a></td>
+		<td>
+			<span data-ng-repeat="t in i.tags" class="label label-success tag-label">{{t}}</span>		
+			<a href="#/issues/{{i._id}}/edit">{{i.title}}</a>
+		</td>
 		<td class="tools">
 			<a href="#/issues/{{i._id}}/edit" title="Bearbeiten"><span class="fa fa-pencil"></span></a>
 			<a href="javascript:void('');" data-ng-click="toggleObservation(i)">

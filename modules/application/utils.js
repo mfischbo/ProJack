@@ -159,6 +159,18 @@ ProJack.utils.service("KT", ['$uibModal', function($modal) {
 				var q = time.split(":");
 				retval = parseInt(q[0] * 3600) + parseInt(q[1] * 60);
 				return parseInt(retval);
+			},
+			
+			sanitizeDate : function(date) {
+				if (!date)
+					return undefined;
+		
+				if (typeof date === 'number')
+					return date;
+				if (typeof date === 'string')
+					return new Date(date).getTime();
+				if (typeof date === 'object')
+					return date.getTime();
 			}
 	};
 

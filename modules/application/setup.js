@@ -1,5 +1,8 @@
-var T = angular.module('Setup', ['ngRoute', 'CustomersModule', 'GitlabModule', 'IssuesModule', 'SecurityModule', 'SprintModule']);
-T.config(['$routeProvider', function($routeProvider) {
+var T = angular.module('Setup', ['ngRoute', 
+                                 'CustomersModule', 'GitlabModule', 
+                                 'IssuesModule', 'SecurityModule', 
+                                 'SprintModule']);
+T.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
 		.when('/', {
@@ -11,10 +14,13 @@ T.config(['$routeProvider', function($routeProvider) {
 			templateUrl : 'modules/application/views/update.html'
 		})
 		.otherwise({ redirectTo : '/' });
+	
+	$httpProvider.defaults.useXDomain = true;
+	$httpProvider.defaults.withCredentials = true;
 }]);
 
 
-T.controller('SetupController', ['$scope', '$http', '$q', function($scope, $http, $q) {
+T.controller('SetupController', ['$scope', '$http', '$q', 'SecurityService', function($scope, $http, $q, secService) {
 	
 	$scope.docs = getDesignDocs();
 	
@@ -27,40 +33,41 @@ T.controller('SetupController', ['$scope', '$http', '$q', function($scope, $http
 	
 	$scope.status = {
 			isDBCreated : undefined,
-			isDDocsCreated : undefined 
+			isDDocsCreated : undefined,
+			isAdminCreated : undefined
 	};
 
 	$scope.setup = function() {
 		
-		// set credentials for those operations
-		if ($scope.db.username.length > 0 && $scope.db.password.length > 0) {
-			$http.defaults.headers.common['Authorization'] = 'Basic ' + btoa($scope.db.username + ':' + $scope.db.password);
-		}
-		
-		if ($scope.db.createDB) {
-			$scope.createDatabase().then(function(result) {
-				if (result.status == 'OK') {
-					$scope.status.isDBCreated = true;
-					$scope.installDesignDocs();
+		secService.login($scope.db.username, $scope.db.password).then(function(data) {
+			if (data.ok) {
+				
+				// database creation and design doc installation
+				if ($scope.db.createDB) {
+					$scope.createDatabase().then(function(result) {
+						if (result.status == 'OK') {
+							$scope.status.isDBCreated = true;
+							$scope.installDesignDocs();
+							$scope.createAdminAccount();
+						} else {
+							$scope.status.isDBCreated = false;
+						}
+					});
 				} else {
-					$scope.status.isDBCreated = false;
-				}
-			});
-		} else {
-			$scope.installDesignDocs();
-		}
+					$scope.installDesignDocs();
+					$scope.createAdminAccount();
+				}	
+			}
+		});
 	};
 	
 	$scope.createDatabase = function() {
 		
 		var def = $q.defer();
-		$http({
-			url 	: ProJack.config.srvUrl + '/' + $scope.db.name,
-			method 	: 'PUT'
-		}).success(function() {
-			def.resolve({status : 'OK'});
-		}).error(function() {
-			def.resolve({status : 'error'});
+		$http.put(ProJack.config.srvUrl + '/' + $scope.db.name).then(function() {
+			def.resolve({status : 'OK' });
+		}, function() {
+			def.reject({status : 'error'});
 		});
 		return def.promise;
 	};
@@ -73,6 +80,18 @@ T.controller('SetupController', ['$scope', '$http', '$q', function($scope, $http
 			});
 		}
 	};
+	
+	$scope.createAdminAccount = function() {
+		var user = {
+			name : $scope.db.username,
+			password : $scope.db.password
+		};
+		secService.addUser(user, 'admins').then(function() {
+			$scope.status.isAdminCreated = true;
+		}, function() {
+			$scope.status.isAdminCreated = false;
+		});
+	};
 }]);
 
 T.controller('UpdateController', ['$scope', 'SprintService', 'IssueService', function($scope, service, issueService) {
@@ -84,7 +103,6 @@ T.controller('UpdateController', ['$scope', 'SprintService', 'IssueService', fun
 	 * default lane within the sprint 
 	 */
 	$scope.updateSprintModel = function() {
-	
 		var smap = { };
 		
 		service.getSprintsStartingAt(new Date(0)).then(function(sprints) {

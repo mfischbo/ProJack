@@ -29,32 +29,47 @@
 					<div class="col-md-3 swimlane-unassigned sprint-lane" data-drop-channel="issues" data-ui-on-drop="onUnassignedDrop($event, $data)" data-drop-validate="validateUnassignedDrop($data)">
 						<div class="lane-tab unassigned">Unassigned</div>
 						<ul class="lane-content sprint-issueList">
-							<li data-ng-repeat="i in issues.unassigned track by i._id" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
-								<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}"></div>
+							<li data-ng-repeat="i in lane.issues track by i._id" class="sprint-issueItem" 
+								data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
+								<div data-ng-if="i.state == 'NEW'" 
+									data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" 
+									data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+								</div>
 							</li>
 						</ul>
 					</div>
 					<div class="col-md-3 swimlane-processing sprint-lane" data-drop-channel="issues" data-ui-on-drop="onAssignedDrop($event, $data)" data-drop-validate="validateAssignedDrop($data)">
 						<div class="lane-tab processing ">Processing</div>
 						<ul class="lane-content sprint-issueList">
-							<li data-ng-repeat="i in issues.assigned track by i._id" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
-								<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}"></div>
+							<li data-ng-repeat="i in lane.issues track by i._id" class="sprint-issueItem" 
+								data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
+								<div data-ng-if="i.state == 'ASSIGNED'" 
+									data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" 
+									data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+								</div>
 							</li>
 						</ul>
 					</div>
 					<div class="col-md-3 swimlane-qa sprint-lane" data-drop-channel="issues" data-ui-on-drop="onQADrop($event, $data)" data-drop-validate="validateQADrop($data)">
 						<div class="lane-tab qa">QA</div>
 						<ul class="lane-content sprint-issueList">
-							<li data-ng-repeat="i in issues.resolved track by i._id" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
-								<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}"></div>
+							<li data-ng-repeat="i in lane.issues track by i._id" class="sprint-issueItem" 
+								data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
+								<div data-ng-if="i.state == 'RESOLVED'" 
+									 data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" 
+									 data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+								</div>
 							</li>
 						</ul>
 					</div>
 					<div class="col-md-3 swimlane-done sprint-lane" data-drop-channel="issues" data-ui-on-drop="onDoneDrop($event, $data)" data-drop-validate="validateDoneDrop($data)">
 						<div class="lane-tab done">Done</div>
 						<ul class="lane-content sprint-issueList">
-							<li data-ng-repeat="i in issues.done track by i._id" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
-								<div data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}"></div>
+							<li data-ng-repeat="i in lane.issues track by i._id" class="sprint-issueItem" data-ui-draggable="true" data-drag="i" data-drag-channel="issues">
+								<div data-ng-if="i.state == 'CLOSED'" 
+									 data-ng-include data-src="'./modules/sprints/views/sprint-item.html'" 
+									 data-ng-class="{danger : i.state  == 'NEW', info : i.state == 'ASSIGNED', warning : i.state == 'FEEDBACK', success : i.state == 'RESOLVED', active : i.state == 'CLOSED'}">
+								</div>
 							</li>
 						</ul>
 					</div>
@@ -66,8 +81,8 @@
 				<input type="text" data-ng-model="shadow.title" class="form-control">
 		
 				<div class="pull-right">
-					<button class="btn btn-danger btn-sm" data-ng-click="cancelEdit()">Abbrechen</button>
-					<button class="btn btn-success btn-sm" data-ng-click="updateLane()">Speichern</button>
+					<button class="btn btn-danger btn-sm" data-ng-click="cancelEdit()">Cancel</button>
+					<button class="btn btn-success btn-sm" data-ng-click="updateLane()">Save</button>
 				</div>	
 				<div class="clearfix"></div>
 			</div>

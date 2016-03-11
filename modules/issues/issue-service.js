@@ -1,7 +1,7 @@
 /**
  * Service that handles all affairs related to issues
  */
-ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', function ($http, $q, KT, secService) {
+ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 'ESService', function ($http, $q, KT, secService, elastic) {
 	
 	return {
 		
@@ -14,12 +14,9 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				number		: 0,			// the issues ticket number to be displayed
 				title		: '',			
 				description : '',
-				sprint		: '',			// id of the sprint this issue is related to
-				lane		: undefined,	// id of the lane the ticket belongs to
-				feature		: '', 			// id of the feature this issue is related to
-				customer	: '', 			// id of the customer this issue is related to
 				assignedTo  : '', 			// the user the issue is assigned to
 				reportedBy  : secService.getCurrentUserName(),
+				project		: '',			// the id of the project this issue belongs to
 				state		: 'NEW', 		// NEW, ASSIGNED, FEEDBACK, RESOLVED, CLOSED
 				issuetype	: 'BUG', 		// BUG, FEATURE, CHANGE_REQUEST, SUPPORT,
 				priority	: 'NORMAL',		// LOW, NORMAL, HIGH
@@ -28,6 +25,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				dateModified: new Date().getTime(),
 				estimatedTime: undefined,	// estimated time in seconds this issue will take to be resolved
 				resolveUntil: undefined,	// the deadline for this issue,
+				tags		: [],			// array of user input strings
 				fixedIn		: [],			// takes an array of branches, where the issue has been fixed
 				notes		: [],
 				times		: [],	        // array of time tracking object for all users,
@@ -145,31 +143,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				});
 		},
 	
-		/**
-		 * Returns all issues that are related to the given sprint
-		 * @param sprint The sprint
-		 */
-		getIssuesBySprint : function(sprint) {
-			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/bySprint?key="' + sprint._id + '"')
-				.then(function(response) {
-					var retval = new Array();
-					for (var i in response.data.rows)
-						retval.push(response.data.rows[i].value);
-					return retval;
-				});
-		},
-		
-		/**
-		 * Returns all issues that are related to the given feature
-		 * @param feature The given feature
-		 */
-		getIssueByFeature : function(feature) {
-			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byFeature?key="'+feature._id+'"')
-				.then(function(response) {
-					return response.data.rows[0].value;
-				});
-		},
-
         /**
          * Returns all issues that are visible by the current user
          * @returns Array of issues
@@ -189,25 +162,30 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * Returns all issues matching the given filter criteria
 		 * @param criteria The criteria to filter the issues
 		 */
-		getIssuesByCriteria : function(criteria) {
-			var url = ProJack.config.dbUrl + "/_design/issues/_list/indexfilter/search";
+		getIssuesByCriteria : function(predicates, sort, page) {
 			var params = {};
-			
-			if (criteria.type && criteria.type !== '') 
-				params.type = criteria.type;
-			
-			if (criteria.selection == 1)
-				params.uid = 'org.couchdb.user:' + secService.getCurrentUserName();
-			if (criteria.selection == 2)
-				params.uid = '';
-			
-			if (criteria.customer) 
-				params.cid = criteria.customer;
 		
-			params.status = criteria.status;
-			return $http.get(url, { params : params }).then(function(response) {
-				return response.data.rows;
-			});
+			if (predicates.issuetype && predicates.issuetype !== '') 
+				params.issuetype = predicates.issuetype;
+		
+			if (predicates.selection == 1)
+				params.assignedTo = 'org.couchdb.user:' + secService.getCurrentUserName();
+			if (predicates.selection == 2)
+				params.assignedTo = '';
+	
+			if (predicates.project != '')
+				params.project = predicates.project;
+			
+			if (predicates.tags)
+				params.tags = predicates.tags;
+			
+			params.state = predicates.status;
+			
+			return elastic.query('issue', params, 
+					sort.predicate, 
+					sort.reverse, 
+					page.offset,
+					page.size); 
 		},
 		
 		/**
@@ -240,15 +218,12 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param issue The issue that should be persisted
 		 */
 		createIssue : function(issue) {
-			if (typeof issue.customer == "object")
-				issue.customer = issue.customer._id;
-			if (typeof issue.feature == "object")
-				issue.feature = issue.feature._id;
-			
+		
 			if (issue.assignedTo && issue.assignedTo.length > 0)
 				issue.state = 'ASSIGNED';
 			
 			var d = $q.defer();
+			var that = this;
 		
 			// get the next available numerical ticket number
 			$http.get(ProJack.config.dbUrl + "/_design/issues/_view/count?group=false").success(function(data) {
@@ -257,14 +232,18 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				} else {
 					issue.number = (parseInt(data.rows[0].value) + 1);
 				}
-				$http.post(ProJack.config.dbUrl, issue)
+				
+				that.createHyperlinks(issue).then(function(issue) {
+					$http.post(ProJack.config.dbUrl, issue)
 					.success(function(response) {
 						issue._id = response.id;
 						issue._rev= response.rev;
+						elastic.index('issue', issue);
 						d.resolve(issue);
 					}).error(function() {
 						d.reject();
-					});
+					});				
+				});
 			});
 			return d.promise;
 		},
@@ -275,12 +254,70 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 		 * @param issue The issue that should be updated
 		 */
 		updateIssue : function(issue) {
+			
+			// dates shall be stored as timestamps
+			issue.dateCreated  = KT.sanitizeDate(issue.dateCreated);
+			issue.resolveUntil = KT.sanitizeDate(issue.resolveUntil);
 			issue.dateModified = new Date().getTime();
-			return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
-				.then(function(response) {
+			
+			// remove customer, since it doesn't exist any more
+			issue.customer = undefined;
+			
+			return this.createHyperlinks(issue).then(function(issue) {
+				return $http.put(ProJack.config.dbUrl + "/" + issue._id, issue).then(function(response) {
 					issue._rev = response.data.rev;
-					return response.data;
+					elastic.index('issue', issue);
+					return issue;
 				});
+			});
+		},
+		
+	
+		/**
+		 * Creates a hyperlink to another issue by exchanging all occurences of the pattern
+		 * #[0-9]* with an actual hyperlink in the issues description and notes
+		 */
+		createHyperlinks : function(issue) {
+		
+			// pattern matches #12 but not within a hyperlink like <a>#15</a>
+			var pattern = /[^>|"]#([0-9]*)/g;
+			var occurences = {};
+			var numbers = [];
+			
+		
+			var t = null;
+			while ((t = pattern.exec(issue.description)) !== null) {
+				occurences[t[1]] = undefined;
+				numbers.push(t[1]);
+			}
+
+			angular.forEach(issue.notes, function(e) {
+				while ((t = pattern.exec(e.text)) !== null) {
+					occurences[t[1]] = undefined;
+					numbers.push(t[1]);
+				}
+			});
+		
+			return $http.get(ProJack.config.dbUrl + '/_design/issues/_view/byNumber?keys=[' + numbers + ']').then(function(result) {
+				for (var x in occurences) {
+					occurences[x] = KT.find('key', x, result.data.rows);
+					
+					if (occurences[x]) {
+						var strikeout = '';
+						if (occurences[x].value.state == 'CLOSED')
+							strikeout = ' class="strikethrough" '
+						var link = ' <a href="#/issues/'+ occurences[x].id +'/edit" '+strikeout+'>#' + x + '</a> ';
+			
+						var t = new RegExp('[^>|"]#('+x+')', 'g'); 
+						
+						issue.description = issue.description.replace(t, link);
+						angular.forEach(issue.notes, function(e) {
+							e.text = e.text.replace(t, link);
+						});
+					}
+				}
+				return issue;
+			});
 		},
 		
 		
@@ -330,8 +367,10 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				issue._attachments[file.name] = {};
 				issue._attachments[file.name]["content_type"] = file.type;
 				issue._attachments[file.name]['data'] = fr.result.split(",")[1];
-				$http.put(ProJack.config.dbUrl + "/" + issue._id, issue)
-				.success(function() {
+				
+				$http.put(ProJack.config.dbUrl + "/" + issue._id, issue).success(function(response) {
+					issue._rev = response.rev;
+					elastic.index('issue', issue);
 					deferred.resolve({filename : file.name, type : file.type, length : file.size || 0 });
 				})
 				.error(function(response) {
@@ -391,8 +430,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				// create a new time tracking
 				track = this.newTimeTrack(user);
 				issue.times.push(track);
-				this.updateIssue(issue).then(function(data) {
-					issue._rev = data.rev;
+				this.updateIssue(issue).then(function() {
 					def.resolve();
 				});
 			} else {
@@ -407,8 +445,7 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 				track.pauseTimes += pauseTime;
 				track.pause = undefined;
 				track.state = 'RUNNING';
-				this.updateIssue(issue).then(function(data) {
-					issue._rev = data.rev;
+				this.updateIssue(issue).then(function() {
 					def.resolve();
 				});
 			}
@@ -424,8 +461,8 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
 			if (track) {
                 track.pause = this.newPause();
 				track.state = 'PAUSED';
-				this.updateIssue(issue).then(function(data) {
-					issue._rev = data.rev;
+				this.updateIssue(issue).then(function() {
+					return issue;
 				});
 			}
 		},
@@ -519,7 +556,6 @@ ProJack.issues.service("IssueService", ['$http', '$q', 'KT', 'SecurityService', 
             }
             var def = $q.defer();
             this.updateIssue(issue).then(function(data) {
-               issue._rev = data.rev;
                def.resolve();
             });
             return def.promise;

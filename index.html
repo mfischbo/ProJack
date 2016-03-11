@@ -11,7 +11,7 @@
 	<!-- build:css ./resources/css/projack.css -->
 	<link href="./resources/css/bootstrap-paper.min.css" rel="stylesheet">
     <link href="bower_components/fontawesome/css/font-awesome.css" rel="stylesheet">
-    <link href="bower_components/nvd3/nv.d3.css" rel="stylesheet">
+    <link href="bower_components/nvd3/build/nv.d3.css" rel="stylesheet">
     <link href="./resources/css/style.css" rel="stylesheet">
     <!-- endbuild -->
 	
@@ -33,9 +33,9 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Administration</a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a href="#/admin/users"><i class="fa fa-user fa-fw"></i>&nbsp;Benutzer</a></li>
-								<li><a href="#/customers">  <i class="fa fa-group fa-fw"></i>&nbsp;Kunden</a></li>
-								<li><a href="#/admin/settings"> <i class="fa fa-gears fa-fw"></i>&nbsp;Einstellungen</a></li>
+								<li><a href="#/admin/users"><i class="fa fa-user fa-fw"></i>&nbsp;User Management</a></li>
+								<li><a href="#/projects">  <i class="fa fa-group fa-fw"></i>&nbsp;Projects</a></li>
+								<li><a href="#/admin/settings"> <i class="fa fa-gears fa-fw"></i>&nbsp;Settings</a></li>
 							</ul>
 						</li>
 						<li><a href="#/issues">Issues</a></li>
@@ -51,7 +51,7 @@
 						<li data-ng-controller="FlashLightController">
 							<form class="navbar-form">
 								<div class="form-group">
-									<input type="text" data-ng-model="query"  class="form-control" placeholder="Finde..." data-ng-change="checkVisible()">
+									<input type="text" data-ng-model="query"  class="form-control" placeholder="Search ..." data-ng-change="checkVisible()">
 								</div>
 							</form>	
 							<div id="flashlight-panel" class="overlay-panel ng-hide" style="right:-157px;" data-ng-show="panelVisible">
@@ -124,9 +124,12 @@
     <script src="./bower_components/angular-ui-tinymce/src/tinymce.js"></script>
     <script src="./bower_components/angular-native-dragdrop/draganddrop.js"></script>
 
+	<!-- Infinite scrolling and paging-->
+	<script src="./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+
     <!-- Charting libs -->
     <script src="./bower_components/d3/d3.min.js"></script>
-    <script src="./bower_components/nvd3/nv.d3.min.js"></script>
+    <script src="./bower_components/nvd3/build/nv.d3.min.js"></script>
     <script src="./bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
     <!-- endbuild -->
 
@@ -138,6 +141,9 @@
 
 	<!-- Gitlab Service Module -->
 	<script src="./modules/gitlab/gitlab.js"></script>
+	
+	<!-- Elasticsearch service -->
+	<script src="./modules/elasticsearch/elasticsearch.js"></script>
 
 	<!-- Security Module -->	
 	<script src="./modules/security/security.js"></script>
@@ -145,9 +151,19 @@
 	<script src="./modules/security/security-controller.js"></script>
 
 	<!-- Customer Module -->
+	<!-- 
 	<script src="./modules/customers/customers.js"></script>
 	<script src="./modules/customers/customer-service.js"></script>
 	<script src="./modules/customers/customer-controller.js"></script>
+	-->
+	
+	<!-- Projects Module -->
+	<script src="./modules/projects/projects.js"></script>
+	<script src="./modules/projects/projects.service.js"></script>
+	<script src="./modules/projects/projects.controller.js"></script>
+	
+	<!-- Issue Tags -->
+	<script src="./modules/issue-tags/issue-tag.service.js"></script>
 	
 	<!-- Issues Module -->		
 	<script src="./modules/issues/issues.js"></script>

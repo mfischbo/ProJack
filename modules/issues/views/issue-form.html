@@ -1,12 +1,14 @@
 <div class="form-group">
-<!-- 
 	<div class="row">
-		<div class="col-md-12 col-xs-12">
-			<label>Kunde</label>
-			<select data-ng-model="issue.customer" class="form-control" data-ng-options="c._id as c.name for c in customers" required></select>
+		<div class="col-md-6">
+			<label>Project</label>
+			<select data-ng-model="issue.project" class="form-control" data-ng-options="p._id as p.name for p in projects" required></select>	
+		</div>
+		<div class="col-md-6">
+			<label>Tags</label>
+			<div data-issue-tags data-tags="issue.tags" data-allow-create="true"></div>	
 		</div>
 	</div>
--->
 </div>
 
 <div class="form-group">
@@ -15,19 +17,19 @@
 </div>	
 
 <div class="form-group">
-	<label>Beschreibung</label>	
+	<label>Description</label>	
 	<textarea data-ng-model="issue.description" class="form-control" data-ui-tinymce="tinymceOptions" required></textarea>
 </div>
 
 <div class="form-group">
 	<div class="row">
 		<div class="col-md-2 col-xs-6">
-			<label>Typ</label>
+			<label>Type</label>
 			<select data-ng-model="issue.issuetype" class="form-control">
 				<option value="BUG">Bug</option>
 				<option value="FEATURE">Feature</option>
 				<option value="CHANGE_REQUEST">Change Request</option>
-				<option value="SUPPORT">Supportanfrage</option>
+				<option value="SUPPORT">Support</option>
 			</select>
 		</div>	
 		
@@ -41,17 +43,17 @@
 		</div>
 		
 		<div class="col-md-3 col-xs-6">
-			<label>Zugewiesen an</label>
+			<label>Assigned to</label>
 			<div data-user-selector data-select-as="issue.assignedTo"></div>			
 		</div>
 		
 		<div class="col-md-2 col-xs-6">
-			<label>Aufwand</label>	
+			<label>Estimate</label>	
 			<input type="text" data-ng-model="issue.estimatedTime" class="form-control" placeholder="HH:mm" data-duration-format>
 		</div>
 
 		<div class="col-md-3 col-xs-12">
-			<label>Zu erledigen bis</label>
+			<label>Resolve until</label>
 			<input type="date"  data-ng-model="issue.resolveUntil" class="form-control" data-date-format>
 		</div>
 	</div>

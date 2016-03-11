@@ -1,5 +1,5 @@
 ProJack.issues = angular.module("IssuesModule", 
-		['CustomersModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap']);
+		['ProjectsModule', 'SecurityModule', 'Utils', 'ngFileUpload', 'ui.tinymce', 'ui.bootstrap', 'IssueTagsModule']);
 
 ProJack.issues.config(['$routeProvider', function($routeProvider) {
 
@@ -8,7 +8,7 @@ ProJack.issues.config(['$routeProvider', function($routeProvider) {
             controller : 'IssueIndexController',
             templateUrl : './modules/issues/views/index.html'
         })
-        .when('/issues/customer/:cid/create', {
+        .when('/issues/create', {
             controller : 'IssueCreateController',
             templateUrl : './modules/issues/views/create.html'
         })
@@ -61,6 +61,68 @@ ProJack.issues.directive('statelabel', function() {
 		templateUrl		: './modules/issues/views/directives/statelabel.html'
 	};
 });
+
+ProJack.issues.directive('searchCriteria', ['ProjectService', function(projectService) {
+
+	var locKey = '__IssuesIndex_Criteria';
+	
+	var linkFn = function(scope) {
+		
+		scope.criteria = {
+			predicates : {
+				type : '',
+				selection : 0,
+				status : 0,
+				project : '',
+				tags : []
+			},
+			sort : {
+				predicate : 'number',
+				reverse   : 'false'
+			},
+			page : {
+				offset    : 0,
+				size      : 50
+			}
+		};
+		
+		scope.projects = [];
+
+		projectService.getAllProjects().then(function(data) {
+			scope.projects.push({ _id : '', name : 'All'});
+			for (var i in data)
+				scope.projects.push(data[i]);
+		});
+		
+		if (localStorage.getItem(locKey)) {
+			scope.criteria.predicates = JSON.parse(localStorage.getItem(locKey));
+			scope.criteria.page.offset = 0;
+		}
+		
+		scope.$watch('criteria.predicates', function(nval) {
+			localStorage.setItem(locKey, JSON.stringify(nval));
+			scope.criteria.page.offset = 0;
+			scope.$emit('Issues::SearchCriteriaDirective::predicates-changed', scope.criteria);
+		}, true);
+		
+		scope.$on('Issues::IssueController::scroll-event', function() {
+			scope.criteria.page.offset += scope.criteria.page.size;
+			scope.$emit('Issues::SearchCriteriaDirective::page-changed', scope.criteria);
+		});
+		
+		scope.$on('Issues::IssueController::sort-changed', function($event, sort) {
+			scope.criteria.sort = sort;
+			scope.$emit('Issues::SearchCriteriaDirective::predicates-changed', scope.criteria);
+		});
+	};
+	
+	return {
+		restrict:		'A',
+		templateUrl:	'./modules/issues/views/directives/search-criteria.html',
+		link: linkFn, 
+		scope :false 
+	}
+}]);
 
 
 ProJack.issues.directive('trackingControls', ['$compile', '$uibModal', 'IssueService', 'SecurityService', function($compile, $modal, service, secService) {

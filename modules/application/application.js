@@ -1,7 +1,7 @@
 ProJack.app = angular.module("ProJack", 
 		['ngRoute', 'ang-drag-drop', 'Utils', 'SecurityModule', 
-		 'DashBoardModule', 'CustomersModule', 
-		 'IssuesModule', 'FlashLightModule', 'SprintModule', 'GitlabModule']);
+		 'DashBoardModule', 'ProjectsModule', 
+		 'IssuesModule', 'FlashLightModule', 'SprintModule', 'GitlabModule', 'Elasticsearch', 'infinite-scroll']);
 
 ProJack.app.filter('numberFixedLen', function () {
     return function(a,b){
@@ -49,6 +49,25 @@ ProJack.app.filter('userName', function() {
 		return retval;
 	};
 });
+
+/**
+ * static-include directive is useful when a template should be included without creating a new scope.
+ * This is a workaround for using ng-model="$parent.item" when using a directive with isolated scope
+ * from within an included template.
+ * 
+ *  Usage:
+ *  <div static-include="{path-to-template.html}"></div>
+ */
+ProJack.app.directive('staticInclude', ['$http', '$templateCache', '$compile', function($http, $templateCache, $compile) {
+
+	return function(scope, element, attrs) {
+		var path = attrs.staticInclude;
+		$http.get(path, {cache : $templateCache}).success(function(response) {
+			var contents = element.html(response).contents();
+			$compile(contents)(scope);
+		});
+	}
+}]);
 
 ProJack.app.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	

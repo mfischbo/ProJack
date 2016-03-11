@@ -15,17 +15,62 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 				}
 			};
 		},
+	
+		getAllUsers : function() {
+			return $http.get(ProJack.config.dbUrl+ '/_security').then(function(response) {
+				var retval = {};
+				
+				// admin accounts
+				for (var i in response.data.admins) {
+					var admins = response.data.admins[i];
+					for (var q in admins) {
+						retval[admins[q]] = {
+							_id  : 'org.couchdb.user:' + admins[q],
+							name : admins[q],
+							roles : []
+						};
+						retval[admins[q]].roles.push('admin');
+					}
+				}
+				
+				// member accounts
+				for (var i in response.data.members) {
+					var members = response.data.members[i];
+					for (var q in members) {
+						
+						if (!retval[members[q]]) {
+							retval[members[q]] = {
+								_id  : 'org.couchdb.user:' + members[q],
+								name : members[q],
+								roles : []
+							};
+						}
+						retval[members[q]].roles.push('member');
+					}
+				}
+				return retval;
+			});
+		},
 		
 		getAllUserNames : function() {
-			return $http.get(ProJack.config.srvUrl + "/_users/_all_docs").then(function(response) {
-				var retval = new Array();
-				for (var i in response.data.rows) {
-					if (response.data.rows[i].id.indexOf("org.couchdb.user") == 0) {
-						var tmp = response.data.rows[i].id.split(":");
-						tmp.splice(0,1);
-						var login = tmp.join(":");
-						retval.push({id : response.data.rows[i].id, login : login});
-					} 
+			return $http.get(ProJack.config.dbUrl + '/_security').then(function(response) {
+				var retval = [];
+				if (response.data.admins) {
+					for (var i in response.data.admins.names) {
+						retval.push({
+							id : 'org.couchdb.user:' + response.data.admins.names[i],
+							login : response.data.admins.names[i]
+						});
+					}
+				}
+			
+				if (response.data.members) {
+					for (var i in response.data.members.names) {
+						retval.push({
+							id : 'org.couchdb.user:' + response.data.members.names[i],
+							login: response.data.members.names[i]
+						});
+					}
 				}
 				return retval;
 			});
@@ -37,13 +82,6 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			});
 		},
 		
-		createAdminUser : function(user) {
-			return $http.put(ProJack.config.srvUrl + "/_config/admins/" + user.name, user.password)
-				.then(function(response) {
-					return response.data;
-				});
-		},
-		
 		createUser : function(user) {
 			return $http.put(ProJack.config.srvUrl + "/_users/org.couchdb.user:" + user.name, user)
 				.success(function(response) {
@@ -52,7 +90,37 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 					return undefined;
 				});
 		},
+
+		/**
+		 * Adds the user to the database in the provided role
+		 * @param role 	Either 'admins' or 'members'
+		 */
+		addUser : function(user, role) {
+			var def = $q.defer();
+			$http.get(ProJack.config.dbUrl + '/_security').success(function(security) {
+				if (!security[role]) {
+					security[role] = {
+							names : []
+					};	
+				}
+				
+				if (security[role].names.indexOf(user.name) > -1)
+					def.reject();
+				else {
+					security[role].names.push(user.name);
+					$http.put(ProJack.config.dbUrl + '/_security', security).success(function(data) {
+						def.resolve(data);
+					}).error(function() {
+						def.reject();
+					});
+				}
+			}).error(function() {
+				def.reject();
+			});
+			return def.promise;
+		},
 		
+/*	
 		addUserAsMember : function(user) {
 			var def = $q.defer();
 			$http.get(ProJack.config.dbUrl + "/_security").success(function(security) {
@@ -71,7 +139,7 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 			});
 			return def.promise;
 		},
-	
+*/	
 		/**
 		 * Updates the given user and returns the persisted instance 
 		 */
@@ -106,10 +174,13 @@ ProJack.security.service("SecurityService", ['$http', '$q', function($http, $q) 
 		},
 		
 		getCurrentUser : function() {
-			var uname = this.getCurrentUserName();
-			return $http.get(ProJack.config.srvUrl + '/_users/org.couchdb.user:' + uname).then(function(response) {
-				return response.data;
+			return this.getCurrentSession().then(function(data) {
+				var uname = data.userCtx.name;
+				return $http.get(ProJack.config.srvUrl + '/_users/org.couchdb.user:' + uname).then(function(response) {
+					return response.data;
+				});
 			});
+			
 		},
 		
 		getCurrentUserName : function() {
