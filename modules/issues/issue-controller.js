@@ -390,8 +390,9 @@ ProJack.issues.controller('IssueEditController',
 			$scope.sanitizeHtml();
 			KT.alert("The note has been added");
 			$scope.removeTrackingData = false;
-			if (redirect) 
+			if (redirect) {
 				$location.path('/issues');
+			}
 		});
 	};
 

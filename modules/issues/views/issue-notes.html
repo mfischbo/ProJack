@@ -9,7 +9,7 @@
 			<span data-ng-if="n.tasktype == 'BACKEND'">Backend - </span>
 			<span data-ng-if="n.timeSpent.hours != 0 && timeSpentMinutes != 0"><b>Time Spent</b> {{n.timeSpent | secsToTime}}</span>
 		
-			<span style="padding-left:24px;">			
+			<span style="padding-left:24px;" data-ng-if="focusNote && deleteNote">			
 				<button type="button" class="btn btn-primary btn-xs" data-ng-click="focusNote(n)"><span class="fa fa-pencil"></span></button>
 				<button type="button" class="btn btn-danger btn-xs" data-ng-click="deleteNote(n)"><span class="fa fa-trash-o"></span></button>
 			</span>

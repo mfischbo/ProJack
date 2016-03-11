@@ -61,7 +61,6 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			scope.metaInfVisible = false;
 		};
 		
-	
 		/**
 		 * Removes the issue from the current sprint and put's it back on the backlog
 		 */
@@ -69,8 +68,7 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			KT.remove('_id', issue._id, scope.lane.issues);
 			scope.$emit('Sprints::Swimlane::lane-changed');
 		};
-		
-		
+	
 		/**
 		 * Toggles expansion state of the lane
 		 */
@@ -91,8 +89,21 @@ ProJack.sprint.directive('swimlane', ['KT', 'IssueService', 'SecurityService', '
 			lane.issues.push(issue);
 			scope.$emit('Sprints::Swimlane::lane-changed');
 		};
+
+		/**
+		 * Signals that the user has clicked on an issue and wants to see the issues
+		 * details. This however is not being coped in the directive but in the
+		 * controller
+		 */
+		scope.focusIssue = function(issue) {
+			scope.$emit('Sprints::Swimlane::issue-selected', issue);
+		};
 		
-		// issue drag-drop
+		
+		/* --------------------------------------------------------
+		 * Drag and drop functionality
+		 * --------------------------------------------------------
+		 */
 		scope.onUnassignedDrop = function(event, $data) {
 			var issue = KT.find('_id', $data._id, scope.lane.issues);
 			if (!issue) {

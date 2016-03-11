@@ -2,7 +2,7 @@
 	<div>
 		<div class="pull-left" data-buglabel data-type="{{::i.issuetype}}"></div>
 		<div class="pull-right">
-			<a href data-ng-click="removeFromSprint(i);" title="Move to backlog "data-ng-if="i.state == 'NEW'">
+			<a href data-ng-click="removeFromSprint(i);" title="Move to backlog" data-ng-if="i.state == 'NEW'">
 				<span class="fa fa-recycle" title="Move to backlog" ></span>
 			</a>
 			
@@ -17,7 +17,7 @@
 	</div>
 </div>
 <div class="sprint-issueHeading">
-	<b>#{{::i.number}}</b> / <a href="#/issues/{{::i._id}}/edit" target="_blank">{{::i.title}}</a> 
+	<b>#{{::i.number}}</b> / <a href data-ng-click="focusIssue(i)">{{::i.title}}</a> 
 </div>
 <div class="pull-left" data-ng-if="i.assignedTo && i.assignedTo.length > 0">
 	Assigned to : {{i.assignedTo | userName}}

@@ -1,6 +1,6 @@
 ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintService', 'IssueService',
-                                                        'SecurityService', '$uibModal',
-                         function($scope, KT, sprintService, issueService, secService, $uibModal) {
+                                                        'SecurityService', '$uibModal', '$sce',
+                         function($scope, KT, sprintService, issueService, secService, $uibModal, $sce) {
 	
 	var locKey = "__Projack.sprints.current.id";
 	
@@ -106,20 +106,46 @@ ProJack.sprint.controller('SprintWorkbenchController', ['$scope', 'KT', 'SprintS
 		$scope.$broadcast('Sprints::Workbench::issues-reloaded');
 	});
 
+	
+	$scope.$on('Sprints::Swimlane::issue-selected', function(e, issue) {
+		$scope.toggleIssueDetailsOverlay(issue);
+	});
 
 	/* --------------------------------
 	 * Overlays
 	 * --------------------------------*/
 	$scope.toggleIssueSearchOverlay = function() {
 		$scope.issueCreateOverlayVisible = false;
+		$scope.issueDetailsOverlayVisible = false;
 		$scope.issueSearchOverlayVisible = !$scope.issueSearchOverlayVisible;
 	};
 	
 	$scope.toggleIssueCreateOverlay = function() {
 		$scope.issueSearchOverlayVisible = false;
+		$scope.issueDetailsOverlayVisible = false;
 		$scope.issueCreateOverlayVisible = !$scope.issueCreateOverlayVisible;
 	};
 	
+	$scope.toggleIssueDetailsOverlay = function(issue) {
+		$scope.issueCreateOverlayVisible = false;
+		$scope.issueSearchOverlayVisible = false;
+		$scope.issueDetailsOverlayVisible= !$scope.issueDetailsOverlayVisible;
+		
+		if (!$scope.issue) {
+			$scope.issue = issue;
+			$scope.html = {
+				notes : {},
+				description : $sce.trustAsHtml($scope.issue.description)
+			}
+			angular.forEach($scope.issue.notes, function(n) {
+				$scope.html.notes[n._id] = $sce.trustAsHtml(n.text);
+			});
+		} else {
+			delete $scope.issue;
+			delete $scope.html;
+		}
+	};
+
 	$scope.$on('Issues::CreateDirective::issue-created', function(event, issue) {
 		
 		// sort the issue in the default lane and update the lane directives

@@ -55,3 +55,16 @@
 
 <div data-issue-search-directive data-hide="issueIds" data-ng-if="issueSearchOverlayVisible"></div>
 <div id="sprint-issueCreateOverlay" class="overlay-panel" data-issue-create-directive data-ng-if="issueCreateOverlayVisible"></div>
+<div id="sprint-issueDetailsOverlay" class="overlay-panel" data-ng-if="issueDetailsOverlayVisible">
+	<div class="row">
+		<div class="pull-right">
+			<button class="btn btn-primary btn-sm" data-ng-click="toggleIssueDetailsOverlay()"><span class="fa fa-close"></span></button>
+		</div>
+	</div>
+
+	<h5>Status #{{issue.number}}</h5>
+	<div data-ng-include data-src="'./modules/issues/views/issue-details.html'"></div>
+	
+	<h5>Notes</h5>
+	<div data-ng-include data-src="'./modules/issues/views/issue-notes.html'"></div>
+</div>

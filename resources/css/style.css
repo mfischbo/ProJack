@@ -81,7 +81,8 @@ a.strikethrough {
  * CSS for Sprints 
  */
 #sprint-issueCreateOverlay,
-#sprint-issueSearchOverlay {
+#sprint-issueSearchOverlay,
+#sprint-issueDetailsOverlay {
 	right:0px; 
 	top:83px; 
 	max-height:80vh; 
@@ -213,8 +214,8 @@ li.sprint-issueItem > div.active {
 }
 .progress { height : 22px; border-radius: 4px;}
 .progress-bar-done {
-	background-color:#f5f5f5;
-	color:#444;
+	background-color:grey;
+	color:#fff;
 }
 
 div.sprint-issueHandle {

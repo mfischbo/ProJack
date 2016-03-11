@@ -8,35 +8,10 @@
 
 <div class="row">
 	<div class="col-md-3 col-xs-6">
-		<b>Kunde</b>	
-	</div>
-	<div class="col-md-3 col-xs-6">
-		<a href="#/customers/{{::customer._id}}/edit" title="{{::customer.description}}">{{customer.name}}</a>
-	</div>
-	
-	<div class="col-md-3 col-xs-6">
-		<b>Version</b>	
-	</div>
-	<div class="col-md-3 col-xs-6">
-		<a href="#/milestones/{{::milestone._id}}/edit" title="{{milestone.name}}">{{milestone.version}}</a>
-		<span data-ng-if="milestone.status == 'NEW'" class="text-danger" style="cursor:help" title="Das Pflichtenheft aus dem dieses Ticket stammt wurde noch nicht freigegeben">&nbsp;&nbsp;<small>Keine Freigabe!</small></span>
-		<span data-ng-if="milestone.status == 'APPROVED'" class="text-success" style="cursor:help" title="Das Pflichtenheft aus dem dieses Ticket stammt wurde freigegeben">&nbsp;&nbsp;<small>Freigegeben</small></span>
-	</div>
-</div>
-
-<div class="row">
-	<div class="col-md-3 col-xs-6">
-		<b>Feature</b>	
-	</div>
-	<div class="col-md-3 col-xs-6">
-		{{::feature.title}} 
-	</div>
-	
-	<div class="col-md-3 col-xs-6">
 		<b>Typ</b>	
 	</div>
 	<div class="col-md-3 col-xs-6">
-		<span data-buglabel type="{{issue.issuetype}}"></span>
+		<span data-buglabel data-type="{{issue.issuetype}}"></span>
 	</div>
 </div>
 
