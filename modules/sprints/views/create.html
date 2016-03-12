@@ -15,7 +15,7 @@
 				<div data-ng-include data-src="'./modules/sprints/views/form.html'"></div>
 			</div>
 			<div class="col-md-6 col-xs-12">
-				<div class="formgroup">
+				<div class="formgroup" data-ng-if="tinymceOptions">
 					<label>Meta Informationen (Deployment Hinweise)</label>
 					<textarea data-ng-model="sprint.metadata" class="form-control" data-ui-tinymce="tinymceOptions" required></textarea>
 				</div>	

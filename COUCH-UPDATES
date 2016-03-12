@@ -1,7 +1,0 @@
-add the following functions:
-
-/_design/sprints/filterfunction:
-
-function(doc, req) { 
-	return (doc.type == 'issue' && doc.sprint && doc.sprint == req.query.sprint)
-}
