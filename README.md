@@ -49,8 +49,13 @@ For Elasticsearch you can use the following options in your elasticsearch.yml fi
 
 ### Configuration of Projack ###
 URLs to CouchDB and Elasticsearch can be configured in the file config.js which
-contains information about how to set those values.
+contains information about how to set those values. After changing the URL's to
+the correct values you need to install all design documents. For this point your
+browser to
 
+    http://localhost/projack/setup.html
+
+and run the setup process.
 
 ## Running ##
 At the moment projack javascript and html files should be served from a webserver.

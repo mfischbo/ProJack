@@ -1,7 +1,5 @@
 var T = angular.module('Setup', ['ngRoute', 
-                                 'CustomersModule', 'GitlabModule', 
-                                 'IssuesModule', 'SecurityModule', 
-                                 'SprintModule']);
+                                 'SecurityModule']);
 T.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
 	
 	$routeProvider
