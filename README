@@ -1,31 +1,58 @@
-Changes to couchdb configurations required:
-
-File : /etc/couchdb/local.ini (or similar)
-
-// Might be irrelevant when using proxy setup with apache/nginx
-enable_cors=true 
-
-[cors]
-credentials = true
-origins = *
+# ProJack #
+ProJack is a small issue tracker and sprint planning tool providing a KANBAN style
+Ticket Bord with swimlanes and drag and drop support.
+The project started out as a pet project to evaluate some techniques like angularjs,
+Apache CouchDB and elasticsearch. The idea behind using those technologies was
+to write a software running completely without any middleware.
 
 
-File: /etc/couchdb/default.ini (or similar)
+## Installation ##
+
+### Prerequisites ###
+1. A running CouchDB installation with Version 1.6. Can be downloaded
+[here](https://couchdb.apache.org)
+
+2. A running elasticsearch installation. ProJack was developed against version 1.7
+but is using only a minimal set of the API and thus should be working with newer releases
+as well. Elasticsearch can be retrieved from [here](https://www.elastic.co/)
+
+### Installation ###
+    git clone https://github.com/mfischbo/ProJack.git
+    cd projack
+    bower install
+
+### Configuration of CouchDB and Elasticsearch ###
+In order to access the API's of CouchDB and Elasticsearch one can use a proxy server
+or directly access those. For the later one you will need to enable CORS support.
+
+For CouchDB you can enable CORS by editing /etc/couchdb/default.ini
+
+    [httpd]
+    enable_cors = true
+
+    [cors]
+    credentials = true
+    origins = * // you can adjust this to your needs
+
+You might also want to add a admin user for CouchDB in order to login.
+The Admin user can be added in /etc/couchdb/local.ini
+
+    [admins]
+    admin = mysecretpassword
 
 
-// required in order to allow a casual user to 'see' others
-[couch_httpd_auth]
-public_fields=_id, name
-users_db_public = true
+For Elasticsearch you can use the following options in your elasticsearch.yml file
+
+    http.cors.enabled: true
+    http.cors.allow-credentials: true
+    http.cors.allow-origin: /https?://localhost(:[0-9]+)?/
+
+### Configuration of Projack ###
+URLs to CouchDB and Elasticsearch can be configured in the file config.js which
+contains information about how to set those values.
 
 
-
-In order to run the search functionality, one needs to install elasticsearch
-
-1) Enable dynamic scripting. Edit elasticsearch.yml file and add the following line
-script.groovy.sandbox.enable: true
-
-2) Install the couch-river plugin from:
-https://github.com/elastic/elasticsearch-river-couchdb
-
-3) Restart the service and build the index from the projack settings menue
+## Running ##
+At the moment projack javascript and html files should be served from a webserver.
+It is planned to integrate a full build and a server which can be started from npm
+in the near future.
